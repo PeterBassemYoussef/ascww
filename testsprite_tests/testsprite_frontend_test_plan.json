@@ -1,0 +1,449 @@
+[
+  {
+    "id": "TC001",
+    "title": "Navigate from home to About Company via site navigation",
+    "description": "Verifies users can open the navigation menu from the home page and reach the About Company page.",
+    "category": "Content Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open navigation menu"
+      },
+      {
+        "type": "action",
+        "description": "Click a section link for the about/company page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the about/company content page is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Navigate from home to Branches via site navigation",
+    "description": "Verifies users can open the navigation menu from the home page and reach the branches listing page.",
+    "category": "Content Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open navigation menu"
+      },
+      {
+        "type": "action",
+        "description": "Click a section link for the branches page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the branches listing page content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Navigate from home to News Archive via site navigation",
+    "description": "Verifies users can reach the news archive page from the home page navigation and see news summaries.",
+    "category": "Content Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open navigation menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the news archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of news summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Navigate from home to Projects Archive via site navigation",
+    "description": "Verifies users can reach the projects archive page from the home page navigation and see project cards.",
+    "category": "Content Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open navigation menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the projects archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of project summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Navigate from home to Tenders Archive via site navigation",
+    "description": "Verifies users can reach the tenders archive page from the home page navigation and see tender cards.",
+    "category": "Content Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open navigation menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the tenders archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of tender summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Verify core pages render primary content when opened directly",
+    "description": "Verifies key informational pages load their primary content when accessed via static routes.",
+    "category": "Content Navigation",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /about-company"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the about/company content page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /branches"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the branches listing page content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Open a news item from the archive and view its details",
+    "description": "Verifies a user can select a news card from the archive and read the news details content.",
+    "category": "News Browsing",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /news-archive"
+      },
+      {
+        "type": "action",
+        "description": "Select a news card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the news details content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Open a news item using keyboard focus and view its details",
+    "description": "Verifies a user can focus a news card via keyboard controls and open the news details page.",
+    "category": "News Browsing",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /news-archive"
+      },
+      {
+        "type": "action",
+        "description": "Press Tab until a news card is focused"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter to open the focused news item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the news details content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "News archive page loads and displays news summaries",
+    "description": "Verifies the news archive page renders its list of news summaries.",
+    "category": "News Browsing",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /news-archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of news summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Open a project from the projects archive and view its details",
+    "description": "Verifies a user can select a project card from the archive and view the project details content.",
+    "category": "Projects and Tenders Catalog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /projects-archive"
+      },
+      {
+        "type": "action",
+        "description": "Click a project card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the item details page content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Open a tender from the tenders archive and view its details",
+    "description": "Verifies a user can select a tender card from the archive and view the tender details content.",
+    "category": "Projects and Tenders Catalog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tenders-archive"
+      },
+      {
+        "type": "action",
+        "description": "Click a tender card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the item details page content is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Projects archive page loads and displays project summaries",
+    "description": "Verifies the projects archive page renders its list of project summaries.",
+    "category": "Projects and Tenders Catalog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /projects-archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of project summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Tenders archive page loads and displays tender summaries",
+    "description": "Verifies the tenders archive page renders its list of tender summaries.",
+    "category": "Projects and Tenders Catalog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tenders-archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of tender summaries is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Run a keyword search and view matching results",
+    "description": "Verifies users can submit a keyword search and see a list of matching results.",
+    "category": "Keyword Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill a common keyword into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching search results are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Search with a query that yields no results",
+    "description": "Verifies the search experience shows a clear empty state when no matches are found.",
+    "category": "Keyword Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill a highly specific keyword into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a no-results empty state is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Attempt to submit an empty search query",
+    "description": "Verifies the UI prevents submitting an empty query and provides guidance to enter search terms.",
+    "category": "Keyword Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Clear the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify guidance to enter search terms is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Update the query and refresh the results list",
+    "description": "Verifies users can change the entered keyword and re-submit to see updated results.",
+    "category": "Keyword Search",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill a common keyword into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "action",
+        "description": "Replace the search field value with a different keyword"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching search results are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Search using leading and trailing whitespace",
+    "description": "Verifies whitespace around the query does not break search submission and results rendering.",
+    "category": "Keyword Search",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill a keyword with leading and trailing spaces into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify search results or a no-results empty state is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Search with a long query string",
+    "description": "Verifies the search page remains usable and provides feedback when a long query is submitted.",
+    "category": "Keyword Search",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill a long multi-word query into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify search results or a no-results empty state is displayed"
+      }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "functions": {
+    "api/gallery/[name].js": {
+      "includeFiles": "public/gallery-manifest.json"
+    }
+  },
+  "rewrites": [
+    { "source": "/news/:id", "destination": "/api/ssr?type=news&id=:id&routeBase=/news" },
+    { "source": "/news-company/:id", "destination": "/api/ssr?type=news&id=:id&routeBase=/news-company" },
+    { "source": "/projects/:id", "destination": "/api/ssr?type=project&id=:id&routeBase=/projects" },
+    { "source": "/projects-company/:id", "destination": "/api/ssr?type=project&id=:id&routeBase=/projects-company" },
+    { "source": "/tenders/:id", "destination": "/api/ssr?type=tender&id=:id&routeBase=/tenders" },
+    { "source": "/allTenders/:id", "destination": "/api/ssr?type=tender&id=:id&routeBase=/allTenders" },
+    { "source": "/alltenders/:id", "destination": "/api/ssr?type=tender&id=:id&routeBase=/alltenders" },
+    { "source": "/news-archive", "destination": "/api/ssr?type=news&routeBase=/news-archive" },
+    { "source": "/projects-archive", "destination": "/api/ssr?type=project&routeBase=/projects-archive" },
+    { "source": "/tenders-archive", "destination": "/api/ssr?type=tender&routeBase=/tenders-archive" },
+    { "source": "/news-company", "destination": "/api/ssr?type=news&routeBase=/news-company" },
+    { "source": "/projects-company", "destination": "/api/ssr?type=project&routeBase=/projects-company" },
+    { "source": "/tenders", "destination": "/api/ssr?type=tender&routeBase=/tenders" },
+    { "source": "/allTenders", "destination": "/api/ssr?type=tender&routeBase=/allTenders" },
+    { "source": "/alltenders", "destination": "/api/ssr?type=tender&routeBase=/alltenders" },
+    { "source": "/api/ssr", "destination": "/api/ssr" },
+    { "source": "/api/gallery/:name", "destination": "/api/gallery/:name" },
+    { "source": "/api/gallery", "destination": "/api/gallery" },
+    { "source": "/api/(.*)", "destination": "https://backend.ascww.org/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
