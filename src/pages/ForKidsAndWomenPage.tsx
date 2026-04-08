@@ -1,24 +1,26 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteVideoLinks } from '../hooks/useSiteVideoLinks';
+import { normalizeYouTubeEmbedUrl } from '../utils/helpers';
 
-const KIDS_VIDEOS = [
+const KIDS_VIDEO_META = [
   {
     title: 'ترشيد الأطفال في استهلاك المياه',
-    src: 'https://www.youtube.com/embed/MLgpjaS6TX4',
+    key: 'kidsWaterUse',
   },
   {
     title: 'نوره والماء',
-    src: 'https://www.youtube.com/embed/_xmmPrvbc9I',
+    key: 'kidsNoraWater',
   },
   {
     title: 'نصائح للحفاظ على الماء',
-    src: 'https://www.youtube.com/embed/gZsstDIp24o',
+    key: 'kidsWaterTips',
   },
   {
     title: 'المحافظة على الماء',
-    src: 'https://www.youtube.com/embed/1G28AbR6pA8',
+    key: 'kidsSaveWater',
   },
-];
+] as const;
 
 const WOMEN_SECTION_IMAGES = [
   '/images/awareness/1.webp',
@@ -38,6 +40,12 @@ const WOMEN_TIPS = [
 ];
 
 function ForKidsAndWomenPage() {
+  const siteVideoLinks = useSiteVideoLinks();
+  const kidsVideos = KIDS_VIDEO_META.map((video) => ({
+    title: video.title,
+    src: normalizeYouTubeEmbedUrl(siteVideoLinks[video.key]),
+  }));
+
   return (
     <>
       <Header />
@@ -55,8 +63,8 @@ function ForKidsAndWomenPage() {
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h2 className="mb-4 text-xl font-bold text-[#0a3555]">ركن الأطفال</h2>
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {KIDS_VIDEOS.map((video) => (
-                    <article key={video.src} className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+                  {kidsVideos.map((video) => (
+                    <article key={video.title} className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
                       <div className="border-b border-slate-200 px-3 py-2 text-sm font-bold text-slate-700 text-justify">
                         {video.title}
                       </div>

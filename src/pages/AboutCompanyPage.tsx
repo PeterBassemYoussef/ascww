@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AboutSidebarWidget from '../components/AboutSidebarWidget';
 import { API_BASE_ENDPOINT } from '../utils/helpers';
+import { useCompanyVideoUrl } from '../hooks/useCompanyVideoUrl';
 
 type BoardMember = {
     index?: number;
@@ -14,7 +15,7 @@ function AboutCompanyPage() {
     const [boardMembers, setBoardMembers] = useState<BoardMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [videoUrl, setVideoUrl] = useState('');
+    const videoUrl = useCompanyVideoUrl();
     const variant = 'modern' as const;
 
     const isFormal = false;
@@ -68,32 +69,6 @@ function AboutCompanyPage() {
         };
 
         loadBoardMembers();
-
-        return () => {
-            active = false;
-            controller.abort();
-        };
-    }, []);
-
-    useEffect(() => {
-        const controller = new AbortController();
-        let active = true;
-
-        const loadAdminInfo = async () => {
-            try {
-                const response = await fetch(`${API_BASE_ENDPOINT}/admin-info`, {
-                    signal: controller.signal
-                });
-                if (!response.ok) return;
-                const payload = (await response.json()) as { ascww_video_link?: string };
-                if (!active) return;
-                setVideoUrl(String(payload.ascww_video_link || '').trim());
-            } catch {
-                if (!active) return;
-            }
-        };
-
-        loadAdminInfo();
 
         return () => {
             active = false;
@@ -238,3 +213,5 @@ function AboutCompanyPage() {
 }
 
 export default AboutCompanyPage;
+
+

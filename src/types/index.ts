@@ -6,6 +6,15 @@ export type AdminInfoResponse = {
     has_boss_image?: boolean;
 };
 
+export type SiteVideoLinks = {
+    companyIntro: string;
+    hotlineApp: string;
+    kidsWaterUse: string;
+    kidsNoraWater: string;
+    kidsWaterTips: string;
+    kidsSaveWater: string;
+};
+
 export type NewsImage = {
     id?: number;
     path?: string;
@@ -81,3 +90,5 @@ export type CareerItem = {
     created_at?: string;
     updated_at?: string;
 };
+
+

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import AboutSidebarWidget from '../components/AboutSidebarWidget';
-import { API_BASE_ENDPOINT } from '../utils/helpers';
+import { useCompanyVideoUrl } from '../hooks/useCompanyVideoUrl';
 
 const COMPANY_VALUES = [
     'جودة الاداء',
@@ -15,33 +14,7 @@ const COMPANY_VALUES = [
 ];
 
 function VisionAndMessagePage() {
-    const [videoUrl, setVideoUrl] = useState('');
-
-    useEffect(() => {
-        const controller = new AbortController();
-        let active = true;
-
-        const loadAdminInfo = async () => {
-            try {
-                const response = await fetch(`${API_BASE_ENDPOINT}/admin-info`, {
-                    signal: controller.signal
-                });
-                if (!response.ok) return;
-                const payload = (await response.json()) as { ascww_video_link?: string };
-                if (!active) return;
-                setVideoUrl(String(payload.ascww_video_link || '').trim());
-            } catch {
-                if (!active) return;
-            }
-        };
-
-        loadAdminInfo();
-
-        return () => {
-            active = false;
-            controller.abort();
-        };
-    }, []);
+    const videoUrl = useCompanyVideoUrl();
 
     return (
         <>

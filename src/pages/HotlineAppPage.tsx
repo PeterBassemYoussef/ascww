@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteVideoLinks } from '../hooks/useSiteVideoLinks';
+import { normalizeYouTubeEmbedUrl } from '../utils/helpers';
 
 const featureItems = [
   'التعرف على المعلومات والأخبار الخاصة بقطاع مياه الشرب والصرف الصحى.',
@@ -18,7 +20,9 @@ const complaintTypes = [
 ];
 
 function HotlineAppPage() {
-  const videoUrl = 'https://www.youtube.com/watch?v=lxPod5W8rZs';
+  const { hotlineApp } = useSiteVideoLinks();
+  const videoUrl = hotlineApp;
+  const embeddedVideoUrl = normalizeYouTubeEmbedUrl(videoUrl);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   return (
@@ -169,7 +173,7 @@ function HotlineAppPage() {
                   <div className="relative aspect-video w-full bg-slate-100">
                     <iframe
                       className="absolute inset-0 h-full w-full"
-                      src="https://www.youtube.com/embed/lxPod5W8rZs"
+                      src={embeddedVideoUrl}
                       title="فيديو شرح تطبيق الخط الساخن"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen

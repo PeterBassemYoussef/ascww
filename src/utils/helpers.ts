@@ -1,4 +1,4 @@
-import type { NewsItem, ProjectItem, TenderItem } from '../types';
+import type { NewsItem, ProjectItem, SiteVideoLinks, TenderItem } from '../types';
 import { ROUTES } from '../constants/routes';
 
 export const API_BASE_ENDPOINT = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -27,6 +27,46 @@ export const CAREERS_AN_ENDPOINT = `${API_BASE_ENDPOINT}/careers/an`;
 export const SEARCH_ENDPOINT = `${API_BASE_ENDPOINT}/search`;
 export const BOSS_SINGLE_LINE_PHRASE = 'تحية تقدير وإعزاز لكل مواطن يساعد ويساهم في تحقيق هذا الهدف المنشود';
 const SEARCH_IMAGE_BASE_URL = 'https://ascww.org';
+export const SITE_VIDEO_LINKS_PATH = '/site-video-links.json';
+export const DEFAULT_SITE_VIDEO_LINKS: SiteVideoLinks = {
+    companyIntro: 'https://www.youtube.com/watch?v=d4anYHoukSs',
+    hotlineApp: 'https://www.youtube.com/watch?v=lxPod5W8rZs',
+    kidsWaterUse: 'https://www.youtube.com/watch?v=MLgpjaS6TX4',
+    kidsNoraWater: 'https://www.youtube.com/watch?v=_xmmPrvbc9I',
+    kidsWaterTips: 'https://www.youtube.com/watch?v=gZsstDIp24o',
+    kidsSaveWater: 'https://www.youtube.com/watch?v=1G28AbR6pA8'
+};
+
+export const normalizeYouTubeEmbedUrl = (rawUrl?: string) => {
+    const value = String(rawUrl || '').trim();
+    if (!value) return '';
+
+    try {
+        const url = new URL(value);
+        const host = url.hostname.replace(/^www\./i, '').toLowerCase();
+
+        if (host === 'youtu.be') {
+            const videoId = url.pathname.split('/').filter(Boolean)[0];
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : value;
+        }
+
+        if (host === 'youtube.com' || host === 'm.youtube.com') {
+            if (url.pathname === '/watch') {
+                const videoId = url.searchParams.get('v')?.trim();
+                return videoId ? `https://www.youtube.com/embed/${videoId}` : value;
+            }
+
+            const match = url.pathname.match(/^\/(?:embed|shorts)\/([^/?#]+)/i);
+            if (match?.[1]) {
+                return `https://www.youtube.com/embed/${match[1]}`;
+            }
+        }
+    } catch {
+        return value;
+    }
+
+    return value;
+};
 
 export type SearchResultItem = {
     key: string;
@@ -364,3 +404,5 @@ export const sanitizeHtmlContent = (html?: string) => {
 
     return doc.body.innerHTML;
 };
+
+
