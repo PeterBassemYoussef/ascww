@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { AdminInfoResponse } from '../types';
 import { ADMIN_IMAGE_ENDPOINT, sanitizeBossSpeechHtml } from '../utils/helpers';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type BossWordProps = {
     adminInfo: AdminInfoResponse | null;
@@ -9,23 +10,28 @@ type BossWordProps = {
 };
 
 function BossWord({ adminInfo, adminInfoLoading, adminInfoError }: BossWordProps) {
-    const bossTitle = adminInfo?.boss_title?.trim() || 'السيد المهندس';
-    const bossName = adminInfo?.boss_name?.trim() || 'رئيس مجلس الإدارة';
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const bossTitle = adminInfo?.boss_title?.trim() || t('السيد المهندس', 'Eng.');
+    const bossName = adminInfo?.boss_name?.trim() || t('رئيس مجلس الإدارة', 'Chairman of the Board');
     const speechHtml = adminInfo?.boss_speech?.trim()
         ? sanitizeBossSpeechHtml(adminInfo.boss_speech)
-        : '<p>نسعى دائمًا إلى تقديم خدمات مياه الشرب والصرف الصحي بأعلى جودة، مع التطوير المستمر للبنية التحتية ورفع كفاءة التشغيل لخدمة المواطنين.</p>';
+        : isEnglish
+            ? '<p>We always strive to deliver drinking water and wastewater services with the highest quality, while continuously developing infrastructure and improving operational efficiency to serve citizens.</p>'
+            : '<p>نسعى دائمًا إلى تقديم خدمات مياه الشرب والصرف الصحي بأعلى جودة، مع التطوير المستمر للبنية التحتية ورفع كفاءة التشغيل لخدمة المواطنين.</p>';
     const bossImageName = (adminInfo?.boss_image || 'boss.jpg').split('/').pop() || 'boss.jpg';
     const bossImageUrl = `${ADMIN_IMAGE_ENDPOINT}/${encodeURIComponent(bossImageName)}`;
 
     return (
-        <section id="boss-word" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <section id="boss-word" dir={isEnglish ? 'ltr' : 'rtl'} className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
             <div className="boss-word-card animate-on-scroll" data-delay="70">
                 <div className="boss-word-grid">
                     <div className="boss-word-content order-2 p-5 sm:p-8 lg:order-2">
-                        <p className="boss-word-kicker">كلمة السيد رئيس مجلس الإداره والعضو المنتدب</p>
+                        <p className="boss-word-kicker">{t('كلمة السيد رئيس مجلس الإداره والعضو المنتدب', 'Message from the Chairman and Managing Director')}</p>
                         <div className="boss-word-body" aria-live="polite">
                             {adminInfoLoading ? (
-                                <p className="text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">جاري تحميل كلمة السيد رئيس مجلس الإداره والعضو المنتدب...</p>
+                                <p className="text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">{t('جاري تحميل كلمة السيد رئيس مجلس الإداره والعضو المنتدب...', 'Loading the Chairman and Managing Director message...')}</p>
                             ) : adminInfoError ? (
                                 <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">{adminInfoError}</p>
                             ) : (
@@ -43,7 +49,7 @@ function BossWord({ adminInfo, adminInfoLoading, adminInfoError }: BossWordProps
                     <div className="boss-word-media order-1 relative overflow-hidden bg-slate-100 lg:order-1">
                         <img
                             src={bossImageUrl}
-                            alt={`صورة ${bossName}`}
+                            alt={isEnglish ? `Photo of ${bossName}` : `صورة ${bossName}`}
                             className="boss-word-photo h-full w-full object-cover"
                             loading="lazy"
                             decoding="async"

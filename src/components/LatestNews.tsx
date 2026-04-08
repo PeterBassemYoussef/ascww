@@ -8,8 +8,8 @@ import {
     getNewsDetailsPath,
     truncateText,
     extractPlainTextFromHtml,
-    formatArabicDate,
 } from '../utils/helpers';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type LatestNewsProps = {
     latestNews: NewsItem[];
@@ -18,15 +18,27 @@ type LatestNewsProps = {
 };
 
 function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+
     const preparedNews = useMemo(
         () =>
             latestNews.map((newsItem, index) => {
                 const imagePath = getLatestNewsImagePath(newsItem);
                 const imageUrl = imagePath ? `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(imagePath)}` : '';
                 const detailsPath = getNewsDetailsPath(newsItem);
-                const articleTitle = truncateText((newsItem.title || 'بدون عنوان').trim(), 80);
-                const articleExcerpt = truncateText(extractPlainTextFromHtml(newsItem.description), 100) || 'للاطلاع على كامل الخبر يمكن زيارة أرشيف الأخبار.';
-                const articleDate = formatArabicDate(newsItem.created_at || newsItem.updated_at);
+                const articleTitle = truncateText((newsItem.title || t('بدون عنوان', 'Untitled')).trim(), 80);
+                const articleExcerpt = truncateText(extractPlainTextFromHtml(newsItem.description), 100) || t('للاطلاع على كامل الخبر يمكن زيارة أرشيف الأخبار.', 'Visit the news archive to read the full article.');
+                const articleTimestamp = newsItem.created_at || newsItem.updated_at || '';
+                const parsedDate = articleTimestamp ? new Date(articleTimestamp) : null;
+                const articleDate = parsedDate && !Number.isNaN(parsedDate.getTime())
+                    ? new Intl.DateTimeFormat(isEnglish ? 'en-US' : 'ar-EG', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                    }).format(parsedDate)
+                    : '';
 
                 return {
                     key: newsItem.id ?? `${newsItem.slug || 'news'}-${index}`,
@@ -39,14 +51,14 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                     newsItem,
                 };
             }),
-        [latestNews]
+        [isEnglish, latestNews]
     );
 
     return (
-        <section id="latest-news" className="bg-white py-12 sm:py-16">
+        <section id="latest-news" dir={isEnglish ? 'ltr' : 'rtl'} className="bg-white py-12 sm:py-16">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-8 sm:mb-12">
-                    <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">أحدث الأخبار</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">{t('أحدث الأخبار', 'Latest News')}</h2>
                 </div>
 
                 <div>
@@ -69,7 +81,7 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                         </div>
                     ) : latestNews.length === 0 ? (
                         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-600">
-                            لا توجد أخبار متاحة حاليًا.
+                            {t('لا توجد أخبار متاحة حاليًا.', 'No news is available right now.')}
                         </div>
                     ) : (
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -83,7 +95,7 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                                         {imageUrl ? (
                                             <img
                                                 src={imageUrl}
-                                                alt={newsItem.title || 'صورة الخبر'}
+                                                alt={newsItem.title || t('صورة الخبر', 'News image')}
                                                 className="absolute inset-0 !h-full !w-full object-cover transition duration-500 hover:scale-105"
                                                 loading="lazy"
                                                 decoding="async"
@@ -114,7 +126,7 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                                                 </div>
                                             )}
                                             <span className="h-1 w-1 rounded-full bg-slate-300"></span>
-                                            <span>المركز الإعلامي</span>
+                                            <span>{t('المركز الإعلامي', 'Media Center')}</span>
                                         </div>
 
                                         <h3 className="mb-2 text-base font-bold leading-snug text-slate-900 transition hover:text-[#0a3555] line-clamp-2">
@@ -136,7 +148,7 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                                 to={NEWS_ARCHIVE_PATH}
                                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-8 py-3 text-base font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:from-[#082b47] hover:to-[#0a3555]"
                             >
-                                <span>أرشيف الاخبار</span>
+                                <span>{t('أرشيف الاخبار', 'News Archive')}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>

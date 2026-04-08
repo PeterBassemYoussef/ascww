@@ -3,6 +3,7 @@ import type { AdminInfoResponse, NewsItem } from '../types';
 import { ADMIN_INFO_ENDPOINT, NEWS_ENDPOINT } from '../utils/helpers';
 import Header from '../components/Header';
 import HeroSlider from '../components/HeroSlider';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const BossWord = lazy(() => import('../components/BossWord'));
 const LatestNews = lazy(() => import('../components/LatestNews'));
@@ -10,6 +11,9 @@ const MainContent = lazy(() => import('../components/MainContent'));
 const Footer = lazy(() => import('../components/Footer'));
 
 function HomePage() {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
+  const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
   const [adminInfo, setAdminInfo] = useState<AdminInfoResponse | null>(null);
   const [adminInfoLoading, setAdminInfoLoading] = useState(true);
   const [adminInfoError, setAdminInfoError] = useState<string | null>(null);
@@ -33,7 +37,7 @@ function HomePage() {
         setAdminInfo(data);
       } catch {
         if (!active) return;
-        setAdminInfoError('تعذر تحميل كلمة السيد رئيس مجلس الإداره والعضو المنتدب حاليًا.');
+        setAdminInfoError(t('تعذر تحميل كلمة السيد رئيس مجلس الإداره والعضو المنتدب حاليًا.', 'Unable to load the Chairman and Managing Director message right now.'));
       } finally {
         if (active) setAdminInfoLoading(false);
       }
@@ -43,7 +47,7 @@ function HomePage() {
       active = false;
       controller.abort();
     };
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -92,7 +96,7 @@ function HomePage() {
         setLatestNews(validNewsItems);
       } catch {
         if (!active) return;
-        setNewsError('تعذر تحميل أحدث الأخبار حاليًا.');
+        setNewsError(t('تعذر تحميل أحدث الأخبار حاليًا.', 'Unable to load the latest news right now.'));
       } finally {
         if (active) setNewsLoading(false);
       }
@@ -104,15 +108,12 @@ function HomePage() {
       active = false;
       controller.abort();
     };
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     const yearEl = document.getElementById('current-year');
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-    const topBar = document.getElementById('site-topbar');
-    const mainBar = document.getElementById('site-mainbar');
-    const mainBarOffset = document.getElementById('mainbar-offset') as HTMLDivElement | null;
     const heroSlides = Array.from(document.querySelectorAll<HTMLElement>('.hero-slide'));
     const heroTitle = document.getElementById('hero-title');
     const heroSubtitle = document.getElementById('hero-subtitle');
@@ -123,50 +124,24 @@ function HomePage() {
     const heroDots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-hero-dot]'));
 
     const cleanups: Array<() => void> = [];
+    const getLocalizedSlideText = (slide: HTMLElement, key: 'title' | 'subtitle' | 'cta') => {
+      const localizedValue = isEnglish
+        ? slide.dataset[`${key}En` as 'titleEn' | 'subtitleEn' | 'ctaEn']
+        : slide.dataset[`${key}Ar` as 'titleAr' | 'subtitleAr' | 'ctaAr'];
 
-    const getTopBarHeight = () => {
-      if (!topBar) return 0;
-      const topBarStyle = window.getComputedStyle(topBar);
-      if (topBarStyle.display === 'none' || topBarStyle.visibility === 'hidden') return 0;
-      return topBar.offsetHeight;
+      return (localizedValue || slide.dataset[key] || '').trim();
     };
-
-    let topBarHeight = getTopBarHeight();
-
-    const syncMainBar = () => {
-      if (!mainBar) return;
-      const shouldPin = window.scrollY > topBarHeight;
-      mainBar.classList.toggle('is-pinned', shouldPin);
-      if (mainBarOffset) {
-        mainBarOffset.style.height = shouldPin ? `${mainBar.offsetHeight}px` : '0px';
-      }
-      if (window.scrollY > 12) {
-        mainBar.classList.add('shadow-lg');
-      } else {
-        mainBar.classList.remove('shadow-lg');
-      }
-    };
-
-    syncMainBar();
-
-    const onResize = () => {
-      topBarHeight = getTopBarHeight();
-      syncMainBar();
-    };
-
-    window.addEventListener('scroll', syncMainBar, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
-
-    cleanups.push(() => window.removeEventListener('scroll', syncMainBar));
-    cleanups.push(() => window.removeEventListener('resize', onResize));
 
     const updateHeroContent = (slideIndex: number) => {
       const slide = heroSlides[slideIndex];
       if (!slide) return;
-      const title = (slide.dataset.title || '').trim();
-      const subtitle = (slide.dataset.subtitle || '').trim();
+      const title = getLocalizedSlideText(slide, 'title');
+      const subtitle = getLocalizedSlideText(slide, 'subtitle');
       const link = (slide.dataset.link || '').trim();
-      const cta = (slide.dataset.cta || '').trim();
+      const cta = getLocalizedSlideText(slide, 'cta');
+      if (heroContent) {
+        heroContent.setAttribute('dir', isEnglish ? 'ltr' : 'rtl');
+      }
       if (heroTitle && title) heroTitle.textContent = title;
       if (heroSubtitle) {
         if (subtitle) {
@@ -260,6 +235,18 @@ function HomePage() {
       updateHeroContent(currentSlide);
       triggerHeroTextAnimation();
 
+      if (heroPrev) {
+        heroPrev.setAttribute('aria-label', isEnglish ? 'Previous slide' : 'السلايد السابق');
+      }
+
+      if (heroNext) {
+        heroNext.setAttribute('aria-label', isEnglish ? 'Next slide' : 'السلايد التالي');
+      }
+
+      heroDots.forEach((dot, index) => {
+        dot.setAttribute('aria-label', isEnglish ? `Slide ${index + 1}` : `الشريحة ${index + 1}`);
+      });
+
       const preloadIdleSlides = () => {
         heroSlides.forEach((slide, index) => {
           if (index === currentSlide) return;
@@ -341,7 +328,7 @@ function HomePage() {
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
@@ -399,7 +386,7 @@ function HomePage() {
       <Suspense
         fallback={
           <section className="mx-auto max-w-7xl px-4 py-8 text-center text-sm font-semibold text-slate-500 sm:px-6 lg:px-8">
-            جاري تحميل المحتوى...
+            {t('جاري تحميل المحتوى...', 'Loading content...')}
           </section>
         }
       >
@@ -412,7 +399,7 @@ function HomePage() {
       <Suspense
         fallback={
           <section className="mx-auto max-w-7xl px-4 py-8 text-center text-sm font-semibold text-slate-500 sm:px-6 lg:px-8">
-            جاري تحميل الأخبار...
+            {t('جاري تحميل الأخبار...', 'Loading news...')}
           </section>
         }
       >
@@ -425,7 +412,7 @@ function HomePage() {
       <Suspense
         fallback={
           <section className="mx-auto max-w-7xl px-4 py-8 text-center text-sm font-semibold text-slate-500 sm:px-6 lg:px-8">
-            جاري تحميل أقسام الصفحة...
+            {t('جاري تحميل أقسام الصفحة...', 'Loading page sections...')}
           </section>
         }
       >
@@ -435,7 +422,7 @@ function HomePage() {
     <Suspense
       fallback={
         <footer className="px-4 py-6 text-center text-xs font-semibold text-slate-500">
-          جاري تحميل التذييل...
+          {t('جاري تحميل التذييل...', 'Loading footer...')}
         </footer>
       }
     >
@@ -445,7 +432,7 @@ function HomePage() {
         href={messengerUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Open Messenger chat"
+        aria-label={t('فتح محادثة ماسنجر', 'Open Messenger chat')}
         className="fixed bottom-5 right-3 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#0084ff] text-white shadow-lg transition-transform duration-200 hover:scale-105"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
@@ -459,7 +446,7 @@ function HomePage() {
       >
         <button
           type="button"
-          aria-label="العودة إلى أعلى الصفحة"
+          aria-label={t('العودة إلى أعلى الصفحة', 'Back to top')}
           onClick={scrollToTop}
           className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#0a3555] text-white transition-all duration-300 hover:bg-[#082b47] focus:outline-none focus-visible:outline-none"
         >
@@ -473,5 +460,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
-

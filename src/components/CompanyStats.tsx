@@ -1,8 +1,10 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type CompanyStat = {
     id: string;
-    label: string;
+    labelAr: string;
+    labelEn: string;
     value: number;
     icon: JSX.Element;
     iconWrapClass: string;
@@ -12,7 +14,8 @@ type CompanyStat = {
 const companyStats: CompanyStat[] = [
     {
         id: 'wastewater-stations',
-        label: 'محطات الصرف',
+        labelAr: 'محطات الصرف',
+        labelEn: 'Wastewater stations',
         value: 57,
         iconWrapClass: 'bg-sky-100 text-sky-700',
         barClass: 'bg-sky-500',
@@ -29,7 +32,8 @@ const companyStats: CompanyStat[] = [
     },
     {
         id: 'drinking-stations',
-        label: 'محطات الشرب',
+        labelAr: 'محطات الشرب',
+        labelEn: 'Drinking water stations',
         value: 278,
         iconWrapClass: 'bg-indigo-100 text-indigo-700',
         barClass: 'bg-indigo-500',
@@ -46,7 +50,8 @@ const companyStats: CompanyStat[] = [
     },
     {
         id: 'subscribers',
-        label: 'مشترك',
+        labelAr: 'مشترك',
+        labelEn: 'Subscribers',
         value: 752981,
         iconWrapClass: 'bg-emerald-100 text-emerald-700',
         barClass: 'bg-emerald-500',
@@ -61,7 +66,8 @@ const companyStats: CompanyStat[] = [
     },
     {
         id: 'labs',
-        label: 'معمل',
+        labelAr: 'معمل',
+        labelEn: 'Laboratories',
         value: 5,
         iconWrapClass: 'bg-amber-100 text-amber-700',
         barClass: 'bg-amber-500',
@@ -74,7 +80,8 @@ const companyStats: CompanyStat[] = [
     },
     {
         id: 'workers',
-        label: 'عامل',
+        labelAr: 'عامل',
+        labelEn: 'Employees',
         value: 8338,
         iconWrapClass: 'bg-rose-100 text-rose-700',
         barClass: 'bg-rose-500',
@@ -88,12 +95,13 @@ const companyStats: CompanyStat[] = [
     },
 ];
 
-const numberFormatter = new Intl.NumberFormat('en-US');
-
 function CompanyStats() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
     const sectionRef = useRef<HTMLElement | null>(null);
     const [hasAnimated, setHasAnimated] = useState(false);
     const [displayValues, setDisplayValues] = useState<number[]>(() => companyStats.map(() => 0));
+    const numberFormatter = new Intl.NumberFormat(isEnglish ? 'en-US' : 'ar-EG');
 
     useEffect(() => {
         if (hasAnimated) return;
@@ -136,7 +144,7 @@ function CompanyStats() {
     }, [hasAnimated]);
 
     return (
-        <section id="company-stats" ref={sectionRef} className="relative overflow-hidden bg-slate-100/85 py-12 sm:py-16">
+        <section id="company-stats" ref={sectionRef} dir={isEnglish ? 'ltr' : 'rtl'} className="relative overflow-hidden bg-slate-100/85 py-12 sm:py-16">
             <div className="pointer-events-none absolute inset-0" aria-hidden="true">
                 <div className="absolute -right-20 top-0 h-52 w-52 rounded-full bg-[#0a3555]/8 blur-3xl"></div>
                 <div className="absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-[#d7b05a]/20 blur-3xl"></div>
@@ -156,7 +164,7 @@ function CompanyStats() {
                             <p className="mt-4 text-3xl font-normal tracking-tight text-slate-900">
                                 {numberFormatter.format(displayValues[index] ?? 0)}
                             </p>
-                            <p className="mt-2 text-lg font-bold text-slate-700">{stat.label}</p>
+                            <p className="mt-2 text-lg font-bold text-slate-700">{isEnglish ? stat.labelEn : stat.labelAr}</p>
                             <div className={`mx-auto mt-4 h-1 w-12 rounded-full ${stat.barClass}`}></div>
                         </article>
                     ))}

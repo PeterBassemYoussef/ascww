@@ -9,50 +9,86 @@ function HeroSlider() {
                     className="hero-slide"
                     data-bg="/images/slider/1.webp"
                     data-title="معامل علي اعلي مستوي"
+                    data-title-ar="معامل علي اعلي مستوي"
+                    data-title-en="Advanced laboratories"
                     data-subtitle="الاهتمام بمعايير منظمة الصحة العالمية للتاكد من جودة المياه بأحدث المعايير والتقنيات"
+                    data-subtitle-ar="الاهتمام بمعايير منظمة الصحة العالمية للتاكد من جودة المياه بأحدث المعايير والتقنيات"
+                    data-subtitle-en="We follow World Health Organization standards to verify water quality with the latest methods and technologies."
                     data-link={ROUTES.labOfCompanyWater}
                     data-cta="تعرف علي المزيد"
+                    data-cta-ar="تعرف علي المزيد"
+                    data-cta-en="Learn more"
                 ></div>
                 <div
                     className="hero-slide"
                     data-bg="/images/slider/2.webp"
                     data-title="لتنزيل برنامج قرائتي اضغط هنا"
+                    data-title-ar="لتنزيل برنامج قرائتي اضغط هنا"
+                    data-title-en="Click here to download My Reading app"
                     data-subtitle=""
+                    data-subtitle-ar=""
+                    data-subtitle-en=""
                     data-link={ROUTES.myReadingApp}
                     data-cta="المزيد"
+                    data-cta-ar="المزيد"
+                    data-cta-en="More"
                 ></div>
                 <div
                     className="hero-slide is-active"
                     style={{ backgroundImage: "url('/images/slider/3.webp')" }}
                     data-bg="/images/slider/3.webp"
                     data-title="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
+                    data-title-ar="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
+                    data-title-en="Assiut and New Valley Water and Wastewater Company"
                     data-subtitle="ترحب بكم و نفخر بأننا احدي الشركات الرائده في جمهوريه مصر العربيه"
+                    data-subtitle-ar="ترحب بكم و نفخر بأننا احدي الشركات الرائده في جمهوريه مصر العربيه"
+                    data-subtitle-en="Welcomes you. We are proud to be one of the leading companies in the Arab Republic of Egypt."
                     data-link={ROUTES.aboutCompany}
                     data-cta="تعرف علي المزيد"
+                    data-cta-ar="تعرف علي المزيد"
+                    data-cta-en="Learn more"
                 ></div>
                 <div
                     className="hero-slide"
                     data-bg="/images/slider/4.webp"
                     data-title="الإداره العامه للتدريب"
+                    data-title-ar="الإداره العامه للتدريب"
+                    data-title-en="General Administration of Training"
                     data-subtitle="متاح حجز قاعات التدريب من داخل و خارج الشركة"
+                    data-subtitle-ar="متاح حجز قاعات التدريب من داخل و خارج الشركة"
+                    data-subtitle-en="Training halls are available for booking from inside and outside the company."
                     data-link={ROUTES.generalAdminTraining}
                     data-cta="تعرف علي المزيد"
+                    data-cta-ar="تعرف علي المزيد"
+                    data-cta-en="Learn more"
                 ></div>
                 <div
                     className="hero-slide"
                     data-bg="/images/slider/5.webp"
                     data-title="مركز خدمة العملاء"
+                    data-title-ar="مركز خدمة العملاء"
+                    data-title-en="Customer service center"
                     data-subtitle="مراكز خدمه العملاء وطرق التواصل وعنوان أقرب فرع"
+                    data-subtitle-ar="مراكز خدمه العملاء وطرق التواصل وعنوان أقرب فرع"
+                    data-subtitle-en="Customer service centers, contact channels, and the address of the nearest branch."
                     data-link={ROUTES.callCenter}
                     data-cta="تعرف علي المزيد"
+                    data-cta-ar="تعرف علي المزيد"
+                    data-cta-en="Learn more"
                 ></div>
                 <div
                     className="hero-slide"
                     data-bg="/images/slider/6.webp"
                     data-title="لتنزيل برنامج الخط الساخن اضغط هنا"
+                    data-title-ar="لتنزيل برنامج الخط الساخن اضغط هنا"
+                    data-title-en="Click here to download the Hotline app"
                     data-subtitle=""
+                    data-subtitle-ar=""
+                    data-subtitle-en=""
                     data-link={ROUTES.hotlineApp}
                     data-cta="فتح الخدمة"
+                    data-cta-ar="فتح الخدمة"
+                    data-cta-en="Open service"
                 ></div>
             </div>
             <div className="hero-overlay"></div>
@@ -82,4 +118,3 @@ function HeroSlider() {
 }
 
 export default memo(HeroSlider);
-
