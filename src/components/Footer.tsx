@@ -41,9 +41,9 @@ function Footer() {
                         <h3 className="mb-4 text-base font-bold text-white">{t('بيانات الشركة', 'Company Information')}</h3>
                         <div className="space-y-3 text-sm leading-7 text-slate-300">
                             <p>{t('عنوان الفرع الرئيسى : محطه مياه المرشحه بنزله عباللاه- اسيوط', 'Main branch address: Al-Marshaha Water Station, Nazlet Abdallah, Assiut')}</p>
-                            <p>{t('رقم الهاتف : 2331604-088', 'Phone: 2331604-088')}</p>
+                            <p>{t('رقم الهاتف : 2331604-088', 'Phone: 088-2331604')}</p>
                             <p>{t('صندوق بريد : 71111', 'P.O. Box: 71111')}</p>
-                            <p>{t('رقم الفاكس : 2131662-088', 'Fax: 2131662-088')}</p>
+                            <p>{t('رقم الفاكس : 2131662-088', 'Fax: 088-2131662')}</p>
                         </div>
                         <div className="mt-5 flex flex-wrap items-center gap-2">
                             <a href="https://www.facebook.com/ASCWWeg" target="_blank" rel="noopener noreferrer" aria-label={t('فيسبوك', 'Facebook')} className="social-icon social-icon--facebook">
