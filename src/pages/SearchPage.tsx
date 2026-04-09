@@ -2,11 +2,15 @@ import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { buildSearchApiUrl, normalizeSearchPayload, type SearchResultItem } from '../utils/helpers';
 
 const isExternalUrl = (value: string) => /^https?:\/\//i.test(value);
 
 function SearchPage() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const [searchParams, setSearchParams] = useSearchParams();
     const initialQuery = String(searchParams.get('q') || '').trim();
     const [searchTerm, setSearchTerm] = useState(initialQuery);
@@ -47,7 +51,7 @@ function SearchPage() {
             } catch (err) {
                 if ((err as Error).name === 'AbortError') return;
                 setResults([]);
-                setError('تعذر تنفيذ البحث الآن. حاول مرة أخرى.');
+                setError(t('تعذر تنفيذ البحث الآن. حاول مرة أخرى.', 'Unable to perform the search right now. Please try again.'));
             } finally {
                 setIsSearching(false);
             }
@@ -55,7 +59,7 @@ function SearchPage() {
 
         load();
         return () => controller.abort();
-    }, [initialQuery]);
+    }, [initialQuery, isEnglish]);
 
     const hasQuery = initialQuery.trim().length >= 2;
     const totalResults = results.length;
@@ -88,8 +92,11 @@ function SearchPage() {
     }, [currentPage, filteredResults, pageSize]);
 
     const statsLabel = hasQuery
-        ? `تم العثور على ${totalResults} نتيجة (أخبار: ${newsCount} - مناقصات: ${tenderCount} - مشروعات: ${projectCount})`
-        : 'ابدأ بكتابة كلمة البحث لعرض النتائج.';
+        ? t(
+            `تم العثور على ${totalResults} نتيجة (أخبار: ${newsCount} - مناقصات: ${tenderCount} - مشروعات: ${projectCount})`,
+            `Found ${totalResults} results (News: ${newsCount} - Tenders: ${tenderCount} - Projects: ${projectCount})`
+        )
+        : t('ابدأ بكتابة كلمة البحث لعرض النتائج.', 'Start typing a search term to view results.');
 
     useEffect(() => {
         setCurrentPage(1);
@@ -98,16 +105,16 @@ function SearchPage() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-6xl px-4 py-10" dir="rtl">
+            <main className="container mx-auto max-w-6xl px-4 py-10" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <section className="rounded-3xl border border-[#d7b05a]/35 bg-gradient-to-br from-[#0a3555]/10 via-white to-white p-6 sm:p-8">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-[#0a3555] sm:text-3xl">نتائج البحث</h1>
+                            <h1 className="text-2xl font-bold text-[#0a3555] sm:text-3xl">{t('نتائج البحث', 'Search Results')}</h1>
                             <p className="mt-2 text-sm text-slate-600">{statsLabel}</p>
                         </div>
                         <form onSubmit={onSubmit} className="w-full sm:w-96">
                             <div className="flex items-center rounded-full border border-[#d7b05a]/50 bg-white px-3 py-2 transition-colors hover:border-[#0a3555]/60">
-                                <span className="ml-1 text-[#0a3555]/70">
+                                <span className={`${isEnglish ? 'mr-1' : 'ml-1'} text-[#0a3555]/70`}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <circle cx="11" cy="11" r="8"></circle>
                                         <path d="m21 21-4.35-4.35"></path>
@@ -117,14 +124,14 @@ function SearchPage() {
                                     type="search"
                                     value={searchTerm}
                                     onChange={(event) => setSearchTerm(event.target.value)}
-                                    placeholder="ابحث في أخبار الشركة وخدماتها..."
+                                    placeholder={t('ابحث في أخبار الشركة وخدماتها...', 'Search company news and services...')}
                                     className="h-9 w-full bg-transparent px-2 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none"
                                 />
                                 <button
                                     type="submit"
-                                    className="mr-1 inline-flex h-9 items-center justify-center rounded-full bg-[#0a3555] px-4 text-sm font-semibold text-white transition hover:bg-[#082b47]"
+                                    className={`${isEnglish ? 'ml-1' : 'mr-1'} inline-flex h-9 items-center justify-center rounded-full bg-[#0a3555] px-4 text-sm font-semibold text-white transition hover:bg-[#082b47]`}
                                 >
-                                    بحث
+                                    {t('بحث', 'Search')}
                                 </button>
                             </div>
                         </form>
@@ -147,7 +154,7 @@ function SearchPage() {
                                     <path d="m21 21-4.35-4.35" />
                                 </svg>
                             </span>
-                            البحث
+                            {t('البحث', 'Search')}
                             {totalResults ? ` (${totalResults})` : ''}
                         </button>
                         <button
@@ -166,7 +173,7 @@ function SearchPage() {
                                     <path d="M8 16h5" />
                                 </svg>
                             </span>
-                            الأخبار
+                            {t('الأخبار', 'News')}
                             {newsCount ? ` (${newsCount})` : ''}
                         </button>
                         <button
@@ -185,7 +192,7 @@ function SearchPage() {
                                     <path d="M7 16h6" />
                                 </svg>
                             </span>
-                            المناقصات
+                            {t('المناقصات', 'Tenders')}
                             {tenderCount ? ` (${tenderCount})` : ''}
                         </button>
                         <button
@@ -203,13 +210,13 @@ function SearchPage() {
                                     <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
                                 </svg>
                             </span>
-                            المشروعات
+                            {t('المشروعات', 'Projects')}
                             {projectCount ? ` (${projectCount})` : ''}
                         </button>
                     </div>
                     {isSearching ? (
                         <div className="rounded-2xl border border-slate-100 bg-white p-6 text-center text-slate-500">
-                            جاري البحث...
+                            {t('جارٍ البحث...', 'Searching...')}
                         </div>
                     ) : error ? (
                         <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-center text-red-600">
@@ -217,11 +224,11 @@ function SearchPage() {
                         </div>
                     ) : !hasQuery ? (
                         <div className="rounded-2xl border border-slate-100 bg-white p-6 text-center text-slate-500">
-                            اكتب عبارة البحث لعرض النتائج.
+                            {t('اكتب عبارة البحث لعرض النتائج.', 'Type a search phrase to display results.')}
                         </div>
                     ) : totalResults === 0 ? (
                         <div className="rounded-2xl border border-slate-100 bg-white p-6 text-center text-slate-500">
-                            لا توجد نتائج مطابقة.
+                            {t('لا توجد نتائج مطابقة.', 'No matching results found.')}
                         </div>
                     ) : (
                         <div className="space-y-3">
@@ -244,16 +251,16 @@ function SearchPage() {
                                                 />
                                             ) : (
                                                 <div className="flex h-full w-full items-center justify-center text-[11px] font-semibold text-[#0a3555]/70">
-                                                    {isTenderItem ? 'مناقصة' : item.typeLabel}
+                                                    {isTenderItem ? t('مناقصة', 'Tender') : item.typeLabel}
                                                 </div>
                                             )}
                                             {isTenderItem ? (
                                                 <span className="absolute inset-2 flex items-center justify-center rounded-lg bg-white/90 text-xs font-bold text-[#0a3555]">
-                                                    مناقصة
+                                                    {t('مناقصة', 'Tender')}
                                                 </span>
                                             ) : null}
                                         </div>
-                                        <div className="min-w-0 flex-1 text-right">
+                                        <div className={`min-w-0 flex-1 ${isEnglish ? 'text-left' : 'text-right'}`}>
                                             {metaText ? (
                                                 <div className="mb-1 text-xs font-semibold text-[#0a3555]/75">
                                                     {metaText}
@@ -269,7 +276,7 @@ function SearchPage() {
                                             ) : null}
                                             {item.url ? (
                                                 <span className="mt-3 inline-flex items-center text-xs font-semibold text-[#0a3555]">
-                                                    عرض التفاصيل
+                                                    {t('عرض التفاصيل', 'View details')}
                                                 </span>
                                             ) : null}
                                         </div>
@@ -308,10 +315,10 @@ function SearchPage() {
                                         disabled={currentPage === 1}
                                         className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#0a3555]/40 disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        السابق
+                                        {t('السابق', 'Previous')}
                                     </button>
                                     <span className="text-sm font-semibold text-slate-600">
-                                        صفحة {currentPage} من {totalPages}
+                                        {t(`صفحة ${currentPage} من ${totalPages}`, `Page ${currentPage} of ${totalPages}`)}
                                     </span>
                                     <button
                                         type="button"
@@ -319,7 +326,7 @@ function SearchPage() {
                                         disabled={currentPage === totalPages}
                                         className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#0a3555]/40 disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        التالي
+                                        {t('التالي', 'Next')}
                                     </button>
                                 </div>
                             ) : null}

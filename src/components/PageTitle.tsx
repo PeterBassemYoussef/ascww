@@ -122,6 +122,50 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
     return isEnglish ? 'Training Center' : 'مركز التدريب';
   }
 
+  if (pathname === ROUTES.callCenter) {
+    return isEnglish ? 'Customer Service' : 'خدمه العملاء';
+  }
+
+  if (pathname === ROUTES.hotlineApp || pathname === '/hotline125') {
+    return isEnglish ? 'Hotline App' : 'تطبيق الخط الساخن';
+  }
+
+  if (pathname === ROUTES.myReadingApp || pathname === '/readme') {
+    return isEnglish ? 'My Reading App' : 'تطبيق قرائتي';
+  }
+
+  if (pathname === ROUTES.customerCharter) {
+    return isEnglish ? 'Customer Charter' : 'ميثاق المتعاملين';
+  }
+
+  if (pathname === ROUTES.servicesEvidance) {
+    return isEnglish ? 'User Guide' : 'دليل المستخدمين';
+  }
+
+  if (pathname === ROUTES.contractOnService) {
+    return isEnglish ? 'Customer Journey for Service Contract Requests' : 'رحلة المتعامل للتعاقد على طلب خدمة';
+  }
+
+  if (pathname === ROUTES.provideRequest) {
+    return isEnglish ? 'Frequently Asked Questions' : 'الأسئلة الشائعة';
+  }
+
+  if (pathname === ROUTES.provideComplaine) {
+    return isEnglish ? 'Submit a Complaint' : 'تقديم شكوي';
+  }
+
+  if (pathname === ROUTES.search) {
+    return isEnglish ? 'Search Results' : 'نتائج البحث';
+  }
+
+  if (pathname === ROUTES.jobsAndCompetition) {
+    return isEnglish ? 'Competitions and Jobs' : 'مسابقات و وظائف';
+  }
+
+  if (pathname === ROUTES.resultOfWorker) {
+    return isEnglish ? 'Competition Results' : 'نتائج المسابقات';
+  }
+
   if (pathname === ROUTES.schoolSubmissionData) {
     return isEnglish
       ? 'Technical School Student Results Search for Assiut and New Valley Water and Wastewater'
@@ -196,6 +240,72 @@ const resolveDescription = (pathname: string, pageTitle: string, isEnglish: bool
     return isEnglish
       ? 'Awareness content for children and women about conserving water and using services correctly.'
       : 'محتوى توعوي للأطفال والسيدات حول ترشيد المياه والاستخدام الصحيح للخدمات.';
+  }
+
+  if (pathname === ROUTES.callCenter) {
+    return isEnglish
+      ? 'Customer service channels and centers for support, inquiries, and service requests.'
+      : 'قنوات ومراكز خدمة العملاء للدعم والاستفسارات وطلبات الخدمة.';
+  }
+
+  if (pathname === ROUTES.hotlineApp || pathname === '/hotline125') {
+    return isEnglish
+      ? 'Information about the HCWW 125 hotline app for complaints and digital services.'
+      : 'معلومات عن تطبيق الخط الساخن HCWW 125 للشكاوى والخدمات الرقمية.';
+  }
+
+  if (pathname === ROUTES.myReadingApp || pathname === '/readme') {
+    return isEnglish
+      ? 'Information about the My Reading app for submitting water meter readings.'
+      : 'معلومات عن تطبيق قراءتي لتسجيل قراءات عدادات المياه.';
+  }
+
+  if (pathname === ROUTES.customerCharter) {
+    return isEnglish
+      ? 'Customer charter, rights, and responsibilities for the company services.'
+      : 'ميثاق المتعاملين وحقوق وواجبات العملاء في خدمات الشركة.';
+  }
+
+  if (pathname === ROUTES.servicesEvidance) {
+    return isEnglish
+      ? 'User guide for company services and related procedures.'
+      : 'دليل المستخدمين لخدمات الشركة والإجراءات المرتبطة بها.';
+  }
+
+  if (pathname === ROUTES.contractOnService) {
+    return isEnglish
+      ? 'A step-by-step customer journey for contracting a service request.'
+      : 'رحلة المتعامل خطوة بخطوة للتعاقد على طلب خدمة.';
+  }
+
+  if (pathname === ROUTES.provideRequest) {
+    return isEnglish
+      ? 'Frequently asked questions and requirements for service requests.'
+      : 'الأسئلة الشائعة والمتطلبات الخاصة بطلبات الخدمات.';
+  }
+
+  if (pathname === ROUTES.provideComplaine) {
+    return isEnglish
+      ? 'Submit a complaint and access quick communication channels.'
+      : 'تقديم شكوى والوصول إلى قنوات التواصل السريعة.';
+  }
+
+  if (pathname === ROUTES.search) {
+    return isEnglish
+      ? 'Search results across the official website of Assiut and New Valley Water and Wastewater Company.'
+      : 'نتائج البحث في الموقع الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.jobsAndCompetition) {
+    return isEnglish
+      ? 'Follow the latest company job announcements and competition postings.'
+      : 'تابع أحدث إعلانات الوظائف والمسابقات الخاصة بالشركة.';
+  }
+
+  if (pathname === ROUTES.resultOfWorker) {
+    return isEnglish
+      ? 'Browse the latest competition results and job-announcement updates.'
+      : 'استعرض أحدث نتائج المسابقات والتحديثات الخاصة بإعلانات الوظائف.';
   }
 
   if (pathname === ROUTES.tendersArchive) {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import type { CareerItem } from '../types';
 import {
     CAREERS_ENDPOINT,
@@ -119,9 +120,16 @@ const renderTabIcon = (key: string) => {
     }
 };
 
-const renderPanels = (items: CareerItem[]) => {
+const renderPanels = (
+    items: CareerItem[],
+    isEnglish: boolean,
+    t: (arabic: string, english: string) => string
+) => {
+    const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
+    const buttonRowClass = isEnglish ? 'justify-start' : 'justify-end';
+
     return (
-        <div className="space-y-3">
+        <div className="space-y-4">
             {items.map((item) => {
                 const filePath = String(item.file_path || '').trim();
                 const imagePath = String(item.image_path || '').trim();
@@ -138,37 +146,44 @@ const renderPanels = (items: CareerItem[]) => {
                 return (
                     <details
                         key={item.id ?? item.slug ?? item.title}
-                        className="rounded-xl border border-slate-200 bg-white"
+                        className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
                     >
-                        <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-800">
+                        <summary className={`cursor-pointer px-5 py-4 text-sm font-bold text-slate-800 ${textAlignmentClass}`}>
                             {item.title}
                         </summary>
-                        <div className="space-y-4 border-t border-slate-100 px-4 py-4">
+                        <div className="space-y-4 border-t border-slate-100 bg-slate-50/40 px-5 py-5">
                             {descriptionHtml ? (
                                 <div
-                                    className="ql-editor text-sm text-slate-700"
+                                    className={`ql-editor text-sm text-slate-700 ${textAlignmentClass}`}
                                     dangerouslySetInnerHTML={{ __html: descriptionHtml }}
                                 />
                             ) : null}
+
                             {downloadUrl ? (
-                                <div className="text-sm font-semibold text-green-700">
-                                    لتحميل الملف أضغط هنا{' '}
-                                    <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="underline">
-                                        ⤓
+                                <div className={`flex flex-wrap gap-3 ${buttonRowClass}`}>
+                                    <a
+                                        href={downloadUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5"
+                                    >
+                                        {t('تحميل الملف', 'Download file')}
                                     </a>
                                 </div>
                             ) : null}
+
                             {fileUrl ? (
-                                <div className="overflow-hidden rounded-lg border border-slate-200">
+                                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
                                     <iframe
-                                        title={item.title || 'ملف'}
+                                        title={item.title || t('ملف', 'File')}
                                         src={pdfEmbedUrl}
                                         className="h-[520px] w-full"
                                     />
                                 </div>
                             ) : null}
+
                             {imageUrl ? (
-                                <div className="overflow-hidden rounded-lg border border-slate-200">
+                                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
                                     <img src={imageUrl} alt={item.title || ''} className="w-full" loading="lazy" />
                                 </div>
                             ) : null}
@@ -181,6 +196,9 @@ const renderPanels = (items: CareerItem[]) => {
 };
 
 function ResultOfWorkerPage() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const [allCareer, setAllCareer] = useState<CareerItem[]>([]);
     const [pcr, setPcr] = useState<CareerItem[]>([]);
     const [ger, setGer] = useState<CareerItem[]>([]);
@@ -191,6 +209,8 @@ function ResultOfWorkerPage() {
     const [idcar, setIdcar] = useState<CareerItem[]>([]);
     const [an, setAn] = useState<CareerItem[]>([]);
     const [tab, setTab] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
 
     useEffect(() => {
         const controller = new AbortController();
@@ -205,6 +225,8 @@ function ResultOfWorkerPage() {
         };
 
         const loadAll = async () => {
+            setLoading(true);
+
             try {
                 const [
                     allCareerData,
@@ -239,7 +261,9 @@ function ResultOfWorkerPage() {
                 setIdcar(idData);
                 setAn(anData);
             } catch {
-                // intentionally silent
+                if (!active) return;
+            } finally {
+                if (active) setLoading(false);
             }
         };
 
@@ -252,16 +276,16 @@ function ResultOfWorkerPage() {
 
     const tabItems = useMemo(() => {
         const items = [];
-        if (pcr.length) items.push({ key: 'pcr', label: 'نتيجه فحص الورق', data: pcr });
-        if (ger.length) items.push({ key: 'ger', label: 'نتيجه فحص التظلمات', data: ger });
-        if (wed.length) items.push({ key: 'wed', label: 'مواعيد الإختبارات التحريريه', data: wed });
-        if (wtr.length) items.push({ key: 'wtr', label: 'نتائج الإختبار التحريري', data: wtr });
-        if (ped.length) items.push({ key: 'ped', label: 'مواعيد الإختبار العملية', data: ped });
-        if (ptr.length) items.push({ key: 'ptr', label: 'نتائج الاختبار العملي', data: ptr });
-        if (idcar.length) items.push({ key: 'id', label: 'مواعيد المقابله الشخصيه', data: idcar });
-        if (an.length) items.push({ key: 'an', label: 'أسماء المقبولين', data: an });
+        if (pcr.length) items.push({ key: 'pcr', label: t('نتيجه فحص الورق', 'Document review results'), data: pcr });
+        if (ger.length) items.push({ key: 'ger', label: t('نتيجه فحص التظلمات', 'Appeals review results'), data: ger });
+        if (wed.length) items.push({ key: 'wed', label: t('مواعيد الإختبارات التحريريه', 'Written exam schedules'), data: wed });
+        if (wtr.length) items.push({ key: 'wtr', label: t('نتائج الإختبار التحريري', 'Written exam results'), data: wtr });
+        if (ped.length) items.push({ key: 'ped', label: t('مواعيد الإختبار العملية', 'Practical exam schedules'), data: ped });
+        if (ptr.length) items.push({ key: 'ptr', label: t('نتائج الاختبار العملي', 'Practical exam results'), data: ptr });
+        if (idcar.length) items.push({ key: 'id', label: t('مواعيد المقابله الشخصيه', 'Interview schedules'), data: idcar });
+        if (an.length) items.push({ key: 'an', label: t('أسماء المقبولين', 'Accepted candidates'), data: an });
         return items;
-    }, [pcr, ger, wed, wtr, ped, ptr, idcar, an]);
+    }, [an, ger, idcar, isEnglish, pcr, ped, ptr, wed, wtr]);
 
     useEffect(() => {
         if (tab >= tabItems.length) {
@@ -272,39 +296,62 @@ function ResultOfWorkerPage() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-6xl px-4 py-8" dir="rtl">
-                <div className="mb-6 text-right text-xl font-semibold text-slate-900">
-                    نتائج وظائف شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد
-                </div>
+            <main className="bg-slate-50" dir={isEnglish ? 'ltr' : 'rtl'}>
+                <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
+                    <div className="mb-6 border-b border-slate-200 bg-slate-50 px-6 py-8 sm:px-8">
+                        <h1 className="text-center text-2xl font-medium text-slate-900 sm:text-3xl">
+                            {t('نتائج وظائف شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد', 'Results of Assiut and New Valley Water and Wastewater Company Jobs')}
+                        </h1>
+                    </div>
 
-                {allCareer.length >= 1 ? (
-                    <section className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <div className="mb-4 text-center text-lg font-bold text-[#0a3555]">
-                            نتائج كل ما يخص إعلان الوظائف
-                        </div>
-                        <div className="flex flex-wrap justify-center gap-2">
-                            {tabItems.map((item, index) => (
-                                <button
-                                    key={item.key}
-                                    type="button"
-                                    onClick={() => setTab(index)}
-                                    className={`tab-hover-shift rounded-full px-4 py-2 text-sm font-semibold transition ${index === tab
-                                            ? 'bg-[#0a3555] text-white'
-                                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                                        }`}
-                                >
-                                    <span className="inline-flex items-center gap-2">
-                                        {renderTabIcon(item.key)}
-                                        {item.label}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
-                        <div className="mt-6">
-                            {tabItems[tab] ? renderPanels(tabItems[tab].data) : null}
+                    <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
+                        <div className="space-y-6 px-4 py-3 sm:px-8 sm:py-4">
+                            <h1 className="sr-only">
+                                {t('نتائج وظائف شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد', 'Results of Assiut and New Valley Water and Wastewater Company Jobs')}
+                            </h1>
+                            {loading ? (
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-10 text-center shadow-sm">
+                                    <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
+                                </div>
+                            ) : null}
+
+                            {!loading && allCareer.length >= 1 ? (
+                                <section className="rounded-3xl bg-white px-4 pb-5 pt-2 sm:px-5 sm:pb-6 sm:pt-1">
+                                    <div className="mb-7 text-center">
+                                        <h2 className="text-2xl font-extrabold text-[#0a3555]">
+                                            {t('نتائج كل ما يخص إعلان الوظائف', 'All job-announcement results')}
+                                        </h2>
+                                    </div>
+
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        {tabItems.map((item, index) => (
+                                            <button
+                                                key={item.key}
+                                                type="button"
+                                                onClick={() => setTab(index)}
+                                                className={`tab-hover-shift rounded-full px-4 py-2.5 text-sm font-bold transition ${
+                                                    index === tab
+                                                        ? 'bg-[#005f73] text-white shadow-[0_10px_24px_rgba(0,95,115,0.22)]'
+                                                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+                                                }`}
+                                            >
+                                                <span className="inline-flex items-center gap-2">
+                                                    {renderTabIcon(item.key)}
+                                                    {item.label}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-6">
+                                        {tabItems[tab] ? renderPanels(tabItems[tab].data, isEnglish, t) : null}
+                                    </div>
+                                </section>
+                            ) : null}
+
                         </div>
                     </section>
-                ) : null}
+                </div>
             </main>
             <Footer />
         </>
