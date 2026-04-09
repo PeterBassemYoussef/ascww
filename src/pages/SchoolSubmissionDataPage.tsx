@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const SCHOOL_SUBMISSION_DATA_PATH = '/school-submission-data';
 const API_BASE_ENDPOINT = import.meta.env.VITE_API_BASE_URL
@@ -149,6 +150,9 @@ const fetchSchoolSubmissionData = async (signal: AbortSignal) => {
 };
 
 function SchoolSubmissionDataPage() {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
+  const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const [data, setData] = useState<SchoolSubmissionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -291,8 +295,15 @@ function SchoolSubmissionDataPage() {
       <main className="min-h-screen bg-slate-50" dir="rtl">
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
-            <div className="bg-gradient-to-l from-[#0a3555] to-[#1170b0] px-6 py-7 text-white">
-              <h1 className="text-lg font-semibold sm:text-xl">البحث عن نتيجة طلاب المدرسه الفنيه لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد</h1>
+            <div className={`${headerGradientClass} px-6 py-7 text-white`}>
+              <h1
+                className={`text-lg font-semibold sm:text-xl ${isEnglish ? 'text-left' : 'text-right'}`}
+                dir={isEnglish ? 'ltr' : 'rtl'}
+              >
+                {isEnglish
+                  ? 'Technical School Student Results Search for Assiut and New Valley Water and Wastewater'
+                  : 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد'}
+              </h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">

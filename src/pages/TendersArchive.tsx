@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TenderCard from '../components/TenderCard';
 import type { TenderItem } from '../types';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import {
     TENDER_FILE_ENDPOINT,
     TENDERS_ENDPOINT,
@@ -29,6 +30,9 @@ function setMetaTag(
 }
 
 function TendersArchive() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const [allTenders, setAllTenders] = useState<TenderItem[]>([]);
     const [tenders, setTenders] = useState<TenderItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -90,7 +94,7 @@ function TendersArchive() {
                 appendPage(1, validTenders);
             } catch {
                 if (!active) return;
-                setError('فشل تحميل المناقصات. يرجى المحاولة مرة أخرى.');
+                setError(t('فشل تحميل المناقصات. يرجى المحاولة مرة أخرى.', 'Failed to load tenders. Please try again.'));
             } finally {
                 if (active) setLoading(false);
             }
@@ -101,7 +105,7 @@ function TendersArchive() {
             active = false;
             controller.abort();
         };
-    }, [appendPage]);
+    }, [appendPage, isEnglish]);
 
     const loadMore = useCallback(() => {
         if (loading || loadingMore || !hasMore) return;
@@ -136,16 +140,16 @@ function TendersArchive() {
     useEffect(() => {
         const pageUrl = window.location.href;
         const firstTender = allTenders[0] || null;
-        const title = 'أرشيف المناقصات';
+        const title = t('أرشيف المناقصات', 'Tenders Archive');
         const description = firstTender
-            ? extractPlainTextFromHtml(firstTender.description || '').slice(0, 180) || 'تابع أحدث المناقصات والمواصفات الفنية وملفاتها.'
-            : 'تابع أحدث المناقصات والمواصفات الفنية وملفاتها.';
+            ? extractPlainTextFromHtml(firstTender.description || '').slice(0, 180) || t('تابع أحدث المناقصات والمواصفات الفنية وملفاتها.', 'Follow the latest tenders, technical specifications, and related files.')
+            : t('تابع أحدث المناقصات والمواصفات الفنية وملفاتها.', 'Follow the latest tenders, technical specifications, and related files.');
         const imagePath = firstTender ? getTenderImagePath(firstTender) : '';
         const imageUrl = imagePath
             ? `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(imagePath)}`
             : `${window.location.origin}/images/ascww-logo.png`;
 
-        document.title = `${title} | شركة مياه أسيوط`;
+        document.title = `${title} | ${t('شركة مياه أسيوط', 'Assiut Water Company')}`;
         setMetaTag('meta[property="og:title"]', 'property', 'og:title', title);
         setMetaTag('meta[property="og:description"]', 'property', 'og:description', description);
         setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
@@ -155,23 +159,23 @@ function TendersArchive() {
         setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', title);
         setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', description);
         setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', imageUrl);
-    }, [allTenders]);
+    }, [allTenders, isEnglish]);
 
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+            <main className="container mx-auto max-w-7xl px-4 py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <div className="mb-10 text-center">
-                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">أرشيف المناقصات</h1>
+                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">{t('أرشيف المناقصات', 'Tenders Archive')}</h1>
                     <p className="mx-auto max-w-2xl text-lg text-gray-600">
-                        تابع أحدث المناقصات والمواصفات الفنية وملفاتها.
+                        {t('تابع أحدث المناقصات والمواصفات الفنية وملفاتها.', 'Follow the latest tenders, technical specifications, and related files.')}
                     </p>
                 </div>
 
                 {loading ? (
                     <div className="flex h-64 flex-col items-center justify-center">
                         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-                        <p className="font-medium text-gray-500">جاري تحميل المناقصات...</p>
+                        <p className="font-medium text-gray-500">{t('جاري تحميل المناقصات...', 'Loading tenders...')}</p>
                     </div>
                 ) : error ? (
                     <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50 p-8 text-red-500">
@@ -181,7 +185,7 @@ function TendersArchive() {
                             onClick={() => window.location.reload()}
                             className="mt-6 rounded-lg border border-red-200 bg-white px-6 py-2 text-red-700 shadow-sm transition-colors hover:bg-red-50"
                         >
-                            إعادة المحاولة
+                            {t('إعادة المحاولة', 'Try again')}
                         </button>
                     </div>
                 ) : (
@@ -210,10 +214,10 @@ function TendersArchive() {
                                     </svg>
                                 </div>
                                 <h2 className="mt-4 text-xl font-extrabold text-slate-900 sm:text-2xl">
-                                    لا توجد مناقصات لعرضها حاليًا.
+                                    {t('لا توجد مناقصات لعرضها حاليًا.', 'No tenders are currently available.')}
                                 </h2>
                                 <p className="mt-3 mx-auto max-w-full text-center text-xs leading-6 text-slate-600 sm:text-sm">
-                                    سيتم نشر أي مناقصات جديدة فور إضافتها. يمكنك تحديث الصفحة لاحقًا للاطلاع على أحدث المحتوى.
+                                    {t('سيتم نشر أي مناقصات جديدة فور إضافتها. يمكنك تحديث الصفحة لاحقًا للاطلاع على أحدث المحتوى.', 'New tenders will be published as soon as they are added. You can refresh the page later to see the latest content.')}
                                 </p>
 
                             </section>

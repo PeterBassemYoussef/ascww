@@ -52,7 +52,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.wasteOfCompany]: 'محطات الصرف',
   [ROUTES.trainingOfCompany]: 'مركز التدريب',
   [ROUTES.informationTechnologyOfCompany]: 'قطاع تكنولوجيا المعلومات',
-  [ROUTES.schoolSubmissionData]: 'المدرسه الفنيه',
+  [ROUTES.schoolSubmissionData]: 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد',
   [ROUTES.schoolGallery]: 'المدرسه الفنيه',
   [ROUTES.sportOfCompany]: 'النشاط الرياضي',
   '/enter-reading': 'إدخل قراءه عدادك',
@@ -100,6 +100,52 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.forKidsAndWomen || pathname === '/forKids' || pathname === '/toWomen') {
     return isEnglish ? 'Kids and Women Corner' : 'ركن الأطفال ولكِ سيدتي';
+  }
+
+  if (pathname === ROUTES.tendersArchive) {
+    return isEnglish ? 'Tenders Archive' : 'المناقصات';
+  }
+
+  if (pathname === ROUTES.bossTrips) {
+    return isEnglish ? 'Chairman Tours' : 'جولات رئيس مجلس الإداره';
+  }
+
+  if (pathname === ROUTES.labOfCompany) {
+    return isEnglish ? 'Company Laboratories' : 'معامل الشركه';
+  }
+
+  if (pathname === ROUTES.wasteOfCompany) {
+    return isEnglish ? 'Wastewater Stations' : 'محطات الصرف';
+  }
+
+  if (pathname === ROUTES.trainingOfCompany) {
+    return isEnglish ? 'Training Center' : 'مركز التدريب';
+  }
+
+  if (pathname === ROUTES.schoolSubmissionData) {
+    return isEnglish
+      ? 'Technical School Student Results Search for Assiut and New Valley Water and Wastewater'
+      : 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد';
+  }
+
+  if (pathname === ROUTES.schoolGallery) {
+    return isEnglish ? 'Technical School' : 'المدرسه الفنيه';
+  }
+
+  if (pathname === ROUTES.sportOfCompany) {
+    return isEnglish ? 'Sports Activity' : 'النشاط الرياضي';
+  }
+
+  if (pathname === ROUTES.integritySupportOverview) {
+    return isEnglish ? 'Integrity Support Overview' : 'نبذه عن إداره دعم النزاهة';
+  }
+
+  if (pathname === ROUTES.integritySupportHighlights) {
+    return isEnglish ? 'Integrity Support Highlights' : 'أبرز أعمال دعم النزاهة';
+  }
+
+  if (pathname === ROUTES.professionalConduct) {
+    return isEnglish ? 'Professional Conduct' : 'السلوك الوظيفي';
   }
 
   const exactTitle = routeTitles[pathname];
@@ -150,6 +196,66 @@ const resolveDescription = (pathname: string, pageTitle: string, isEnglish: bool
     return isEnglish
       ? 'Awareness content for children and women about conserving water and using services correctly.'
       : 'محتوى توعوي للأطفال والسيدات حول ترشيد المياه والاستخدام الصحيح للخدمات.';
+  }
+
+  if (pathname === ROUTES.tendersArchive) {
+    return isEnglish
+      ? 'Official tenders archive of Assiut and New Valley Water and Wastewater Company.'
+      : 'أرشيف المناقصات الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.bossTrips) {
+    return isEnglish
+      ? 'Photo gallery of the Chairman tours at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور جولات رئيس مجلس الإدارة بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.labOfCompany) {
+    return isEnglish
+      ? 'Photo gallery of company laboratories at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور معامل الشركة بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.wasteOfCompany) {
+    return isEnglish
+      ? 'Photo gallery of wastewater stations at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور محطات الصرف بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.trainingOfCompany) {
+    return isEnglish
+      ? 'Photo gallery of the training center at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور مركز التدريب بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.schoolGallery) {
+    return isEnglish
+      ? 'Photo gallery of the technical school at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور المدرسة الفنية بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.sportOfCompany) {
+    return isEnglish
+      ? 'Photo gallery of sports activity at Assiut and New Valley Water and Wastewater Company.'
+      : 'معرض صور النشاط الرياضي بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.integritySupportOverview) {
+    return isEnglish
+      ? 'Overview of the Integrity Support Department at Assiut and New Valley Water and Wastewater Company.'
+      : 'نبذة عن إدارة دعم النزاهة بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.integritySupportHighlights) {
+    return isEnglish
+      ? 'Highlights of the Integrity Support Department at Assiut and New Valley Water and Wastewater Company.'
+      : 'أبرز أعمال إدارة دعم النزاهة بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+  }
+
+  if (pathname === ROUTES.professionalConduct) {
+    return isEnglish
+      ? 'Professional conduct guide at Assiut and New Valley Water and Wastewater Company.'
+      : 'دليل السلوك الوظيفي بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
   }
 
   const exactDescription = routeDescriptions[pathname];

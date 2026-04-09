@@ -3,13 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useSpeech } from '../hooks/useSpeech';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import type { TenderItem } from '../types';
 import {
     TENDER_FILE_ENDPOINT,
     TENDERS_ARCHIVE_PATH,
     TENDERS_ENDPOINT,
     extractPlainTextFromHtml,
-    formatArabicDate,
     getTenderImagePath,
     getTenderRouteId,
     sanitizeHtmlContent,
@@ -34,6 +34,9 @@ function setMetaTag(
 }
 
 function TenderDetails() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const { id } = useParams<{ id: string }>();
     const [tender, setTender] = useState<TenderItem | null>(null);
     const [loading, setLoading] = useState(true);
@@ -153,12 +156,12 @@ function TenderDetails() {
     useEffect(() => {
         if (!tender) return;
 
-        const title = tender.title || 'مناقصة';
+        const title = tender.title || t('مناقصة', 'Tender');
         const pageUrl = window.location.href;
         const imagePath = getTenderImagePath(tender);
         const imageUrl = imagePath ? `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(imagePath)}` : '';
 
-        document.title = `${title} | أرشيف المناقصات`;
+        document.title = `${title} | ${t('أرشيف المناقصات', 'Tenders Archive')}`;
         setMetaTag('meta[property="og:title"]', 'property', 'og:title', title);
         setMetaTag('meta[property="og:description"]', 'property', 'og:description', shareDescription);
         setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'article');
@@ -173,7 +176,7 @@ function TenderDetails() {
         if (imageUrl) {
             setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', imageUrl);
         }
-    }, [tender, shareDescription]);
+    }, [tender, shareDescription, isEnglish]);
 
     if (loading) {
         return (
@@ -191,9 +194,9 @@ function TenderDetails() {
         return (
             <>
                 <Header />
-                <main className="container mx-auto px-4 py-16 text-center" dir="rtl">
-                    <h2 className="mb-4 text-2xl font-bold text-gray-800">المناقصة غير موجودة</h2>
-                    <Link to={TENDERS_ARCHIVE_PATH} className="text-blue-600 hover:underline">العودة إلى المناقصات</Link>
+                <main className="container mx-auto px-4 py-16 text-center" dir={isEnglish ? 'ltr' : 'rtl'}>
+                    <h2 className="mb-4 text-2xl font-bold text-gray-800">{t('المناقصة غير موجودة', 'Tender not found')}</h2>
+                    <Link to={TENDERS_ARCHIVE_PATH} className="text-blue-600 hover:underline">{t('العودة إلى المناقصات', 'Back to tenders')}</Link>
                 </main>
                 <Footer />
             </>
@@ -201,8 +204,18 @@ function TenderDetails() {
     }
 
     const typeText = String(tender.type || '').trim();
-    const expiryDateText = formatArabicDate(tender.expiration_date);
-    const publishDateText = formatArabicDate(tender.created_at || tender.updated_at);
+    const formatDate = (value: string | undefined | null) => {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString(isEnglish ? 'en-US' : 'ar-EG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+    const expiryDateText = formatDate(tender.expiration_date);
+    const publishDateText = formatDate(tender.created_at || tender.updated_at);
     const descriptionHtml = String(tender.description || '');
     const cleanedDescriptionCandidate = descriptionHtml
         .replace(/اقرأ المزيد/g, '')
@@ -217,7 +230,7 @@ function TenderDetails() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-4xl px-4 py-8" dir="rtl">
+            <main className="container mx-auto max-w-4xl px-4 py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
                     {imageFiles.length > 0 ? (
                         <div
@@ -228,7 +241,7 @@ function TenderDetails() {
                         >
                             <img loading="lazy" decoding="async"
                                 src={currentImageUrl}
-                                alt={tender.title || 'صورة المناقصة'}
+                                alt={tender.title || t('صورة المناقصة', 'Tender image')}
                                 className="!h-full !w-full object-contain"
                                 onError={(event) => {
                                     event.currentTarget.style.display = 'none';
@@ -268,7 +281,7 @@ function TenderDetails() {
                         </div>
                     ) : (
                         <div className="flex h-[280px] items-center justify-center bg-gray-100 text-gray-400 md:h-[500px]">
-                            لا توجد صور
+                            {t('لا توجد صور', 'No images available')}
                         </div>
                     )}
 
@@ -281,18 +294,18 @@ function TenderDetails() {
                             )}
                             {expiryDateText && (
                                 <span className="rounded-full bg-amber-50 px-3 py-1 font-bold text-amber-700">
-                                    آخر موعد: {expiryDateText}
+                                    {t('آخر موعد:', 'Deadline:')} {expiryDateText}
                                 </span>
                             )}
                             {!expiryDateText && publishDateText && (
                                 <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-600">
-                                    تاريخ النشر: {publishDateText}
+                                    {t('تاريخ النشر:', 'Publish date:')} {publishDateText}
                                 </span>
                             )}
                         </div>
 
                         <h1 className="mb-6 text-justify text-xl font-bold leading-tight text-gray-900 md:text-2xl">
-                            {tender.title || 'مناقصة'}
+                            {tender.title || t('مناقصة', 'Tender')}
                         </h1>
 
                         {hasDetailsContent ? (
@@ -302,19 +315,19 @@ function TenderDetails() {
                             />
                         ) : (
                             <p className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-600">
-                                لا توجد تفاصيل متاحة لهذه المناقصة حاليًا.
+                                {t('لا توجد تفاصيل متاحة لهذه المناقصة حاليًا.', 'No details are currently available for this tender.')}
                             </p>
                         )}
 
                         {pdfFiles.length > 0 && (
                             <div className="mb-8 rounded-xl border border-red-100 bg-red-50/60 p-4">
-                                <h2 className="mb-3 text-lg font-black text-red-800">ملفات المناقصة</h2>
+                                <h2 className="mb-3 text-lg font-black text-red-800">{t('ملفات المناقصة', 'Tender files')}</h2>
                                 <div className="flex flex-wrap gap-2">
                                     {pdfFiles.map((file, index) => {
                                         const path = String(file.path || '').trim();
                                         if (!path) return null;
                                         const fileUrl = `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(path)}`;
-                                        const fileName = String(file.name || `ملف ${index + 1}`).trim();
+                                        const fileName = String(file.name || t(`ملف ${index + 1}`, `File ${index + 1}`)).trim();
 
                                         return (
                                             <a
@@ -324,7 +337,7 @@ function TenderDetails() {
                                                 rel="noopener noreferrer"
                                                 className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700 shadow-sm transition hover:bg-red-100"
                                             >
-                                                <span className="rounded-lg bg-red-100 px-2.5 py-1 text-sm font-black text-red-800">ملف PDF</span>
+                                                <span className="rounded-lg bg-red-100 px-2.5 py-1 text-sm font-black text-red-800">{t('ملف PDF', 'PDF file')}</span>
                                                 <span className="font-extrabold">{fileName}</span>
                                             </a>
                                         );
@@ -342,7 +355,7 @@ function TenderDetails() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l-7-7 7-7" />
                                 </svg>
-                                العودة إلى المناقصات
+                                {t('العودة إلى المناقصات', 'Back to tenders')}
                             </Link>
 
                             <div className="tender-details-actions flex flex-wrap gap-3">
@@ -350,11 +363,11 @@ function TenderDetails() {
                                     type="button"
                                     onClick={async () => {
                                         const url = window.location.href;
-                                        const text = `${tender.title || 'مناقصة'}\n${shareDescription}`;
+                                        const text = `${tender.title || t('مناقصة', 'Tender')}\n${shareDescription}`;
                                         if (navigator.share) {
                                             try {
                                                 await navigator.share({
-                                                    title: tender.title || 'مناقصة',
+                                                    title: tender.title || t('مناقصة', 'Tender'),
                                                     text,
                                                     url,
                                                 });
@@ -366,7 +379,7 @@ function TenderDetails() {
                                         await navigator.clipboard.writeText(`${text}\n${url}`);
                                     }}
                                     className="rounded-full bg-slate-100 p-2 text-slate-600 transition-colors hover:bg-slate-200"
-                                    title="مشاركة المناقصة"
+                                    title={t('مشاركة المناقصة', 'Share tender')}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <circle cx="18" cy="5" r="3"></circle>
@@ -380,11 +393,11 @@ function TenderDetails() {
                                     type="button"
                                     onClick={() => {
                                         const url = window.location.href;
-                                        const quote = `${tender.title || 'مناقصة'}\n${shareDescription}`;
+                                        const quote = `${tender.title || t('مناقصة', 'Tender')}\n${shareDescription}`;
                                         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`, '_blank');
                                     }}
                                     className="rounded-full bg-blue-50 p-2 text-blue-600 transition-colors hover:bg-blue-100"
-                                    title="مشاركة على فيسبوك"
+                                    title={t('مشاركة على فيسبوك', 'Share on Facebook')}
                                 >
                                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.49 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -394,11 +407,11 @@ function TenderDetails() {
                                     type="button"
                                     onClick={() => {
                                         const url = window.location.href;
-                                        const text = `${tender.title || 'مناقصة'}\n${shareDescription}\n${url}`;
+                                        const text = `${tender.title || t('مناقصة', 'Tender')}\n${shareDescription}\n${url}`;
                                         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                                     }}
                                     className="rounded-full bg-green-50 p-2 text-green-600 transition-colors hover:bg-green-100"
-                                    title="مشاركة على واتساب"
+                                    title={t('مشاركة على واتساب', 'Share on WhatsApp')}
                                 >
                                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347" />
@@ -409,10 +422,10 @@ function TenderDetails() {
                                         type="button"
                                         onClick={() => {
                                             const stripped = cleanContent.replace(/<[^>]*>/g, '');
-                                            speak(`${tender.title || 'مناقصة'}. ${stripped}`, 'ar-SA');
+                                            speak(`${tender.title || t('مناقصة', 'Tender')}. ${stripped}`, isEnglish ? 'en-US' : 'ar-SA');
                                         }}
                                         className="rounded-full bg-purple-50 p-2 text-purple-600 transition-colors hover:bg-purple-100"
-                                        title="اقرأ المناقصة"
+                                        title={t('اقرأ المناقصة', 'Read tender')}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -425,7 +438,7 @@ function TenderDetails() {
                                         type="button"
                                         onClick={stop}
                                         className="rounded-full bg-red-50 p-2 text-red-600 transition-colors hover:bg-red-100"
-                                        title="إيقاف القراءة"
+                                        title={t('إيقاف القراءة', 'Stop reading')}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -452,11 +465,11 @@ function TenderDetails() {
                             onClick={() => setOpenedImageUrl(null)}
                             className="absolute left-3 top-3 z-10 rounded-lg bg-black/60 px-3 py-1 text-sm font-bold text-white transition hover:bg-black/80"
                         >
-                            إغلاق
+                            {t('إغلاق', 'Close')}
                         </button>
                         <img
                             src={openedImageUrl}
-                            alt={tender.title || 'صورة المناقصة'}
+                            alt={tender.title || t('صورة المناقصة', 'Tender image')}
                             loading="lazy"
                             className="max-h-[85vh] w-full object-contain"
                         />

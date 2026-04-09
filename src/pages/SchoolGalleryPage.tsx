@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { fetchGallerySources } from '../utils/gallery';
 
-const toImageAlt = (index: number) => `المدرسة الفنية - ${index + 1}`;
+const toImageAlt = (index: number, isEnglish: boolean) =>
+  isEnglish ? `Technical school - ${index + 1}` : `المدرسة الفنية - ${index + 1}`;
 
 type GalleryImage = { src: string; alt: string };
 
@@ -22,15 +24,23 @@ const fallbackImageSources = [
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({
   src,
-  alt: toImageAlt(index),
+  alt: toImageAlt(index, false),
 }));
 
 function SchoolGalleryPage() {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
+  const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const [galleryImages, setGalleryImages] = useState(fallbackImages);
   const [isLoading, setIsLoading] = useState(true);
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(
     null
   );
+
+  useEffect(() => {
+    setGalleryImages((previous) => previous.map((image, index) => ({ ...image, alt: toImageAlt(index, isEnglish) })));
+  }, [isEnglish]);
 
   useEffect(() => {
     let isMounted = true;
@@ -43,7 +53,7 @@ function SchoolGalleryPage() {
 
         const nextImages = sources.map((src, index) => ({
           src,
-          alt: toImageAlt(index),
+          alt: toImageAlt(index, isEnglish),
         }));
 
         if (isMounted) {
@@ -64,22 +74,22 @@ function SchoolGalleryPage() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [isEnglish]);
 
   return (
     <>
       <Header />
-      <main className="bg-[radial-gradient(circle_at_12%_8%,_rgba(17,112,176,0.12),_transparent_45%)]" dir="rtl">
+      <main className="bg-[radial-gradient(circle_at_12%_8%,_rgba(17,112,176,0.12),_transparent_45%)]" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <div className="bg-gradient-to-l from-[#0a3555] to-[#1170b0] px-6 py-7 text-white sm:px-8">
-              <h1 className="text-2xl font-extrabold sm:text-3xl">المدرسة الفنية</h1>
+            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
+              <h1 className="text-2xl font-extrabold sm:text-3xl">{t('المدرسة الفنية', 'Technical School')}</h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">
               {isLoading ? (
                 <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-                  جارٍ تحميل الصور...
+                  {t('جارٍ تحميل الصور...', 'Loading images...')}
                 </div>
               ) : null}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,7 +97,7 @@ function SchoolGalleryPage() {
                   <button
                     key={image.src}
                     type="button"
-                    aria-label={`تكبير ${image.alt}`}
+                    aria-label={t(`تكبير ${image.alt}`, `Open ${image.alt}`)}
                     className="group cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
                     onClick={() => setLightboxImage(image)}
                   >
@@ -117,11 +127,11 @@ function SchoolGalleryPage() {
           >
             <button
               type="button"
-              aria-label="إغلاق الصورة"
+              aria-label={t('إغلاق الصورة', 'Close image')}
               className="absolute -top-3 right-0 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-slate-700 shadow transition hover:bg-white"
               onClick={() => setLightboxImage(null)}
             >
-              إغلاق
+              {t('إغلاق', 'Close')}
             </button>
             <img
               src={lightboxImage.src}
