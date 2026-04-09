@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type Member = {
     name: string;
@@ -33,6 +34,15 @@ const tokenVariants = (token: string) =>
     token.startsWith('ال') && token.length > 2
         ? [token, token.slice(2)]
         : [token];
+
+const normalizeEnglishText = (value: string) =>
+    value
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+
+const normalizeSearchText = (value: string, isEnglish: boolean) =>
+    isEnglish ? normalizeEnglishText(value) : normalizeArabicText(value);
 
 const ORGANIZATION_SECTIONS: OrgSection[] = [
     {
@@ -208,6 +218,316 @@ const ORGANIZATION_SECTIONS: OrgSection[] = [
     }
 ];
 
+const SECTION_TITLE_TRANSLATIONS: Record<string, string> = {
+    'الإدارة العليا': 'Executive Management',
+    'الإدارات العامة': 'General Departments',
+    'قطاع المشروعات': 'Projects Sector',
+    'قطاع الدعم الفني': 'Technical Support Sector',
+    'قطاع الوادي الجديد': 'New Valley Sector',
+    'قطاع شمال': 'North Sector',
+    'قطاع جنوب': 'South Sector',
+    'قطاع وسط': 'Central Sector',
+    'القطاع المالي': 'Financial Sector',
+    'القطاع التجاري': 'Commercial Sector',
+    'قطاع الموارد البشرية': 'Human Resources Sector',
+    'قطاع التخطيط': 'Planning Sector',
+    'قطاع المعامل والجودة': 'Laboratories and Quality Sector',
+    'قطاع شرق': 'East Sector'
+};
+
+const ROLE_TRANSLATIONS: Record<string, string> = {
+    'رئيس مجلس الإدارة والعضو المنتدب.': 'Chairman of the Board and Managing Director.',
+    'نائب رئيس مجلس الإدارة للشئون المالية والإدارية ورئيس القطاع المالي.': 'Deputy Chairman for Financial and Administrative Affairs and Head of the Financial Sector.',
+    'نائب رئيس مجلس الإدارة للشئون الفنية ورئيس قطاع الدعم الفني.': 'Deputy Chairman for Technical Affairs and Head of the Technical Support Sector.',
+    'الإدارة العامة للمراجعة الداخلية والتفتيش.': 'General Department of Internal Audit and Inspection.',
+    'الإدارة العامة للسلامة والصحة المهنية.': 'General Department of Occupational Safety and Health.',
+    'الإدارة العامة للتحليل الاقتصادي.': 'General Department of Economic Analysis.',
+    'الإدارة العامة للخدمات الفنية.': 'General Department of Technical Services.',
+    'الإدارة العامة للأمن بالوادي الجديد.': 'General Department of Security in New Valley.',
+    'الإدارة العامة لمكتب رئيس مجلس الإدارة.': 'General Department of the Chairman Office.',
+    'الإدارة العامة للشئون القانونية.': 'General Department of Legal Affairs.',
+    'الإدارة العامة للعلاقات العامة والتوعية.': 'General Department of Public Relations and Awareness.',
+    'الإدارة العامة لتكنولوجيا المعلومات.': 'General Department of Information Technology.',
+    'الإدارة العامة للتعاون الدولي.': 'General Department of International Cooperation.',
+    'الإدارة العامة لشئون مجلس الإدارة.': 'General Department of Board Affairs.',
+    'الإدارة العامة للأمن بأسيوط.': 'General Department of Security in Assiut.',
+    'الإدارة العامة للمكتب الفني.': 'General Department of the Technical Office.',
+    'الإدارة العامة للأملاك.': 'General Department of Properties.',
+    'رئيس قطاع المشروعات.': 'Head of the Projects Sector.',
+    'الإدارة العامة للتنفيذ الذاتي.': 'General Department of Self-Execution.',
+    'الإدارة العامة لتنفيذ المشروعات.': 'General Department of Project Execution.',
+    'الإدارة العامة لبحوث المشروعات.': 'General Department of Project Research.',
+    'الإدارة العامة للمراجعة الفنية.': 'General Department of Technical Review.',
+    'رئيس قطاع الدعم الفني.': 'Head of the Technical Support Sector.',
+    'مدير الإدارة العامة للدعم الفني مياه.': 'Director of the General Department of Technical Support for Water.',
+    'الإدارة العامة للكهرباء وترشيد الطاقة.': 'General Department of Electricity and Energy Conservation.',
+    'الإدارة العامة للاحتياجات.': 'General Department of Requirements.',
+    'الإدارة العامة للدعم الفني صرف.': 'General Department of Technical Support for Wastewater.',
+    'الإدارة العامة للإسكادا.': 'General Department of SCADA.',
+    'رئيس قطاع الوادي الجديد.': 'Head of the New Valley Sector.',
+    'الإدارة العامة لمنطقة الخارجة.': 'General Department of Kharga Area.',
+    'الإدارة العامة لمنطقة الداخلة.': 'General Department of Dakhla Area.',
+    'الإدارة العامة لمنطقة باريس.': 'General Department of Paris Area.',
+    'الإدارة العامة لمنطقة الفرافرة.': 'General Department of Farafra Area.',
+    'الإدارة العامة لمنطقة بلاط.': 'General Department of Balat Area.',
+    'رئيس قطاع شمال.': 'Head of the North Sector.',
+    'الإدارة العامة لمنطقة ديروط.': 'General Department of Dayrout Area.',
+    'الإدارة العامة لمنطقة القوصية.': 'General Department of Al-Qusiyah Area.',
+    'الإدارة العامة لمنطقة منفلوط.': 'General Department of Manfalut Area.',
+    'رئيس قطاع جنوب.': 'Head of the South Sector.',
+    'الإدارة العامة لمنطقة أبوتيج.': 'General Department of Abutig Area.',
+    'الإدارة العامة لمنطقة صدفا.': 'General Department of Sidfa Area.',
+    'الإدارة العامة لمنطقة الغنايم.': 'General Department of Al-Ghanayem Area.',
+    'رئيس قطاع وسط.': 'Head of the Central Sector.',
+    'الإدارة العامة لمنطقة غرب.': 'General Department of West Area.',
+    'الإدارة العامة لمنطقة مركز أسيوط بحري.': 'General Department of Assiut North Center Area.',
+    'الإدارة العامة لمنطقة مركز أسيوط قبلي.': 'General Department of Assiut South Center Area.',
+    'الإدارة العامة لمنطقة شرق.': 'General Department of East Area.',
+    'رئيس القطاع المالي.': 'Head of the Financial Sector.',
+    'الإدارة العامة للعقود والمشتريات.': 'General Department of Contracts and Procurement.',
+    'الإدارة العامة للمراجعة العامة.': 'General Department of General Audit.',
+    'الإدارة العامة للتكاليف والأصول.': 'General Department of Costs and Assets.',
+    'الإدارة العامة للحسابات العامة.': 'General Department of General Accounts.',
+    'الإدارة العامة للمخازن.': 'General Department of Stores.',
+    'الإدارة العامة للموازنة.': 'General Department of Budget.',
+    'الإدارة العامة للمتابعة المالية.': 'General Department of Financial Follow-up.',
+    'رئيس القطاع التجاري.': 'Head of the Commercial Sector.',
+    'الإدارة العامة للإيرادات والتحصيل.': 'General Department of Revenue and Collection.',
+    'الإدارة العامة لإصدار الفواتير.': 'General Department of Billing.',
+    'الإدارة العامة للمصالح الحكومية وكبار المشتركين.': 'General Department of Government Entities and Major Subscribers.',
+    'الإدارة العامة للعدادات والاشتراكات.': 'General Department of Meters and Subscriptions.',
+    'الإدارة العامة لخدمة العملاء.': 'General Department of Customer Service.',
+    'الإدارة العامة للمخالفات والخلسة.': 'General Department of Violations and Illegal Connections.',
+    'رئيس قطاع الموارد البشرية.': 'Head of the Human Resources Sector.',
+    'الإدارة العامة للموارد البشرية.': 'General Department of Human Resources.',
+    'الإدارة العامة للتدريب.': 'General Department of Training.',
+    'الإدارة العامة للشئون الإدارية.': 'General Department of Administrative Affairs.',
+    'رئيس قطاع التخطيط.': 'Head of the Planning Sector.',
+    'الإدارة العامة للتخطيط وتطوير الأداء المؤسسي.': 'General Department of Planning and Institutional Performance Development.',
+    'الإدارة العامة للمخطط العام.': 'General Department of the Master Plan.',
+    'الإدارة العامة للتحليل الهيدروليكي.': 'General Department of Hydraulic Analysis.',
+    'الإدارة العامة للمياه غير محاسب عليها وتقليل الفاقد والقياسات.': 'General Department of Non-Revenue Water, Loss Reduction, and Measurements.',
+    'الإدارة العامة الفنية للأصول.': 'General Technical Department of Assets.',
+    'الإدارة العامة للـ GIS.': 'General Department of GIS.',
+    'الإدارة العامة للبحوث والتطوير.': 'General Department of Research and Development.',
+    'رئيس قطاع المعامل والجودة.': 'Head of the Laboratories and Quality Sector.',
+    'الإدارة العامة للصرف الصناعي.': 'General Department of Industrial Wastewater.',
+    'الإدارة العامة لمعامل محطات مياه الشرب.': 'General Department of Drinking Water Station Laboratories.',
+    'الإدارة العامة لمعامل محطات الصرف الصحي.': 'General Department of Wastewater Station Laboratories.',
+    'الإدارة العامة لسلامة ومأمونية مياه الشرب ومأمونية الصرف الصحي.': 'General Department of Drinking Water Safety and Wastewater Safety.',
+    'الإدارة العامة للمعمل المركزي لتحاليل الصرف الصحي.': 'General Department of the Central Wastewater Analysis Laboratory.',
+    'الإدارة العامة لضبط الجودة وشئون البيئة.': 'General Department of Quality Control and Environmental Affairs.',
+    'الإدارة العامة للمعمل المركزي لمياه الشرب.': 'General Department of the Central Drinking Water Laboratory.',
+    'رئيس قطاع شرق.': 'Head of the East Sector.',
+    'الإدارة العامة لمنطقة الفتح.': 'General Department of Al-Fath Area.',
+    'الإدارة العامة لمنطقة أبنوب.': 'General Department of Abnoub Area.',
+    'الإدارة العامة لمنطقة البداري.': 'General Department of Al-Badari Area.',
+    'الإدارة العامة لمنطقة ساحل سليم.': 'General Department of Sahel Selim Area.'
+};
+
+const NAME_WORD_TRANSLATIONS: Record<string, string> = {
+    'محمود': 'Mahmoud',
+    'شحاته': 'Shehata',
+    'محمد': 'Mohamed',
+    'لبنى': 'Lobna',
+    'أحمد': 'Ahmed',
+    'عبدالله': 'Abdallah',
+    'بهاء': 'Bahaa',
+    'عبد': 'Abdel',
+    'المنجي': 'Mongey',
+    'حسن': 'Hassan',
+    'أبو': 'Abo',
+    'النجا': 'El-Naga',
+    'عبدالمنعم': 'Abdel Moneim',
+    'حسني': 'Hosny',
+    'علي': 'Ali',
+    'بخيت': 'Bekheit',
+    'غادة': 'Ghada',
+    'مصطفى': 'Mostafa',
+    'يسري': 'Yousry',
+    'يحيى': 'Yehia',
+    'حسين': 'Hussein',
+    'إيمان': 'Eman',
+    'حامد': 'Hamed',
+    'مرغني': 'Marghany',
+    'آمال': 'Amal',
+    'جميل': 'Gameel',
+    'جاد': 'Gad',
+    'مؤمن': 'Moamen',
+    'نشأت': 'Nashaat',
+    'هشام': 'Hesham',
+    'الفتاح': 'El-Fattah',
+    'إبراهيم': 'Ibrahim',
+    'العلا': 'El-Ela',
+    'خالد': 'Khaled',
+    'فرغلي': 'Farghaly',
+    'عمرو': 'Amr',
+    'عوض': 'Awad',
+    'عبير': 'Abeer',
+    'كمال': 'Kamal',
+    'الظاهر': 'El-Zaher',
+    'عثمان': 'Othman',
+    'عبدالعزيز': 'Abdelaziz',
+    'حنان': 'Hanan',
+    'ناجح': 'Nageh',
+    'السيد': 'El-Sayed',
+    'فاطمة': 'Fatma',
+    'شيماء': 'Shaimaa',
+    'جمال': 'Gamal',
+    'زينب': 'Zeinab',
+    'عبداللطيف': 'Abdel Latif',
+    'حسام': 'Hossam',
+    'عبدالوهاب': 'Abdel Wahab',
+    'محسن': 'Mohsen',
+    'فوزي': 'Fawzy',
+    'أشرف': 'Ashraf',
+    'صلاح': 'Salah',
+    'عبدالحميد': 'Abdel Hamid',
+    'عصام': 'Essam',
+    'مروة': 'Marwa',
+    'جمعة': 'Gomaa',
+    'مرفت': 'Mervat',
+    'زوزو': 'Zouzou',
+    'متري': 'Metry',
+    'زكريا': 'Zakaria',
+    'رامز': 'Ramez',
+    'شوقي': 'Shawky',
+    'إسحاق': 'Ishak',
+    'رمضان': 'Ramadan',
+    'العظيم': 'El-Azeem',
+    'رفعت': 'Refaat',
+    'حكيم': 'Hakim',
+    'كريم': 'Karim',
+    'عبدالرشيد': 'Abdel Rashid',
+    'موسى': 'Mousa',
+    'فراج': 'Farag',
+    'همت': 'Hemmat',
+    'فياض': 'Fayad',
+    'نهى': 'Noha',
+    'ضيف': 'Deif',
+    'هبه': 'Heba',
+    'الله': 'Allah',
+    'سيدة': 'Sayeda',
+    'صاوى': 'Sawy',
+    'عبدالعليم': 'Abdel Aleem',
+    'عبدالناصر': 'Abdel Nasser',
+    'عواطف': 'Awatif',
+    'عماد': 'Emad',
+    'إسلام': 'Islam',
+    'عرفان': 'Irfan',
+    'حسنى': 'Hosny',
+    'دياب': 'Diab',
+    'عبدالحكم': 'Abdel Hakam',
+    'أسماء': 'Asmaa',
+    'كامل': 'Kamel',
+    'حسانين': 'Hassanain',
+    'عاطف': 'Atef',
+    'عليوه': 'Aliwa',
+    'ثابت': 'Thabet',
+    'عبدالجابر': 'Abdel Gaber',
+    'عبدالتواب': 'Abdel Tawab',
+    'عبدالحافظ': 'Abdel Hafeez',
+    'حرويه': 'Haraweya',
+    'طلعت': 'Talaat',
+    'عبدالرحمن': 'Abdel Rahman'
+};
+
+const NAME_PREFIX_TRANSLATIONS: Record<string, string> = {
+    'مهندس': 'Eng.',
+    'م': 'Eng.',
+    'لواء': 'Maj. Gen.',
+    'ك': 'Chem.'
+};
+
+const ARABIC_CHAR_TRANSLITERATIONS: Record<string, string> = {
+    'ا': 'a',
+    'أ': 'a',
+    'إ': 'e',
+    'آ': 'aa',
+    'ب': 'b',
+    'ت': 't',
+    'ث': 'th',
+    'ج': 'g',
+    'ح': 'h',
+    'خ': 'kh',
+    'د': 'd',
+    'ذ': 'dh',
+    'ر': 'r',
+    'ز': 'z',
+    'س': 's',
+    'ش': 'sh',
+    'ص': 's',
+    'ض': 'd',
+    'ط': 't',
+    'ظ': 'z',
+    'ع': 'a',
+    'غ': 'gh',
+    'ف': 'f',
+    'ق': 'q',
+    'ك': 'k',
+    'ل': 'l',
+    'م': 'm',
+    'ن': 'n',
+    'ه': 'h',
+    'ة': 'a',
+    'و': 'w',
+    'ؤ': 'o',
+    'ي': 'y',
+    'ى': 'a',
+    'ئ': 'e'
+};
+
+const translateSectionTitle = (title: string, isEnglish: boolean) =>
+    isEnglish ? SECTION_TITLE_TRANSLATIONS[title] ?? title : title;
+
+const translateRole = (role: string, isEnglish: boolean) =>
+    isEnglish ? ROLE_TRANSLATIONS[role] ?? role : role;
+
+const transliterateArabicToken = (word: string): string => {
+    const normalized = word.trim();
+    if (!normalized) return normalized;
+
+    if (normalized.startsWith('ال') && normalized.length > 2) {
+        return `Al-${transliterateArabicToken(normalized.slice(2))}`;
+    }
+
+    return normalized
+        .split('')
+        .map((char) => ARABIC_CHAR_TRANSLITERATIONS[char] ?? char)
+        .join('')
+        .replace(/aa+/g, 'aa')
+        .replace(/yy+/g, 'y')
+        .replace(/ww+/g, 'w')
+        .replace(/^a(?=[b-df-hj-np-tv-z])/i, 'A')
+        .replace(/^./, (char) => char.toUpperCase());
+};
+
+const transliterateArabicName = (value: string) => {
+    const normalized = value
+        .replace(/\u00a0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const [prefixPart, bodyPart] = normalized.includes('/')
+        ? normalized.split('/').map((part) => part.trim())
+        : ['', normalized];
+
+    const translatedPrefix = NAME_PREFIX_TRANSLATIONS[prefixPart] ?? '';
+    const transliteratedBody = bodyPart
+        .split(' ')
+        .filter(Boolean)
+        .map((word) => NAME_WORD_TRANSLATIONS[word] ?? transliterateArabicToken(word))
+        .join(' ');
+
+    return translatedPrefix ? `${translatedPrefix} ${transliteratedBody}` : transliteratedBody;
+};
+
+const translateMemberName = (name: string, isEnglish: boolean) => {
+    if (!isEnglish) return name;
+    if (name.includes('شاغر')) return '(Vacant)';
+    return transliterateArabicName(name);
+};
+
 const CHAIRMAN = ORGANIZATION_SECTIONS.flatMap((section) => section.members).find((member) => member.role.includes('رئيس مجلس الإدارة'));
 
 const INFOGRAPHIC_COLORS = [
@@ -232,6 +552,14 @@ const ORGANIZATION_PDF_DOWNLOAD_URL = 'https://backend.ascww.org/api/admin-struc
 const DEFAULT_SECTION_ID = ORGANIZATION_SECTIONS.find((section) => section.id === 'upper-management')?.id ?? ORGANIZATION_SECTIONS[0]?.id ?? '';
 
 function OrganizationStructurePage() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const headerGradientStyle = {
+        background: isEnglish
+            ? 'linear-gradient(240deg,#0a3555 0%,#0f4f7b 55%,#0a3555 100%)'
+            : 'linear-gradient(120deg,#0a3555 0%,#0f4f7b 55%,#0a3555 100%)'
+    };
     const [activeSectionId, setActiveSectionId] = useState<string>(DEFAULT_SECTION_ID);
     const [query, setQuery] = useState('');
     const [selectedLineSectionId, setSelectedLineSectionId] = useState<string | null>(DEFAULT_SECTION_ID);
@@ -247,14 +575,14 @@ function OrganizationStructurePage() {
         []
     );
 
-    const normalizedQuery = normalizeArabicText(query);
+    const normalizedQuery = normalizeSearchText(query, isEnglish);
     const filteredSections = useMemo(() => {
         if (!normalizedQuery) return normalizedSections;
         const queryTokens = normalizedQuery.split(' ').filter(Boolean);
 
         return normalizedSections.filter((section) => {
-            const titleText = normalizeArabicText(section.title);
-            const roleTexts = section.members.map((member) => normalizeArabicText(member.role));
+            const titleText = normalizeSearchText(translateSectionTitle(section.title, isEnglish), isEnglish);
+            const roleTexts = section.members.map((member) => normalizeSearchText(translateRole(member.role, isEnglish), isEnglish));
             const haystacks = [titleText, ...roleTexts];
 
             return queryTokens.every((token) =>
@@ -263,7 +591,7 @@ function OrganizationStructurePage() {
                 )
             );
         });
-    }, [normalizedQuery, normalizedSections]);
+    }, [isEnglish, normalizedQuery, normalizedSections]);
 
     useEffect(() => {
         if (!filteredSections.length) return;
@@ -544,24 +872,24 @@ function OrganizationStructurePage() {
     return (
         <>
             <Header />
-            <main className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.12),_transparent_45%),linear-gradient(180deg,#f8fbff_0%,#eef6ff_52%,#ffffff_100%)] py-8" dir="rtl">
+            <main className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.12),_transparent_45%),linear-gradient(180deg,#f8fbff_0%,#eef6ff_52%,#ffffff_100%)] py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <span className="pointer-events-none absolute -top-20 left-[-120px] h-64 w-64 rounded-full bg-[#1170b0]/10 blur-3xl"></span>
                 <span className="pointer-events-none absolute -bottom-24 right-[-100px] h-64 w-64 rounded-full bg-[#0f766e]/10 blur-3xl"></span>
 
                 <div className="mx-auto w-full max-w-7xl px-4">
                     <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-                        <div className="bg-[linear-gradient(120deg,#0a3555_0%,#0f4f7b_55%,#0a3555_100%)] px-6 py-7 text-white sm:px-8">
+                        <div className="px-6 py-7 text-white sm:px-8" style={headerGradientStyle}>
                             <div className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-bold tracking-wide">
-                                خريطة ذهنية تفاعلية
+                                {t('خريطة ذهنية تفاعلية', 'Interactive mind map')}
                             </div>
-                            <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl">الهيكل التنظيمي للشركة</h1>
+                            <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl">{t('الهيكل التنظيمي للشركة', 'Company Organizational Structure')}</h1>
                         </div>
 
                         <div className="space-y-6 px-6 py-6 sm:px-8">
                             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                 <div className="flex flex-col gap-3 md:flex-row md:items-end md:gap-4">
                                     <div className="w-full md:flex-1">
-                                        <label htmlFor="org-search" className="mb-2 block text-xs font-bold text-slate-600">بحث ذكي داخل القطاعات والادارات</label>
+                                        <label htmlFor="org-search" className="mb-2 block text-xs font-bold text-slate-600">{t('بحث ذكي داخل القطاعات والادارات', 'Smart search across sectors and departments')}</label>
                                         <div className="relative">
                                             <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#0a3555]/70">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -574,7 +902,7 @@ function OrganizationStructurePage() {
                                                 type="search"
                                                 value={query}
                                                 onChange={(event) => setQuery(event.target.value)}
-                                                placeholder="اكتب قطاعًا أو إدارةً أو منطقةً..."
+                                                placeholder={t('اكتب قطاعًا أو إدارةً أو منطقةً...', 'Type a sector, department, or area...')}
                                                 className="h-10 w-full rounded-full border border-[#d7b05a]/55 bg-white pr-9 pl-4 text-sm text-slate-700 outline-none transition focus:border-[#0a3555] focus:ring-2 focus:ring-[#0a3555]/15"
                                             />
                                         </div>
@@ -585,14 +913,14 @@ function OrganizationStructurePage() {
                                         rel="noopener noreferrer"
                                         className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#0a3555] px-4 text-center text-sm font-extrabold text-white transition hover:bg-[#082b47] sm:w-auto"
                                     >
-                                        تحميل ملف الهيكل التنظيمي (PDF)
+                                        {t('تحميل ملف الهيكل التنظيمي (PDF)', 'Download organizational structure file (PDF)')}
                                     </a>
                                 </div>
                             </div>
 
                             <section className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
-                                <h2 className="text-lg font-extrabold text-slate-800 sm:text-xl">الخريطة الذهنية للهيكل التنظيمي</h2>
-                                <p className="mt-1 text-center text-sm text-slate-600">ارشادات تصفح الخريطة : اضغط على أي كرت لعرض الأسماء والوظائف الخاصة به بالاسفل مع تثبيت خط الربط من رئيس مجلس الإدارة.</p>
+                                <h2 className="text-lg font-extrabold text-slate-800 sm:text-xl">{t('الخريطة الذهنية للهيكل التنظيمي', 'Organizational structure mind map')}</h2>
+                                <p className="mt-1 text-center text-sm text-slate-600">{t('ارشادات تصفح الخريطة : اضغط على أي كرت لعرض الأسماء والوظائف الخاصة به بالاسفل مع تثبيت خط الربط من رئيس مجلس الإدارة.', 'Map navigation tips: click any card to display its names and job titles below while keeping the connection line from the Chairman fixed.')}</p>
 
                                 <div className="org-map-mobile mt-5 space-y-3 md:hidden">
                                     {filteredSections.map((section) => {
@@ -606,13 +934,13 @@ function OrganizationStructurePage() {
                                                 className="block w-full rounded-2xl border border-slate-200 bg-white p-3 text-center transition hover:bg-slate-50 hover:shadow-sm"
                                                 style={isLineSelected ? { borderColor: 'transparent', backgroundColor: `${selectedAccentColor}20`, boxShadow: `0 0 0 2px ${selectedAccentColor}55` } : undefined}
                                             >
-                                                <h3 className="text-sm font-extrabold text-slate-800">{section.title}</h3>
+                                                <h3 className="text-sm font-extrabold text-slate-800">{translateSectionTitle(section.title, isEnglish)}</h3>
                                             </button>
                                         );
                                     })}
                                     {!filteredSections.length && (
                                         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm font-semibold text-slate-600">
-                                            لا توجد نتائج مطابقة للبحث.
+                                            {t('لا توجد نتائج مطابقة للبحث.', 'No matching search results were found.')}
                                         </div>
                                     )}
                                 </div>
@@ -651,14 +979,14 @@ function OrganizationStructurePage() {
                                                 className="absolute z-20 flex flex-col justify-center rounded-2xl border border-slate-300 bg-white p-3 text-center shadow-lg"
                                                 style={{ top: centerY - (centerCardHeight / 2), left: chairmanCenterX - (centerCardWidth / 2), width: centerCardWidth, height: centerCardHeight }}
                                             >
-                                                <h3 className="mt-1 text-sm font-extrabold text-[#0a3555]">رئيس مجلس الإدارة</h3>
-                                                <p className="mt-1 text-xs font-semibold text-slate-700">{CHAIRMAN?.name ?? 'غير محدد'}</p>
+                                                <h3 className="mt-1 text-sm font-extrabold text-[#0a3555]">{t('رئيس مجلس الإدارة', 'Chairman of the Board')}</h3>
+                                                <p className="mt-1 text-xs font-semibold text-slate-700">{CHAIRMAN?.name ? translateMemberName(CHAIRMAN.name, isEnglish) : t('غير محدد', 'Not specified')}</p>
                                             </article>
 
                                             {visibleRingNodes.map(({ section, x, y }) => {
                                                 const isLineSelected = section.id === selectedLineSectionId;
                                                 const selectedAccentColor = getSectionAccentColor(section.id);
-                                                const nodeTitle = section.title.trim() || 'بدون عنوان';
+                                                const nodeTitle = translateSectionTitle(section.title, isEnglish).trim() || t('بدون عنوان', 'Untitled');
                                                 return (
                                                     <button
                                                         key={`desktop-map-${section.id}`}
@@ -697,7 +1025,7 @@ function OrganizationStructurePage() {
                                         className="px-5 py-4"
                                         style={{ background: `linear-gradient(140deg, ${activePalette.from}, ${activePalette.to})` }}
                                     >
-                                        <h2 className="text-lg font-extrabold text-white sm:text-xl">{activeSection.title}</h2>
+                                        <h2 className="text-lg font-extrabold text-white sm:text-xl">{translateSectionTitle(activeSection.title, isEnglish)}</h2>
                                     </header>
 
                                     <div className="space-y-4 p-4">
@@ -708,7 +1036,7 @@ function OrganizationStructurePage() {
                                                     className="rounded-full border px-2 py-1 text-[11px] font-bold text-slate-700"
                                                     style={{ backgroundColor: activePalette.soft, borderColor: '#dbeafe' }}
                                                 >
-                                                    {member.role}
+                                                    {translateRole(member.role, isEnglish)}
                                                 </span>
                                             ))}
                                         </div>
@@ -718,8 +1046,8 @@ function OrganizationStructurePage() {
                                                     key={`${activeSection.id}-${member.name}`}
                                                     className="rounded-xl border border-slate-200 bg-slate-50 p-3"
                                                 >
-                                                    <p className="text-sm font-extrabold text-slate-800">{member.name}</p>
-                                                    <p className="mt-1 text-xs font-semibold text-slate-600 sm:text-sm">{member.role}</p>
+                                                    <p className="text-sm font-extrabold text-slate-800">{translateMemberName(member.name, isEnglish)}</p>
+                                                    <p className="mt-1 text-xs font-semibold text-slate-600 sm:text-sm">{translateRole(member.role, isEnglish)}</p>
                                                 </li>
                                             ))}
                                         </ul>
@@ -727,7 +1055,7 @@ function OrganizationStructurePage() {
                                 </article>
                             ) : (
                                 <article className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm font-semibold text-slate-600">
-                                    لا توجد بيانات مطابقة للبحث الحالي.
+                                    {t('لا توجد بيانات مطابقة للبحث الحالي.', 'No data matches the current search.')}
                                 </article>
                             )}
 

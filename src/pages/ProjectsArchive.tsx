@@ -4,10 +4,14 @@ import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
 import type { ProjectItem } from '../types';
 import { PROJECTS_ENDPOINT } from '../utils/helpers';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const ITEMS_PER_LOAD = 6;
 
 function ProjectsArchive() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const [allProjects, setAllProjects] = useState<ProjectItem[]>([]);
     const [projects, setProjects] = useState<ProjectItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -69,7 +73,7 @@ function ProjectsArchive() {
                 appendPage(1, validProjects);
             } catch {
                 if (!active) return;
-                setError('فشل تحميل المشروعات. يرجى المحاولة مرة أخرى.');
+                setError(t('فشل تحميل المشروعات. يرجى المحاولة مرة أخرى.', 'Failed to load projects. Please try again.'));
             } finally {
                 if (active) setLoading(false);
             }
@@ -115,18 +119,18 @@ function ProjectsArchive() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+            <main className="container mx-auto max-w-7xl px-4 py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <div className="mb-10 text-center">
-                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">أرشيف المشروعات</h1>
+                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">{t('أرشيف المشروعات', 'Projects Archive')}</h1>
                     <p className="mx-auto max-w-2xl text-lg text-gray-600">
-                        تصفح مشروعات الشركة وتفاصيل التنفيذ.
+                        {t('تصفح مشروعات الشركة وتفاصيل التنفيذ.', 'Browse company projects and implementation details.')}
                     </p>
                 </div>
 
                 {loading ? (
                     <div className="flex h-64 flex-col items-center justify-center">
                         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-                        <p className="font-medium text-gray-500">جاري تحميل المشروعات...</p>
+                        <p className="font-medium text-gray-500">{t('جاري تحميل المشروعات...', 'Loading projects...')}</p>
                     </div>
                 ) : error ? (
                     <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50 p-8 text-red-500">
@@ -136,7 +140,7 @@ function ProjectsArchive() {
                             onClick={() => window.location.reload()}
                             className="mt-6 rounded-lg border border-red-200 bg-white px-6 py-2 text-red-700 shadow-sm transition-colors hover:bg-red-50"
                         >
-                            إعادة المحاولة
+                            {t('إعادة المحاولة', 'Try again')}
                         </button>
                     </div>
                 ) : (
@@ -155,7 +159,7 @@ function ProjectsArchive() {
 
                         {projects.length === 0 && (
                             <div className="py-12 text-center text-gray-500">
-                                لا توجد مشروعات لعرضها حاليًا.
+                                {t('لا توجد مشروعات لعرضها حاليًا.', 'No projects are currently available.')}
                             </div>
                         )}
                     </>
@@ -167,4 +171,3 @@ function ProjectsArchive() {
 }
 
 export default ProjectsArchive;
-

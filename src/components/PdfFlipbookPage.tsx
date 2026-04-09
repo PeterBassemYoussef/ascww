@@ -4,6 +4,7 @@ import Header from './Header';
 import HTMLFlipBook from 'react-pageflip';
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const FAST_OPEN_PAGES = 2;
 const INITIAL_BACKGROUND_PAGES = 6;
@@ -95,6 +96,10 @@ function PdfFlipbookPage({
   loadingErrorMessage,
   viewerKey,
 }: PdfFlipbookPageProps) {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
+  const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#082e4a] to-[#0d5b8f]' : 'bg-gradient-to-l from-[#082e4a] to-[#0d5b8f]';
   const [isDownloading, setIsDownloading] = useState(false);
   const [isLoadingDocument, setIsLoadingDocument] = useState(true);
   const [loadingError, setLoadingError] = useState<string | null>(null);
@@ -547,11 +552,11 @@ function PdfFlipbookPage({
       <Header />
       <main
         className="bg-[radial-gradient(circle_at_top,_rgba(13,91,143,0.06),_transparent_48%)]"
-        dir="rtl"
+        dir={isEnglish ? 'ltr' : 'rtl'}
       >
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <div className="bg-gradient-to-l from-[#082e4a] to-[#0d5b8f] px-6 py-7 text-white sm:px-8">
+            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
               <h1 className="text-xl font-extrabold sm:text-2xl">
                 {title}
               </h1>
@@ -559,7 +564,7 @@ function PdfFlipbookPage({
 
             <div className="px-4 py-5 sm:px-6 lg:px-8">
               <div className="rounded-2xl border border-slate-200 bg-white p-2 sm:p-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#082e4a]/25 bg-gradient-to-l from-[#082e4a] to-[#0d5b8f] px-2.5 py-2 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]">
+                <div className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#082e4a]/25 ${headerGradientClass} px-2.5 py-2 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]`}>
                   <div className="flex items-center gap-1">
                     <button
                       className={`inline-flex h-8 items-center justify-center rounded-md border border-white/20 px-2 text-xs font-bold text-white transition ${
@@ -568,14 +573,14 @@ function PdfFlipbookPage({
                       onClick={toggleSound}
                       type="button"
                     >
-                      {isSoundEnabled ? 'الصوت: تشغيل' : 'الصوت: كتم'}
+                      {isSoundEnabled ? t('الصوت: تشغيل', 'Sound: on') : t('الصوت: كتم', 'Sound: muted')}
                     </button>
                     <button
                       className="inline-flex h-8 items-center justify-center rounded-md border border-white/20 bg-white/8 px-2 text-xs font-bold text-white transition hover:bg-white/15"
                       onClick={toggleFullscreen}
                       type="button"
                     >
-                      {isFullscreen ? 'خروج من الملء' : 'ملء الشاشة'}
+                      {isFullscreen ? t('خروج من الملء', 'Exit fullscreen') : t('ملء الشاشة', 'Fullscreen')}
                     </button>
                     <button
                       className="inline-flex h-8 items-center justify-center rounded-md border border-slate-200 bg-white px-2 text-xs font-extrabold text-[#0a3555] transition hover:bg-slate-50"
@@ -583,7 +588,7 @@ function PdfFlipbookPage({
                       onClick={handlePdfDownload}
                       type="button"
                     >
-                      {isDownloading ? 'جارٍ التحميل...' : 'تحميل PDF'}
+                      {isDownloading ? t('جارٍ التحميل...', 'Downloading...') : t('تحميل PDF', 'Download PDF')}
                     </button>
                   </div>
 
@@ -615,7 +620,7 @@ function PdfFlipbookPage({
                     ) : null}
 
                     <form className="flex items-center gap-1" onSubmit={handlePageInputSubmit}>
-                      <span className="text-xs font-bold text-[#e7f3ff]">الصفحة</span>
+                      <span className="text-xs font-bold text-[#e7f3ff]">{t('الصفحة', 'Page')}</span>
                       <input
                         className={`h-8 rounded-md border border-slate-200 bg-white px-2 text-center text-xs font-black text-[#0a3555] outline-none focus:border-[#0d5b8f] ${isMobileViewer ? 'w-14' : 'w-16'}`}
                         inputMode="numeric"
@@ -631,12 +636,12 @@ function PdfFlipbookPage({
 
                 <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700">
                   {isLoadingDocument
-                    ? 'جاري تجهيز الملف...'
+                    ? t('جاري تجهيز الملف...', 'Preparing file...')
                     : loadingError
-                      ? 'تعذر العرض'
+                      ? t('تعذر العرض', 'Unable to display')
                       : isChunkLoading
-                        ? `الصفحة ${currentPage} من ${totalPages} (جاري تجهيز صفحات إضافية...)`
-                        : `الصفحة ${currentPage} من ${totalPages} (تم تجهيز ${loadedPagesCount} صفحة)`}
+                        ? t(`الصفحة ${currentPage} من ${totalPages} (جاري تجهيز صفحات إضافية...)`, `Page ${currentPage} of ${totalPages} (preparing more pages...)`)
+                        : t(`الصفحة ${currentPage} من ${totalPages} (تم تجهيز ${loadedPagesCount} صفحة)`, `Page ${currentPage} of ${totalPages} (${loadedPagesCount} pages ready)`)}
                 </div>
 
                 {isLoadingDocument ? (
@@ -652,20 +657,20 @@ function PdfFlipbookPage({
                     <div className="relative h-full overflow-hidden rounded-xl border border-slate-200 bg-white" ref={stageRef}>
                       {isFullscreen ? (
                         <button
-                          aria-label="إغلاق ملء الشاشة"
+                          aria-label={t('إغلاق ملء الشاشة', 'Close fullscreen')}
                           className="absolute left-3 top-3 z-30 inline-flex items-center gap-1 rounded-md border border-[#0a3555]/20 bg-white/95 px-2.5 py-1.5 text-xs font-extrabold text-[#0a3555] shadow-[0_8px_18px_rgba(0,0,0,0.2)] transition hover:bg-white"
                           onClick={toggleFullscreen}
                           type="button"
                         >
                           ✕
-                          <span>خروج</span>
+                          <span>{t('خروج', 'Exit')}</span>
                         </button>
                       ) : null}
 
                       {!isMobileViewer ? (
                         <>
                           <button
-                            aria-label="الصفحة السابقة"
+                            aria-label={t('الصفحة السابقة', 'Previous page')}
                             className="absolute left-2 top-1/2 z-20 inline-flex h-16 w-9 -translate-y-1/2 items-center justify-center rounded-md border border-white/35 bg-[#0a3555]/90 text-2xl font-black text-[#f2f8ff] shadow-[0_8px_20px_rgba(10,53,85,0.3)] transition hover:bg-[#1170b0] disabled:opacity-35"
                             disabled={!canFlipPrev}
                             onClick={flipPrev}
@@ -674,7 +679,7 @@ function PdfFlipbookPage({
                             <span className="inline-block rotate-180" dir="ltr">❯</span>
                           </button>
                           <button
-                            aria-label="الصفحة التالية"
+                            aria-label={t('الصفحة التالية', 'Next page')}
                             className="absolute right-2 top-1/2 z-20 inline-flex h-16 w-9 -translate-y-1/2 items-center justify-center rounded-md border border-white/35 bg-[#0a3555]/90 text-2xl font-black text-[#f2f8ff] shadow-[0_8px_20px_rgba(10,53,85,0.3)] transition hover:bg-[#1170b0] disabled:opacity-35"
                             disabled={!canFlipNext}
                             onClick={() => { void flipNext(); }}
@@ -759,7 +764,7 @@ function PdfFlipbookPage({
                                   onClick={() => { void goToPage(currentPage - 1); }}
                                   type="button"
                                 >
-                                  السابق
+                                  {t('السابق', 'Previous')}
                                 </button>
                                 <span className="min-w-[84px] text-center text-xs font-black text-[#0a3555]">
                                   {currentPage} / {totalPages}
@@ -770,7 +775,7 @@ function PdfFlipbookPage({
                                   onClick={() => { void goToPage(currentPage + 1); }}
                                   type="button"
                                 >
-                                  التالي
+                                  {t('التالي', 'Next')}
                                 </button>
                               </div>
                             </div>

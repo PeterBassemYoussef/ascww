@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useSpeech } from '../hooks/useSpeech';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 import type { NewsItem } from '../types';
 import {
     NEWS_ARCHIVE_PATH,
@@ -31,6 +32,9 @@ function setMetaTag(
 }
 
 function NewsDetails() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const { id } = useParams<{ id: string }>();
     const [news, setNews] = useState<NewsItem | null>(null);
     const [loading, setLoading] = useState(true);
@@ -127,12 +131,12 @@ function NewsDetails() {
     useEffect(() => {
         if (!news) return;
 
-        const title = news.title || 'خبر';
+        const title = news.title || t('خبر', 'News');
         const pageUrl = window.location.href;
         const imagePath = getLatestNewsImagePath(news);
         const imageUrl = imagePath ? `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(imagePath)}` : '';
 
-        document.title = `${title} | أرشيف الأخبار`;
+        document.title = `${title} | ${t('أرشيف الأخبار', 'News Archive')}`;
         setMetaTag('meta[property="og:title"]', 'property', 'og:title', title);
         setMetaTag('meta[property="og:description"]', 'property', 'og:description', shareDescription);
         setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'article');
@@ -146,7 +150,7 @@ function NewsDetails() {
         if (imageUrl) {
             setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', imageUrl);
         }
-    }, [news, shareDescription]);
+    }, [news, shareDescription, isEnglish]);
 
     const nextImage = () => {
         if (images.length < 2) return;
@@ -186,15 +190,15 @@ function NewsDetails() {
             <>
                 <Header />
                 <main className="container mx-auto px-4 py-16 text-center" dir="rtl">
-                    <h2 className="mb-4 text-2xl font-bold text-gray-800">الخبر غير موجود</h2>
-                    <Link to={NEWS_ARCHIVE_PATH} className="text-blue-600 hover:underline">العودة للأخبار</Link>
+                    <h2 className="mb-4 text-2xl font-bold text-gray-800">{t('الخبر غير موجود', 'News item not found')}</h2>
+                    <Link to={NEWS_ARCHIVE_PATH} className="text-blue-600 hover:underline">{t('العودة للأخبار', 'Back to news')}</Link>
                 </main>
                 <Footer />
             </>
         );
     }
 
-    const dateText = new Date(news.created_at || news.updated_at || '').toLocaleDateString('ar-EG', {
+    const dateText = new Date(news.created_at || news.updated_at || '').toLocaleDateString(isEnglish ? 'en-US' : 'ar-EG', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -214,7 +218,7 @@ function NewsDetails() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-4xl px-4 py-8" dir="rtl">
+            <main className="container mx-auto max-w-4xl px-4 py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
                     {images.length > 0 ? (
                         <div
@@ -225,7 +229,7 @@ function NewsDetails() {
                         >
                             <img loading="lazy" decoding="async"
                                 src={currentImageUrl}
-                                alt={news.title || 'صورة الخبر'}
+                                alt={news.title || t('صورة الخبر', 'News image')}
                                 className="!h-full !w-full object-contain"
                                 onError={(event) => {
                                     event.currentTarget.style.display = 'none';
@@ -265,7 +269,7 @@ function NewsDetails() {
                         </div>
                     ) : (
                         <div className="flex h-[300px] items-center justify-center bg-gray-100 text-gray-400 md:h-[500px]">
-                            لا توجد صور
+                            {t('لا توجد صور', 'No images available')}
                         </div>
                     )}
 
@@ -285,7 +289,7 @@ function NewsDetails() {
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                المركز الإعلامي
+                                {t('المركز الإعلامي', 'Media Center')}
                             </div>
                         </div>
 
@@ -300,7 +304,7 @@ function NewsDetails() {
                             />
                         ) : (
                             <p className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-600">
-                                لا توجد تفاصيل متاحة لهذا الخبر حاليًا.
+                                {t('لا توجد تفاصيل متاحة لهذا الخبر حاليًا.', 'No details are currently available for this news item.')}
                             </p>
                         )}
 
@@ -313,7 +317,7 @@ function NewsDetails() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l-7-7 7-7" />
                                 </svg>
-                                العودة للأخبار
+                                {t('العودة للأخبار', 'Back to news')}
                             </Link>
 
                             <div className="flex flex-wrap gap-3">
@@ -325,7 +329,7 @@ function NewsDetails() {
                                         if (navigator.share) {
                                             try {
                                                 await navigator.share({
-                                                    title: news.title || 'خبر',
+                                                    title: news.title || t('خبر', 'News'),
                                                     text,
                                                     url,
                                                 });
@@ -337,7 +341,7 @@ function NewsDetails() {
                                         await navigator.clipboard.writeText(`${text}\n${url}`);
                                     }}
                                     className="rounded-full bg-slate-100 p-2 text-slate-600 transition-colors hover:bg-slate-200"
-                                    title="مشاركة الخبر"
+                                    title={t('مشاركة الخبر', 'Share news')}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <circle cx="18" cy="5" r="3"></circle>
@@ -355,7 +359,7 @@ function NewsDetails() {
                                         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`, '_blank');
                                     }}
                                     className="rounded-full bg-blue-50 p-2 text-blue-600 transition-colors hover:bg-blue-100"
-                                    title="مشاركة على فيسبوك"
+                                    title={t('مشاركة على فيسبوك', 'Share on Facebook')}
                                 >
                                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.49 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -369,7 +373,7 @@ function NewsDetails() {
                                         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                                     }}
                                     className="rounded-full bg-green-50 p-2 text-green-600 transition-colors hover:bg-green-100"
-                                    title="مشاركة على واتساب"
+                                    title={t('مشاركة على واتساب', 'Share on WhatsApp')}
                                 >
                                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347" />
@@ -380,10 +384,10 @@ function NewsDetails() {
                                         type="button"
                                         onClick={() => {
                                             const stripped = cleanContent.replace(/<[^>]*>/g, '');
-                                            speak(`${news.title}. ${stripped}`, 'ar-SA');
+                                            speak(`${news.title}. ${stripped}`, isEnglish ? 'en-US' : 'ar-SA');
                                         }}
                                         className="rounded-full bg-purple-50 p-2 text-purple-600 transition-colors hover:bg-purple-100"
-                                        title="اقرأ المقال"
+                                        title={t('اقرأ المقال', 'Read article')}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -396,7 +400,7 @@ function NewsDetails() {
                                         type="button"
                                         onClick={stop}
                                         className="rounded-full bg-red-50 p-2 text-red-600 transition-colors hover:bg-red-100"
-                                        title="إيقاف القراءة"
+                                        title={t('إيقاف القراءة', 'Stop reading')}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -423,11 +427,11 @@ function NewsDetails() {
                             onClick={() => setOpenedImageUrl(null)}
                             className="absolute left-3 top-3 z-10 rounded-lg bg-black/60 px-3 py-1 text-sm font-bold text-white transition hover:bg-black/80"
                         >
-                            إغلاق
+                            {t('إغلاق', 'Close')}
                         </button>
                         <img
                             src={openedImageUrl}
-                            alt={news.title || 'صورة الخبر'}
+                            alt={news.title || t('صورة الخبر', 'News image')}
                             loading="lazy"
                             className="max-h-[85vh] w-full object-contain"
                         />

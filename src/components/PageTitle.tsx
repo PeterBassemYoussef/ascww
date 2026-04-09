@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const SITE_NAME = 'شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد';
 const DEFAULT_DESCRIPTION = 'البوابة الإلكترونية الرسمية لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد: خدمات المياه، الصرف الصحي، التوعية، المناقصات، والتواصل مع المواطنين.';
@@ -88,7 +89,19 @@ const normalizeSiteUrl = (value: string) => {
   }
 };
 
-const resolveTitle = (pathname: string) => {
+const resolveTitle = (pathname: string, isEnglish: boolean) => {
+  if (pathname === ROUTES.adviceAndContact) {
+    return isEnglish ? 'Awareness and Communication' : 'التوعية والأتصال';
+  }
+
+  if (pathname === ROUTES.cyberSecurityGuidelines) {
+    return isEnglish ? 'Cybersecurity Guidelines' : 'ارشادات الامن السيبرانى';
+  }
+
+  if (pathname === ROUTES.forKidsAndWomen || pathname === '/forKids' || pathname === '/toWomen') {
+    return isEnglish ? 'Kids and Women Corner' : 'ركن الأطفال ولكِ سيدتي';
+  }
+
   const exactTitle = routeTitles[pathname];
   if (exactTitle) return exactTitle;
 
@@ -97,7 +110,7 @@ const resolveTitle = (pathname: string) => {
     || pathname.startsWith(`${ROUTES.newsArchive}/`)
     || pathname.startsWith('/news-company/')
   ) {
-    return 'تفاصيل الخبر';
+    return isEnglish ? 'News Details' : 'تفاصيل الخبر';
   }
 
   if (
@@ -105,7 +118,7 @@ const resolveTitle = (pathname: string) => {
     || pathname.startsWith(`${ROUTES.projectsArchive}/`)
     || pathname.startsWith('/projects-company/')
   ) {
-    return 'تفاصيل المشروع';
+    return isEnglish ? 'Project Details' : 'تفاصيل المشروع';
   }
 
   if (
@@ -114,22 +127,44 @@ const resolveTitle = (pathname: string) => {
     || pathname.startsWith('/allTenders/')
     || pathname.startsWith('/alltenders/')
   ) {
-    return 'تفاصيل المناقصة';
+    return isEnglish ? 'Tender Details' : 'تفاصيل المناقصة';
   }
 
   return SITE_NAME;
 };
 
-const resolveDescription = (pathname: string, pageTitle: string) => {
+const resolveDescription = (pathname: string, pageTitle: string, isEnglish: boolean) => {
+  if (pathname === ROUTES.adviceAndContact) {
+    return isEnglish
+      ? 'Awareness and communication content about water conservation and responsible use.'
+      : 'محتوى توعوي واتصالي حول ترشيد المياه والاستخدام الرشيد لها.';
+  }
+
+  if (pathname === ROUTES.cyberSecurityGuidelines) {
+    return isEnglish
+      ? 'Cybersecurity guidelines and awareness content to protect users and data.'
+      : 'إرشادات الأمن السيبراني ومحتوى توعوي لحماية المستخدمين والبيانات.';
+  }
+
+  if (pathname === ROUTES.forKidsAndWomen || pathname === '/forKids' || pathname === '/toWomen') {
+    return isEnglish
+      ? 'Awareness content for children and women about conserving water and using services correctly.'
+      : 'محتوى توعوي للأطفال والسيدات حول ترشيد المياه والاستخدام الصحيح للخدمات.';
+  }
+
   const exactDescription = routeDescriptions[pathname];
   if (exactDescription) return exactDescription;
 
   if (pathname.startsWith('/news/') || pathname.startsWith('/news-company/')) {
-    return 'تفاصيل خبر من أرشيف الأخبار الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+    return isEnglish
+      ? 'Details of a news item from the official news archive of Assiut and New Valley Water and Wastewater Company.'
+      : 'تفاصيل خبر من أرشيف الأخبار الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
   }
 
   if (pathname.startsWith('/projects/') || pathname.startsWith('/projects-company/')) {
-    return 'تفاصيل مشروع ضمن مشروعات شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+    return isEnglish
+      ? 'Details of a project from the projects archive of Assiut and New Valley Water and Wastewater Company.'
+      : 'تفاصيل مشروع ضمن مشروعات شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
   }
 
   if (
@@ -137,7 +172,9 @@ const resolveDescription = (pathname: string, pageTitle: string) => {
     || pathname.startsWith('/allTenders/')
     || pathname.startsWith('/alltenders/')
   ) {
-    return 'تفاصيل مناقصة ضمن أرشيف المناقصات الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
+    return isEnglish
+      ? 'Details of a tender from the official tenders archive of Assiut and New Valley Water and Wastewater Company.'
+      : 'تفاصيل مناقصة ضمن أرشيف المناقصات الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
   }
 
   if (!pageTitle || pageTitle === SITE_NAME) return DEFAULT_DESCRIPTION;
@@ -145,6 +182,8 @@ const resolveDescription = (pathname: string, pageTitle: string) => {
 };
 
 function PageTitle() {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
   const { pathname } = useLocation();
   const siteUrl = useMemo(
     () => normalizeSiteUrl(String(import.meta.env.VITE_SITE_URL || DEFAULT_SITE_URL)),
@@ -152,9 +191,9 @@ function PageTitle() {
   );
 
   const normalizedPath = normalizePathname(pathname);
-  const pageTitle = resolveTitle(normalizedPath);
+  const pageTitle = resolveTitle(normalizedPath, isEnglish);
   const fullTitle = pageTitle === SITE_NAME ? SITE_NAME : `${pageTitle} | ${SITE_NAME}`;
-  const description = resolveDescription(normalizedPath, pageTitle);
+  const description = resolveDescription(normalizedPath, pageTitle, isEnglish);
   const canonicalUrl = `${siteUrl}${normalizedPath === '/' ? '/' : normalizedPath}`;
   const imageUrl = `${siteUrl}${LOGO_PATH}`;
   const isDetailPage =
@@ -258,5 +297,3 @@ function PageTitle() {
 }
 
 export default PageTitle;
-
-

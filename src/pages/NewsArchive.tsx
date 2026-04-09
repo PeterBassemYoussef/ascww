@@ -3,12 +3,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import NewsCard from '../components/NewsCard';
 import type { NewsItem } from '../types';
+import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const ITEMS_PER_LOAD = 6;
 const NEWS_ARCHIVE_ENDPOINT = 'https://backend.ascww.org/api/news';
 const NEWS_ARCHIVE_PROXY_ENDPOINT = '/api/news';
 
 function NewsArchive() {
+    const { language } = useSiteLanguage();
+    const isEnglish = language === 'en';
+    const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const [allArticles, setAllArticles] = useState<NewsItem[]>([]);
     const [articles, setArticles] = useState<NewsItem[]>([]);
     const [page, setPage] = useState(1);
@@ -84,7 +88,7 @@ function NewsArchive() {
                 appendPage(1, validNewsItems);
             } catch {
                 if (!active) return;
-                setError('فشل تحميل الأخبار. يرجى المحاولة مرة أخرى.');
+                setError(t('فشل تحميل الأخبار. يرجى المحاولة مرة أخرى.', 'Failed to load news. Please try again.'));
             } finally {
                 if (active) setLoading(false);
             }
@@ -129,18 +133,18 @@ function NewsArchive() {
     return (
         <>
             <Header />
-            <main className="container mx-auto max-w-7xl px-4 py-8" dir="rtl">
+            <main className="container mx-auto max-w-7xl px-4 py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
                 <div className="mb-10 text-center">
-                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">آخر الأخبار</h1>
+                    <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900">{t('آخر الأخبار', 'Latest News')}</h1>
                     <p className="mx-auto max-w-2xl text-lg text-gray-600">
-                        تابع أحدث المستجدات والأخبار من المركز الإعلامي.
+                        {t('تابع أحدث المستجدات والأخبار من المركز الإعلامي.', 'Follow the latest updates and news from the media center.')}
                     </p>
                 </div>
 
                 {loading ? (
                     <div className="flex h-64 flex-col items-center justify-center">
                         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-                        <p className="font-medium text-gray-500">جاري تحميل الأخبار...</p>
+                        <p className="font-medium text-gray-500">{t('جاري تحميل الأخبار...', 'Loading news...')}</p>
                     </div>
                 ) : error ? (
                     <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50 p-8 text-red-500">
@@ -150,7 +154,7 @@ function NewsArchive() {
                             onClick={() => window.location.reload()}
                             className="mt-6 rounded-lg border border-red-200 bg-white px-6 py-2 text-red-700 shadow-sm transition-colors hover:bg-red-50"
                         >
-                            إعادة المحاولة
+                            {t('إعادة المحاولة', 'Try again')}
                         </button>
                     </div>
                 ) : (
@@ -169,13 +173,13 @@ function NewsArchive() {
 
                         {!hasMore && articles.length > 0 && (
                             <div className="py-10 text-center text-sm text-slate-500">
-                                وصلت إلى نهاية الأخبار
+                                {t('وصلت إلى نهاية الأخبار', 'You have reached the end of the news archive')}
                             </div>
                         )}
 
                         {articles.length === 0 && (
                             <div className="py-12 text-center text-gray-500">
-                                لا توجد أخبار لعرضها حاليًا.
+                                {t('لا توجد أخبار لعرضها حاليًا.', 'No news is currently available.')}
                             </div>
                         )}
                     </>
