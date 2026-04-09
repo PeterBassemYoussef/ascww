@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ScrollToTop from './components/ScrollToTop';
 import PageTitle from './components/PageTitle';
 import { LEGACY_ROUTE_REDIRECTS, ROUTES } from './constants/routes';
+import { useSiteLanguage } from './context/SiteLanguageContext';
 
 const NewsArchive = lazy(() => import('./pages/NewsArchive'));
 const NewsDetails = lazy(() => import('./pages/NewsDetails'));
@@ -53,6 +54,9 @@ const ContractOnServicePage = lazy(() => import('./pages/ContractOnServicePage')
 const SearchPage = lazy(() => import('./pages/SearchPage'));
 
 function App() {
+  const { language } = useSiteLanguage();
+  const isEnglish = language === 'en';
+
   return (
     <>
       <ScrollToTop />
@@ -60,7 +64,7 @@ function App() {
       <Suspense
         fallback={
           <div className="mx-auto flex min-h-[50vh] max-w-6xl items-center justify-center px-4 text-sm font-semibold text-slate-500">
-            جاري تحميل الصفحة...
+            {isEnglish ? 'Loading page...' : 'جاري تحميل الصفحة...'}
           </div>
         }
       >
@@ -143,4 +147,3 @@ function App() {
 }
 
 export default App;
-

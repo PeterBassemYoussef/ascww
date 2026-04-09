@@ -7,7 +7,7 @@ type SiteLanguageContextValue = {
   setLanguage: (language: SiteLanguage) => void;
 };
 
-const SiteLanguageContext = createContext<SiteLanguageContextValue | undefined>(undefined);
+export const SiteLanguageContext = createContext<SiteLanguageContextValue | undefined>(undefined);
 const SITE_LANGUAGE_STORAGE_KEY = 'ascww-site-language';
 
 const getInitialLanguage = (): SiteLanguage => {

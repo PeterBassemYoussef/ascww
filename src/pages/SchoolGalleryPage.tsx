@@ -118,7 +118,7 @@ function SchoolGalleryPage() {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4"
           onClick={() => setLightboxImage(null)}
         >
           <div
