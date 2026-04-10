@@ -31,7 +31,6 @@ const importantSites = [
   { labelAr: 'بوابة رئاسة الجمهوريه', labelEn: 'Presidency Portal', href: 'https://www.presidency.eg/ar' },
 ];
 
-const companyMessageImage = 'https://ascww.org/img/7.82d7d17e.png';
 const facebookWidgetSrc =
   'https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F%25D8%25A7%25D9%2584%25D8%25B5%25D9%2581%25D8%25AD%25D8%25A9-%25D8%25A7%D9%84%D8%B1%D8%B3%D9%85%D9%8A%D8%A9-%25D9%2584%25D8%25B4%25D8%25B1%25D9%2583%25D8%25A9-%25D9%2585%25D9%258A%25D8%25A7%25D9%2587-%25D8%25A7%D9%84%D8%B4%D8%B1%D8%A8-%25D9%2588%25D8%25A7%D9%84%D8%B5%D8%B1%D9%81-%25D8%A7%D9%84%D8%B5%D8%AD%D9%89-%25D8%A8%D8%A3%D8%B3%D9%8A%D9%88%D8%B7-%25D9%2588%25D8%A7%D9%84%D9%88%D8%A7%D8%AF%D9%89-%25D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF-364679160333044%2F&tabs=timeline&width=340&height=500&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId=887228017981898';
 
@@ -39,6 +38,9 @@ function RefiningWaterPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const companyMessageImage = isEnglish
+    ? '/images/about/company-messageEN.webp'
+    : '/images/about/company-message.webp';
 
   return (
     <>
