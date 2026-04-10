@@ -9,7 +9,8 @@ type LocalizedText = {
 };
 
 type SectionImage = {
-  src: string;
+  srcAr: string;
+  srcEn?: string;
   alt: LocalizedText;
   caption?: LocalizedText;
 };
@@ -41,7 +42,7 @@ const treatmentDetailsSections: TreatmentSection[] = [
       },
     ],
     image: {
-      src: '/images/prosses-water/prosses1.webp',
+      srcAr: '/images/prosses-water/prosses1.webp',
       alt: {
         ar: 'مصادر مياه الصرف الصحي',
         en: 'Sources of wastewater',
@@ -65,7 +66,7 @@ const treatmentDetailsSections: TreatmentSection[] = [
       },
     ],
     image: {
-      src: '/images/prosses-water/prosess4.webp',
+      srcAr: '/images/prosses-water/prosess4.webp',
       alt: {
         ar: 'مرحلة التصفية في معالجة مياه الصرف',
         en: 'Screening stage in wastewater treatment',
@@ -89,7 +90,8 @@ const treatmentDetailsSections: TreatmentSection[] = [
       },
     ],
     image: {
-      src: '/images/prosses-water/prosess3.webp',
+      srcAr: '/images/prosses-water/prosess3.webp',
+      srcEn: '/images/prosses-water/prosess3EN.webp',
       alt: {
         ar: 'مراحل أولية في معالجة مياه الصرف الصحي',
         en: 'Primary stages of wastewater treatment',
@@ -143,6 +145,7 @@ function SewageTreatmentPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (image: SectionImage) => (isEnglish ? image.srcEn ?? image.srcAr : image.srcAr);
   const paragraphAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const contentOrderClass = 'md:order-1';
   const figureOrderClass = 'md:order-2';
@@ -222,12 +225,12 @@ function SewageTreatmentPage() {
                     <figure className={`mt-4 self-start overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm md:mt-0 ${figureOrderClass}`}>
                       <img
                         decoding="async"
-                        src={sourcesSection.image.src}
+                        src={localizedImageSrc(sourcesSection.image)}
                         alt={t(sourcesSection.image.alt)}
                         loading="lazy"
                         onClick={() =>
                           openLightbox({
-                            src: sourcesSection.image!.src,
+                            src: localizedImageSrc(sourcesSection.image!),
                             alt: t(sourcesSection.image!.alt),
                             caption: sourcesSection.image!.caption ? t(sourcesSection.image!.caption!) : undefined,
                           })
@@ -247,7 +250,7 @@ function SewageTreatmentPage() {
                 <div className="mt-6 space-y-5">
                   {otherTreatmentSections.map((section) => {
                     const isFilteringSection = section.title.ar === 'التصفية';
-                    const isProcessThreeImage = section.image?.src.includes('prosess3.webp');
+                    const isProcessThreeImage = section.image?.srcAr.includes('prosess3.webp');
 
                     return (
                       <section key={section.title.ar} className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
@@ -268,12 +271,12 @@ function SewageTreatmentPage() {
                               <figure className={`mt-4 self-start overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm md:mt-0 ${figureOrderClass}`}>
                                 <img
                                   decoding="async"
-                                  src={section.image.src}
+                                  src={localizedImageSrc(section.image)}
                                   alt={t(section.image.alt)}
                                   loading="lazy"
                                   onClick={() =>
                                     openLightbox({
-                                      src: section.image!.src,
+                                      src: localizedImageSrc(section.image!),
                                       alt: t(section.image!.alt),
                                       caption: section.image!.caption ? t(section.image!.caption!) : undefined,
                                     })
@@ -302,12 +305,12 @@ function SewageTreatmentPage() {
                               <figure className={`${sectionFigureClass} ${figureOrderClass}`}>
                                 <img
                                   decoding="async"
-                                  src={section.image.src}
+                                  src={localizedImageSrc(section.image)}
                                   alt={t(section.image.alt)}
                                   loading="lazy"
                                   onClick={() =>
                                     openLightbox({
-                                      src: section.image!.src,
+                                      src: localizedImageSrc(section.image!),
                                       alt: t(section.image!.alt),
                                       caption: section.image!.caption ? t(section.image!.caption!) : undefined,
                                     })

@@ -10,7 +10,8 @@ type LocalizedText = {
 
 const sections: Array<{
   title: LocalizedText;
-  image: string;
+  imageAr: string;
+  imageEn: string;
   imageAlt: LocalizedText;
   items: LocalizedText[];
   note?: LocalizedText;
@@ -20,7 +21,8 @@ const sections: Array<{
       ar: 'الاحتياجات اللازمة للتعاقد علي العداد التنظيمي والمباني الإنشائية',
       en: 'Requirements for contracting a regular meter and licensed buildings',
     },
-    image: '/images/ask/ask2.webp',
+    imageAr: '/images/ask/ask2.webp',
+    imageEn: '/images/ask/ask2EN.webp',
     imageAlt: {
       ar: 'متطلبات التعاقد على العداد التنظيمي',
       en: 'Requirements for contracting a regular meter',
@@ -73,7 +75,8 @@ const sections: Array<{
       ar: 'المستندات المطلوبة للتعاقد علي العداد الكودي',
       en: 'Required documents for a coded meter contract',
     },
-    image: '/images/ask/ask1.webp',
+    imageAr: '/images/ask/ask1.webp',
+    imageEn: '/images/ask/ask1EN.webp',
     imageAlt: {
       ar: 'متطلبات التعاقد على العداد الكودي',
       en: 'Requirements for contracting a coded meter',
@@ -106,7 +109,8 @@ const sections: Array<{
       ar: 'المستندات المطلوبة في الصرف الصحي للحصول علي الخدمة',
       en: 'Required wastewater documents to obtain the service',
     },
-    image: '/images/ask/ask3.webp',
+    imageAr: '/images/ask/ask3.webp',
+    imageEn: '/images/ask/ask3EN.webp',
     imageAlt: {
       ar: 'المستندات المطلوبة لخدمات الصرف الصحي',
       en: 'Required documents for wastewater services',
@@ -136,6 +140,7 @@ function ProvideRequestPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const [zoomedImage, setZoomedImage] = useState<{ src: string; alt: string } | null>(null);
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
@@ -190,12 +195,12 @@ function ProvideRequestPage() {
                     </div>
                     <figure className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
                       <img
-                        src={section.image}
+                        src={localizedImageSrc(section.imageAr, section.imageEn)}
                         alt={t(section.imageAlt)}
                         className="h-full w-full cursor-zoom-in object-cover transition hover:brightness-95"
                         loading="lazy"
                         decoding="async"
-                        onClick={() => setZoomedImage({ src: section.image, alt: t(section.imageAlt) })}
+                        onClick={() => setZoomedImage({ src: localizedImageSrc(section.imageAr, section.imageEn), alt: t(section.imageAlt) })}
                       />
                     </figure>
                   </div>

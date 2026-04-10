@@ -50,6 +50,7 @@ function HotlineAppPage() {
     if (typeof text === 'string') return isEnglish ? (english ?? text) : text;
     return isEnglish ? text.en : text.ar;
   };
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const { hotlineApp } = useSiteVideoLinks();
   const videoUrl = hotlineApp;
   const embeddedVideoUrl = normalizeYouTubeEmbedUrl(videoUrl);
@@ -94,11 +95,11 @@ function HotlineAppPage() {
                   className="group cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm"
                   role="button"
                   tabIndex={0}
-                  onClick={() => setLightboxImage('/images/hotline/hotline1.webp')}
-                  onKeyDown={(e) => e.key === 'Enter' && setLightboxImage('/images/hotline/hotline1.webp')}
+                  onClick={() => setLightboxImage(localizedImageSrc('/images/hotline/hotline1.webp', '/images/hotline/hotline1EN.webp'))}
+                  onKeyDown={(e) => e.key === 'Enter' && setLightboxImage(localizedImageSrc('/images/hotline/hotline1.webp', '/images/hotline/hotline1EN.webp'))}
                 >
                   <img
-                    src="/images/hotline/hotline1.webp"
+                    src={localizedImageSrc('/images/hotline/hotline1.webp', '/images/hotline/hotline1EN.webp')}
                     alt={t('تطبيق الخط الساخن HCWW 125', 'HCWW 125 hotline app')}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
@@ -174,11 +175,11 @@ function HotlineAppPage() {
                     className="group cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm"
                     role="button"
                     tabIndex={0}
-                    onClick={() => setLightboxImage('/images/hotline/hotline2.webp')}
-                    onKeyDown={(e) => e.key === 'Enter' && setLightboxImage('/images/hotline/hotline2.webp')}
+                    onClick={() => setLightboxImage(localizedImageSrc('/images/hotline/hotline2.webp', '/images/hotline/hotline2EN.webp'))}
+                    onKeyDown={(e) => e.key === 'Enter' && setLightboxImage(localizedImageSrc('/images/hotline/hotline2.webp', '/images/hotline/hotline2EN.webp'))}
                   >
                     <img
-                      src="/images/hotline/hotline2.webp"
+                      src={localizedImageSrc('/images/hotline/hotline2.webp', '/images/hotline/hotline2EN.webp')}
                       alt={t('تطبيق الخط الساخن HCWW 125', 'HCWW 125 hotline app')}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"

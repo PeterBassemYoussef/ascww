@@ -116,6 +116,7 @@ function SaveSewageNetworkPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const paragraphAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const figureLayoutClass = (widthClass: string) =>
     isEnglish
@@ -173,12 +174,12 @@ function SaveSewageNetworkPage() {
                   <figure className={figureLayoutClass('md:w-[36%]')}>
                     <img
                       decoding="async"
-                      src="/images/prosses-water/save1.webp"
+                      src={localizedImageSrc('/images/prosses-water/save1.webp', '/images/prosses-water/save1EN.webp')}
                       alt={t({ ar: 'أهمية الحفاظ على شبكة الصرف الصحي', en: 'Preserving the sewer network' })}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/save1.webp',
+                          src: localizedImageSrc('/images/prosses-water/save1.webp', '/images/prosses-water/save1EN.webp'),
                           alt: t({ ar: 'أهمية الحفاظ على شبكة الصرف الصحي', en: 'Preserving the sewer network' }),
                         })
                       }
@@ -204,12 +205,12 @@ function SaveSewageNetworkPage() {
                   <figure className={figureLayoutClass('md:w-[36%]')}>
                     <img
                       decoding="async"
-                      src="/images/prosses-water/save2.webp"
+                      src={localizedImageSrc('/images/prosses-water/save2.webp', '/images/prosses-water/save2EN.webp')}
                       alt={t({ ar: 'مشاكل صيانة شبكة الصرف الصحي', en: 'Sewer network maintenance problems' })}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/save2.webp',
+                          src: localizedImageSrc('/images/prosses-water/save2.webp', '/images/prosses-water/save2EN.webp'),
                           alt: t({ ar: 'مشاكل صيانة شبكة الصرف الصحي', en: 'Sewer network maintenance problems' }),
                         })
                       }
@@ -238,12 +239,12 @@ function SaveSewageNetworkPage() {
                   <figure className={figureLayoutClass('md:w-[36%]')}>
                     <img
                       decoding="async"
-                      src="/images/prosses-water/save3.webp"
+                      src={localizedImageSrc('/images/prosses-water/save3.webp', '/images/prosses-water/save3EN.webp')}
                       alt={t({ ar: 'التعليمات حول تخطيط شبكة النقل ومحطات الضخ وصيانتها', en: 'Guidelines for planning and maintaining pumping stations and conveyance networks' })}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/save3.webp',
+                          src: localizedImageSrc('/images/prosses-water/save3.webp', '/images/prosses-water/save3EN.webp'),
                           alt: t({ ar: 'التعليمات حول تخطيط شبكة النقل ومحطات الضخ وصيانتها', en: 'Guidelines for planning and maintaining pumping stations and conveyance networks' }),
                         })
                       }
@@ -269,12 +270,12 @@ function SaveSewageNetworkPage() {
                   <figure className={figureLayoutClass('md:w-[44%]')}>
                     <img
                       decoding="async"
-                      src="/images/prosses-water/save4.webp"
+                      src={localizedImageSrc('/images/prosses-water/save4.webp', '/images/prosses-water/save4EN.webp')}
                       alt={t({ ar: 'الأنظمة حول تخطيط شبكة نقل الصرف الصحي وصيانتها', en: 'Regulations for planning and maintaining sewer conveyance networks' })}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/save4.webp',
+                          src: localizedImageSrc('/images/prosses-water/save4.webp', '/images/prosses-water/save4EN.webp'),
                           alt: t({ ar: 'الأنظمة حول تخطيط شبكة نقل الصرف الصحي وصيانتها', en: 'Regulations for planning and maintaining sewer conveyance networks' }),
                         })
                       }

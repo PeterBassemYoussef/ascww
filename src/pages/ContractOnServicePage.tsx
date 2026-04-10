@@ -10,7 +10,8 @@ type LocalizedText = {
 const STAGES: Array<{
   title: LocalizedText;
   steps: LocalizedText[];
-  image: string;
+  imageAr: string;
+  imageEn: string;
 }> = [
   {
     title: { ar: 'المرحلة الأولى: الاستعلام والتحضير', en: 'Stage 1: Inquiry and Preparation' },
@@ -24,7 +25,8 @@ const STAGES: Array<{
         en: 'Reception (3 minutes): initial document review, receiving an introduction card, and assigning a customer number.',
       },
     ],
-    image: '/images/ContractOnService/ContractOnService 1.webp',
+    imageAr: '/images/ContractOnService/ContractOnService 1.webp',
+    imageEn: '/images/ContractOnService/ContractOnService 1EN.webp',
   },
   {
     title: { ar: 'المرحلة الثانية: تقديم الطلب والسداد المبدئي', en: 'Stage 2: Application Submission and Initial Payment' },
@@ -38,7 +40,8 @@ const STAGES: Array<{
         en: 'Treasury - first payment (5 minutes): pay the inspection fee only, then leave.',
       },
     ],
-    image: '/images/ContractOnService/ContractOnService2.webp',
+    imageAr: '/images/ContractOnService/ContractOnService2.webp',
+    imageEn: '/images/ContractOnService/ContractOnService2EN.webp',
   },
   {
     title: { ar: 'المرحلة الثالثة: الإجراءات الفنية والمقايسة', en: 'Stage 3: Technical Procedures and Estimate' },
@@ -52,7 +55,8 @@ const STAGES: Array<{
         en: 'Communication: you are contacted to inform you of the final amount and request your attendance for payment.',
       },
     ],
-    image: '/images/ContractOnService/ContractOnService3.webp',
+    imageAr: '/images/ContractOnService/ContractOnService3.webp',
+    imageEn: '/images/ContractOnService/ContractOnService3EN.webp',
   },
   {
     title: { ar: 'المرحلة الرابعة: التعاقد النهائي والتركيب', en: 'Stage 4: Final Contract and Installation' },
@@ -66,7 +70,8 @@ const STAGES: Array<{
         en: 'Service delivery (within 48 hours): the request is transferred for installation, the meter is installed, and billing begins.',
       },
     ],
-    image: '/images/ContractOnService/ContractOnService4.webp',
+    imageAr: '/images/ContractOnService/ContractOnService4.webp',
+    imageEn: '/images/ContractOnService/ContractOnService4EN.webp',
   },
 ];
 
@@ -74,6 +79,7 @@ function ContractOnServicePage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const listPaddingClass = isEnglish ? 'pl-5' : 'pr-5';
@@ -123,7 +129,7 @@ function ContractOnServicePage() {
                   </div>
                   <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
                     <img
-                      src={stage.image}
+                      src={localizedImageSrc(stage.imageAr, stage.imageEn)}
                       alt={t(stage.title)}
                       loading="lazy"
                       className="h-full w-full object-contain bg-white"

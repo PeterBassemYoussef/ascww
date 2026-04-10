@@ -144,6 +144,7 @@ function IntegritySupportOverviewPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const imageFloatClass = isEnglish
     ? 'group float-right mb-4 ml-6 w-72 cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md md:w-80 lg:w-96'
@@ -182,13 +183,13 @@ function IntegritySupportOverviewPage() {
                   className={imageFloatClass}
                   onClick={() =>
                     setLightboxImage({
-                      src: '/images/nabza-an-elnazaha/Achievements.webp',
+                      src: localizedImageSrc('/images/nabza-an-elnazaha/Achievements.webp', '/images/nabza-an-elnazaha/AchievementsEN.webp'),
                       alt: t({ ar: 'صورة الإنجازات', en: 'Achievements image' }),
                     })
                   }
                 >
                   <img
-                    src="/images/nabza-an-elnazaha/Achievements.webp"
+                    src={localizedImageSrc('/images/nabza-an-elnazaha/Achievements.webp', '/images/nabza-an-elnazaha/AchievementsEN.webp')}
                     alt={t({ ar: 'صورة الإنجازات', en: 'Achievements image' })}
                     className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                     loading="lazy"
@@ -214,13 +215,13 @@ function IntegritySupportOverviewPage() {
                   className="group mx-auto mb-4 block w-full max-w-3xl cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
                   onClick={() =>
                     setLightboxImage({
-                      src: '/images/nabza-an-elnazaha/Performance indicator.webp',
+                      src: localizedImageSrc('/images/nabza-an-elnazaha/Performance indicator.webp', '/images/nabza-an-elnazaha/Performance indicatorEN.webp'),
                       alt: t({ ar: 'صورة مؤشرات الأداء', en: 'Performance indicators image' }),
                     })
                   }
                 >
                   <img
-                    src="/images/nabza-an-elnazaha/Performance indicator.webp"
+                    src={localizedImageSrc('/images/nabza-an-elnazaha/Performance indicator.webp', '/images/nabza-an-elnazaha/Performance indicatorEN.webp')}
                     alt={t({ ar: 'صورة مؤشرات الأداء', en: 'Performance indicators image' })}
                     className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                     loading="lazy"

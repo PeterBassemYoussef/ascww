@@ -2,8 +2,6 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
-const achievementsInfographicImage = '/images/achievements/infographic.webp';
-
 type AchievementItem = {
     id: number;
     value: string;
@@ -40,6 +38,9 @@ function CompanyAchievementsPage() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const achievementsInfographicImage = isEnglish
+        ? '/images/achievements/infographicEN.webp'
+        : '/images/achievements/infographic.webp';
     const headerGradientStyle = {
         background: isEnglish
             ? 'linear-gradient(270deg,#1c76b2 0%,#0f5f94 46%,#0a3555 100%)'

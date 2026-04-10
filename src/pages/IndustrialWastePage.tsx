@@ -56,6 +56,7 @@ function IndustrialWastePage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const paragraphAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const figureLayoutClass = isEnglish
     ? 'mb-4 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:float-right md:mb-3 md:mr-6 md:w-[36%]'
@@ -107,12 +108,12 @@ function IndustrialWastePage() {
                 <div className="mt-4 flow-root">
                   <figure className={figureLayoutClass}>
                     <img decoding="async"
-                      src="/images/prosses-water/manufactring-waste1.webp"
+                      src={localizedImageSrc('/images/prosses-water/manufactring-waste1.webp', '/images/prosses-water/manufactring-waste1EN.webp')}
                       alt={t('نبذه عن الصرف الصناعي', 'Overview of industrial wastewater')}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/manufactring-waste1.webp',
+                          src: localizedImageSrc('/images/prosses-water/manufactring-waste1.webp', '/images/prosses-water/manufactring-waste1EN.webp'),
                           alt: t('نبذه عن الصرف الصناعي', 'Overview of industrial wastewater'),
                         })
                       }
@@ -135,12 +136,12 @@ function IndustrialWastePage() {
                 <div className="mt-4 flow-root">
                   <figure className={figureLayoutClass}>
                     <img decoding="async"
-                      src="/images/prosses-water/manufactring-waste2.webp"
+                      src={localizedImageSrc('/images/prosses-water/manufactring-waste2.webp', '/images/prosses-water/manufactring-waste2EN.webp')}
                       alt={t('محطات المعالجه', 'Treatment plants')}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/manufactring-waste2.webp',
+                          src: localizedImageSrc('/images/prosses-water/manufactring-waste2.webp', '/images/prosses-water/manufactring-waste2EN.webp'),
                           alt: t('محطات المعالجه', 'Treatment plants'),
                         })
                       }
@@ -163,12 +164,12 @@ function IndustrialWastePage() {
                 <div className="mt-4 flow-root">
                   <figure className={figureLayoutClass}>
                     <img decoding="async"
-                      src="/images/prosses-water/manufactring-waste3.webp"
+                      src={localizedImageSrc('/images/prosses-water/manufactring-waste3.webp', '/images/prosses-water/manufactring-waste3EN.webp')}
                       alt={t('الملوثات فى مياه الصرف الصناعي', 'Pollutants in industrial wastewater')}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/manufactring-waste3.webp',
+                          src: localizedImageSrc('/images/prosses-water/manufactring-waste3.webp', '/images/prosses-water/manufactring-waste3EN.webp'),
                           alt: t('الملوثات فى مياه الصرف الصناعي', 'Pollutants in industrial wastewater'),
                         })
                       }
@@ -194,12 +195,12 @@ function IndustrialWastePage() {
                 <div className="mt-4 flow-root">
                   <figure className={figureLayoutClass}>
                     <img decoding="async"
-                      src="/images/prosses-water/manufactring-waste4.webp"
+                      src={localizedImageSrc('/images/prosses-water/manufactring-waste4.webp', '/images/prosses-water/manufactring-waste4EN.webp')}
                       alt={t('الطرق الشائعة لمعالجة مياه الصرف الصناعي', 'Common methods for industrial wastewater treatment')}
                       loading="lazy"
                       onClick={() =>
                         openLightbox({
-                          src: '/images/prosses-water/manufactring-waste4.webp',
+                          src: localizedImageSrc('/images/prosses-water/manufactring-waste4.webp', '/images/prosses-water/manufactring-waste4EN.webp'),
                           alt: t('الطرق الشائعة لمعالجة مياه الصرف الصناعي', 'Common methods for industrial wastewater treatment'),
                         })
                       }

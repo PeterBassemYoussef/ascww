@@ -6,6 +6,7 @@ function MyReadingAppPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const appImageSrc = isEnglish ? '/images/services/readmeEN.webp' : '/images/services/readme.webp';
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const listPaddingClass = isEnglish ? 'pl-6' : 'pr-6';
@@ -24,7 +25,7 @@ function MyReadingAppPage() {
               <section className="space-y-6">
                 <figure className="mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
                   <img
-                    src="/images/services/readme.webp"
+                    src={appImageSrc}
                     alt={t('تطبيق قراءتي', 'My Reading app')}
                     className="h-auto w-full object-cover"
                     loading="lazy"

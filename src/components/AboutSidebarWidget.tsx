@@ -27,6 +27,9 @@ function AboutSidebarWidget({
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const companyMessageImageSrc = isEnglish
+        ? '/images/about/company-messageEN.webp'
+        : '/images/about/company-message.webp';
 
     return (
         <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
@@ -61,7 +64,7 @@ function AboutSidebarWidget({
                         </summary>
                         <div className={`border-t px-3 py-3 ${isFormal ? 'border-slate-200' : 'border-[#d7cfc3]'}`}>
                             <img decoding="async"
-                                src="/images/about/company-message.webp"
+                                src={companyMessageImageSrc}
                                 alt={t('رسالة الشركة', 'Company message')}
                                 className="w-full rounded-lg border border-slate-300 bg-white"
                                 loading="lazy"

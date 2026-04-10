@@ -9,6 +9,7 @@ function MainContent() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const serviceImage = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
 
     return (
         <>
@@ -24,7 +25,7 @@ function MainContent() {
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
                                     <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         <img
-                                            src="/images/services/inquire-bill.webp"
+                                            src={serviceImage('/images/services/inquire-bill.webp', '/images/services/inquire-billEN.webp')}
                                             alt={t('استعلم عن فاتورتك', 'Check your bill')}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             loading="lazy"
@@ -43,7 +44,7 @@ function MainContent() {
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
                                     <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         <img
-                                            src="/images/services/enter-reading.webp"
+                                            src={serviceImage('/images/services/enter-reading.webp', '/images/services/enter-readingEN.webp')}
                                             alt={t('أدخل قراءة عدادك', 'Enter your meter reading')}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             loading="lazy"
@@ -62,7 +63,7 @@ function MainContent() {
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
                                     <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         <img
-                                            src="/images/services/hotline.webp"
+                                            src={serviceImage('/images/services/hotline.webp', '/images/services/hotlineEN.webp')}
                                             alt={t('تطبيق الخط الساخن', 'Hotline app')}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             loading="lazy"
@@ -81,7 +82,7 @@ function MainContent() {
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
                                     <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         <img
-                                            src="/images/services/readme.webp"
+                                            src={serviceImage('/images/services/readme.webp', '/images/services/readmeEN.webp')}
                                             alt={t('تطبيق قراءتي', 'My Reading app')}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             loading="lazy"
@@ -107,3 +108,4 @@ function MainContent() {
 }
 
 export default memo(MainContent);
+

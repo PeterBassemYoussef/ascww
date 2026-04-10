@@ -11,7 +11,8 @@ type LocalizedText = {
 type ContentSection = {
   title: LocalizedText;
   image: {
-    src: string;
+    srcAr: string;
+    srcEn: string;
     alt: LocalizedText;
   };
   paragraphs: LocalizedText[];
@@ -24,7 +25,8 @@ const contentSections: ContentSection[] = [
       en: 'Overview of the importance of wastewater disposal',
     },
     image: {
-      src: '/images/prosses-water/kind-of-waste-water2.webp',
+      srcAr: '/images/prosses-water/kind-of-waste-water2.webp',
+      srcEn: '/images/prosses-water/kind-of-waste-water2EN.webp',
       alt: {
         ar: 'أنواع محطات معالجة مياه الصرف الصحي',
         en: 'Wastewater treatment plant systems',
@@ -55,7 +57,8 @@ const contentSections: ContentSection[] = [
       en: 'Types of treatment plants',
     },
     image: {
-      src: '/images/prosses-water/kind-of-waste-water1.webp',
+      srcAr: '/images/prosses-water/kind-of-waste-water1.webp',
+      srcEn: '/images/prosses-water/kind-of-waste-water1EN.webp',
       alt: {
         ar: 'أنواع محطات المعالجة',
         en: 'Types of treatment plants',
@@ -89,6 +92,7 @@ function SafeSewageDisposalPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (text: LocalizedText) => (isEnglish ? text.en : text.ar);
+  const localizedImageSrc = (section: ContentSection) => (isEnglish ? section.image.srcEn : section.image.srcAr);
   const paragraphAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const figureLayoutClass = isEnglish
     ? 'mb-4 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:float-right md:mb-3 md:mr-6 md:w-[36%]'
@@ -151,12 +155,12 @@ function SafeSewageDisposalPage() {
                         <figure className={figureLayoutClass}>
                           <img
                             decoding="async"
-                            src={section.image.src}
+                            src={localizedImageSrc(section)}
                             alt={t(section.image.alt)}
                             loading="lazy"
                             onClick={() =>
                               openLightbox({
-                                src: section.image.src,
+                                src: localizedImageSrc(section),
                                 alt: t(section.image.alt),
                               })
                             }
@@ -181,12 +185,12 @@ function SafeSewageDisposalPage() {
                           <figure className={`mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:mt-0 ${figureOrderClass}`}>
                             <img
                               decoding="async"
-                              src={section.image.src}
+                              src={localizedImageSrc(section)}
                               alt={t(section.image.alt)}
                               loading="lazy"
                               onClick={() =>
                                 openLightbox({
-                                  src: section.image.src,
+                                  src: localizedImageSrc(section),
                                   alt: t(section.image.alt),
                                 })
                               }

@@ -4,12 +4,14 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const qualityImages = [
   {
-    src: '/images/water-quality/quality_1.webp',
+    srcAr: '/images/water-quality/quality_1.webp',
+    srcEn: '/images/water-quality/quality_1EN.webp',
     altAr: 'الجهات المعنية بجودة مياه الشرب',
     altEn: 'Entities responsible for drinking water quality',
   },
   {
-    src: '/images/water-quality/quality_2.webp',
+    srcAr: '/images/water-quality/quality_2.webp',
+    srcEn: '/images/water-quality/quality_2EN.png',
     altAr: 'منظومة المعامل المرتبطة بجودة المياه',
     altEn: 'Laboratory system related to water quality',
   },
@@ -46,14 +48,14 @@ function WaterQualityPage() {
             <div className="grid gap-6 px-4 py-6 sm:px-8 md:grid-cols-2">
               {qualityImages.map((image) => (
                 <article
-                  key={image.src}
+                  key={image.srcAr}
                   className="group overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-3 shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(15,23,42,0.18)] sm:p-4"
                 >
                   <div className="mb-3 text-center text-sm font-bold text-[#0a3555]">
                     {isEnglish ? image.altEn : image.altAr}
                   </div>
                   <img decoding="async"
-                    src={image.src}
+                    src={isEnglish ? image.srcEn : image.srcAr}
                     alt={isEnglish ? image.altEn : image.altAr}
                     loading="lazy"
                     className="mx-auto h-auto w-full rounded-xl border border-slate-200 bg-white object-contain transition duration-300 group-hover:scale-[1.01]"
@@ -118,3 +120,4 @@ function WaterQualityPage() {
 }
 
 export default WaterQualityPage;
+

@@ -33,6 +33,7 @@ function JobsAndCompetitionPage() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const emptyStateImageSrc = isEnglish ? '/images/jobsEN.webp' : '/images/jobs.webp';
     const [allItems, setAllItems] = useState<CareerItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -285,7 +286,7 @@ function JobsAndCompetitionPage() {
                             {!loading && !error && jobItems.length === 0 ? (
                                 <section className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-[#d7b05a]/40 bg-gradient-to-b from-[#0a3555]/5 to-white p-4 text-center shadow-sm sm:p-5">
                                     <img
-                                        src="/images/jobs.webp"
+                                        src={emptyStateImageSrc}
                                         alt={t('لا توجد وظائف حالياً', 'No jobs available right now')}
                                         className="mx-auto h-auto max-h-[420px] w-full rounded-2xl object-contain shadow-[0_14px_30px_rgba(15,23,42,0.18)] ring-1 ring-slate-900/10"
                                         loading="lazy"
