@@ -28,7 +28,7 @@ function TenderCard({ tender }: TenderCardProps) {
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
-    const footerClass = 'tender-card-footer mt-auto flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between';
+    const footerClass = 'tender-card-footer mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-4';
     const arrowClass = isEnglish ? 'h-4 w-4 transition-transform group-hover:translate-x-1' : 'h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1';
     const { speak, stop, isReading } = useSpeech();
     const detailsPath = getTenderDetailsPath(tender);
@@ -114,13 +114,13 @@ function TenderCard({ tender }: TenderCardProps) {
                         </svg>
                     </Link>
 
-                    <div className="tender-card-actions flex flex-wrap items-center gap-2">
+                    <div className="tender-card-actions flex items-center gap-2">
                         {pdfUrl && (
                             <a
                                 href={pdfUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-black text-red-700 shadow-sm transition hover:bg-red-100"
+                                className="hidden min-h-[44px] items-center justify-center rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-black text-red-700 shadow-sm transition hover:bg-red-100 sm:inline-flex"
                             >
                                 {t('ملف PDF', 'PDF file')}
                             </a>
@@ -201,3 +201,4 @@ function TenderCard({ tender }: TenderCardProps) {
 }
 
 export default memo(TenderCard);
+

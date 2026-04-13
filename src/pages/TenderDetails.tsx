@@ -346,7 +346,7 @@ function TenderDetails() {
                             </div>
                         )}
 
-                        <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="tender-details-footer flex items-center justify-between gap-4 border-t border-gray-100 pt-6">
                             <Link
                                 to={TENDERS_ARCHIVE_PATH}
                                 className="inline-flex items-center gap-2 font-medium text-blue-600 transition-colors hover:text-blue-800"
@@ -358,7 +358,7 @@ function TenderDetails() {
                                 {t('العودة إلى المناقصات', 'Back to tenders')}
                             </Link>
 
-                            <div className="tender-details-actions flex flex-wrap gap-3">
+                            <div className="tender-details-actions flex items-center gap-3">
                                 <button
                                     type="button"
                                     onClick={async () => {

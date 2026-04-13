@@ -147,15 +147,15 @@ function IntegritySupportOverviewPage() {
   const localizedImageSrc = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const imageFloatClass = isEnglish
-    ? 'group float-right mb-4 ml-6 w-72 cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md md:w-80 lg:w-96'
-    : 'group float-left mb-4 mr-6 w-72 cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md md:w-80 lg:w-96';
+    ? 'group mb-4 block w-full max-w-md cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md mx-auto md:float-right md:ml-6 md:mr-0 md:w-80 lg:w-96'
+    : 'group mb-4 block w-full max-w-md cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md mx-auto md:float-left md:mr-6 md:ml-0 md:w-80 lg:w-96';
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
 
   return (
     <>
       <Header />
-      <main className="bg-white py-6" dir={isEnglish ? 'ltr' : 'rtl'}>
+      <main className="integrity-support-overview-page bg-white py-6" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="mx-auto w-full max-w-6xl px-4">
           <div className={`mb-8 overflow-hidden rounded-3xl px-6 py-8 text-white shadow-[0_18px_40px_rgba(2,6,23,0.15)] ${headerGradientClass}`}>
             <div className={textAlignmentClass}>
@@ -168,7 +168,7 @@ function IntegritySupportOverviewPage() {
             </div>
           </div>
 
-          <section className={`space-y-6 text-slate-700 ${textAlignmentClass}`}>
+          <section className={`integrity-support-body space-y-6 text-slate-700 ${textAlignmentClass}`}>
             <div className="rounded-2xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="text-xl font-bold text-[#0a3555]">{t({ ar: 'التعريف', en: 'Definition' })}</h2>
               <p className="mt-4 leading-8">{t(definitionText)}</p>

@@ -278,7 +278,7 @@ function ProjectDetails() {
                             </p>
                         )}
 
-                        <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="project-details-footer flex items-center justify-between gap-4 border-t border-gray-100 pt-6">
                             <Link
                                 to={PROJECTS_ARCHIVE_PATH}
                                 className="inline-flex items-center gap-2 font-medium text-blue-600 transition-colors hover:text-blue-800"
@@ -290,7 +290,7 @@ function ProjectDetails() {
                                 {t('العودة إلى المشروعات', 'Back to projects')}
                             </Link>
 
-                            <div className="flex flex-wrap gap-3">
+                            <div className="project-details-actions flex items-center gap-3">
                                 <button
                                     type="button"
                                     onClick={async () => {

@@ -122,6 +122,11 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
     overflow-x: hidden;
   }
 
+  .integrity-support-overview-page .integrity-support-body :where(p, li) {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
   main :where(table) {
     display: block;
     width: 100%;
@@ -176,26 +181,91 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
   .project-card-footer {
     gap: 0.75rem;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .news-card-actions,
   .project-card-actions,
   .tender-card-actions,
+  .news-details-actions,
+  .project-details-actions,
   .tender-details-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
+  .tender-card-footer {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tender-card-actions {
+    width: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tender-details-footer {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .news-details-footer,
+  .project-details-footer {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tender-details-actions {
+    width: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+
+  .news-details-actions,
+  .project-details-actions {
+    width: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+
   .news-card-actions button,
   .project-card-actions button,
   .tender-card-actions button,
+  .news-details-actions button,
+  .project-details-actions button,
   .tender-details-actions button {
     min-width: var(--tap-target-size);
     min-height: var(--tap-target-size);
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .news-details-actions button,
+  .project-details-actions button,
+  .tender-details-actions button {
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0.45rem;
+  }
+
+  .news-details-actions button svg,
+  .project-details-actions button svg,
+  .tender-details-actions button svg {
+    width: 1rem;
+    height: 1rem;
   }
 }
 

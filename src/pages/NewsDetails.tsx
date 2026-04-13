@@ -308,7 +308,7 @@ function NewsDetails() {
                             </p>
                         )}
 
-                        <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="news-details-footer flex items-center justify-between gap-4 border-t border-gray-100 pt-6">
                             <Link
                                 to={NEWS_ARCHIVE_PATH}
                                 className="inline-flex items-center gap-2 font-medium text-blue-600 transition-colors hover:text-blue-800"
@@ -320,7 +320,7 @@ function NewsDetails() {
                                 {t('العودة للأخبار', 'Back to news')}
                             </Link>
 
-                            <div className="flex flex-wrap gap-3">
+                            <div className="news-details-actions flex items-center gap-3">
                                 <button
                                     type="button"
                                     onClick={async () => {
