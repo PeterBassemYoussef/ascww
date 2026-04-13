@@ -79,6 +79,16 @@ const parseBoolean = (value: unknown) => {
   return ['1', 'true', 'yes', 'open', 'active', 'available', 'متاح', 'مفتوح'].includes(normalized);
 };
 
+const parseQueryBooleanOverride = (value: string | null) => {
+  if (value === null) return null;
+
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return null;
+  if (['1', 'true', 'yes', 'open', 'active', 'available', 'متاح', 'مفتوح'].includes(normalized)) return true;
+  if (['0', 'false', 'no', 'closed', 'inactive', 'unavailable', 'غير متاح', 'مغلق'].includes(normalized)) return false;
+  return null;
+};
+
 const sanitizeHtml = (value: string) => {
   if (!value) return '';
   if (typeof window === 'undefined' || typeof DOMParser === 'undefined') return value;
@@ -191,9 +201,14 @@ function SchoolSubmissionDataPage() {
   const introductionHtml = useMemo(() => sanitizeHtml(data?.introductionMessage ?? ''), [data?.introductionMessage]);
   const submissionTermsHtml = useMemo(() => sanitizeHtml(data?.submissionTerms ?? ''), [data?.submissionTerms]);
   const graduationYearOptions = data?.graduationYears ?? [];
-  const forceClosedPreview = typeof window !== 'undefined'
-    && new URLSearchParams(window.location.search).get('preview_submission') === 'false';
-  const showSubmissionForm = forceClosedPreview ? false : Boolean(data?.showSubmissionForm);
+  const previewSubmissionOverride = typeof window !== 'undefined'
+    ? (() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      return parseQueryBooleanOverride(searchParams.get(''))
+        ?? parseQueryBooleanOverride(searchParams.get('preview_submission'));
+    })()
+    : null;
+  const showSubmissionForm = previewSubmissionOverride ?? Boolean(data?.showSubmissionForm);
 
   const clearFieldError = (field: FormFieldKey) => {
     setFieldErrors((prev) => {
