@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Sports activity - ${index + 1}` : `النشاط الرياضي - ${index + 1}`;
@@ -10,17 +10,17 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/sport_dep/122.webp',
-  '/images/sport_dep/123.webp',
-  '/images/sport_dep/124.webp',
-  '/images/sport_dep/126.webp',
-  '/images/sport_dep/127.webp',
-  '/images/sport_dep/128.webp',
-  '/images/sport_dep/129.webp',
-  '/images/sport_dep/130.webp',
-  '/images/sport_dep/165.webp',
-  '/images/sport_dep/166.webp',
-  '/images/sport_dep/167.webp',
+  resolveGalleryImageSrc('sport_dep', '122.webp'),
+  resolveGalleryImageSrc('sport_dep', '123.webp'),
+  resolveGalleryImageSrc('sport_dep', '124.webp'),
+  resolveGalleryImageSrc('sport_dep', '126.webp'),
+  resolveGalleryImageSrc('sport_dep', '127.webp'),
+  resolveGalleryImageSrc('sport_dep', '128.webp'),
+  resolveGalleryImageSrc('sport_dep', '129.webp'),
+  resolveGalleryImageSrc('sport_dep', '130.webp'),
+  resolveGalleryImageSrc('sport_dep', '165.webp'),
+  resolveGalleryImageSrc('sport_dep', '166.webp'),
+  resolveGalleryImageSrc('sport_dep', '167.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({

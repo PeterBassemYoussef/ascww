@@ -17,19 +17,27 @@ const buildManifest = (publicDir) => {
   const imagesRoot = path.join(publicDir, 'images');
   if (!fs.existsSync(imagesRoot) || !fs.statSync(imagesRoot).isDirectory()) return {};
 
-  const folders = fs
-    .readdirSync(imagesRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-
   const manifest = {};
-  for (const folder of folders) {
-    const folderPath = path.join(imagesRoot, folder);
-    const files = getImageFiles(folderPath);
-    if (files.length === 0) continue;
-    manifest[folder] = files.map((name) => `/images/${folder}/${encodeURIComponent(name)}`);
-  }
+  const collectFolders = (currentDir, relativeDir = '') => {
+    const folders = fs
+      .readdirSync(currentDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+
+    for (const entry of folders) {
+      const nextRelativeDir = relativeDir ? `${relativeDir}/${entry.name}` : entry.name;
+      const folderPath = path.join(currentDir, entry.name);
+      const files = getImageFiles(folderPath);
+
+      if (files.length > 0 && !(entry.name in manifest)) {
+        manifest[entry.name] = files.map((name) => `/images/${nextRelativeDir}/${encodeURIComponent(name)}`);
+      }
+
+      collectFolders(folderPath, nextRelativeDir);
+    }
+  };
+
+  collectFolders(imagesRoot);
 
   return manifest;
 };

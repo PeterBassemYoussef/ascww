@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Technical school - ${index + 1}` : `المدرسة الفنية - ${index + 1}`;
@@ -10,16 +10,16 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/school_dep/96.webp',
-  '/images/school_dep/97.webp',
-  '/images/school_dep/98.webp',
-  '/images/school_dep/99.webp',
-  '/images/school_dep/100.webp',
-  '/images/school_dep/101.webp',
-  '/images/school_dep/102.webp',
-  '/images/school_dep/103.webp',
-  '/images/school_dep/104.webp',
-  '/images/school_dep/108.webp',
+  resolveGalleryImageSrc('school_dep', '96.webp'),
+  resolveGalleryImageSrc('school_dep', '97.webp'),
+  resolveGalleryImageSrc('school_dep', '98.webp'),
+  resolveGalleryImageSrc('school_dep', '99.webp'),
+  resolveGalleryImageSrc('school_dep', '100.webp'),
+  resolveGalleryImageSrc('school_dep', '101.webp'),
+  resolveGalleryImageSrc('school_dep', '102.webp'),
+  resolveGalleryImageSrc('school_dep', '103.webp'),
+  resolveGalleryImageSrc('school_dep', '104.webp'),
+  resolveGalleryImageSrc('school_dep', '108.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({

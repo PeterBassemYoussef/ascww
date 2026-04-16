@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Chairman tours - ${index + 1}` : `جولات رئيس مجلس الإدارة - ${index + 1}`;
@@ -10,14 +10,14 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/trip_boss/111.webp',
-  '/images/trip_boss/112.webp',
-  '/images/trip_boss/113.webp',
-  '/images/trip_boss/114.webp',
-  '/images/trip_boss/115.webp',
-  '/images/trip_boss/116.webp',
-  '/images/trip_boss/117.webp',
-  '/images/trip_boss/118.jpg',
+  resolveGalleryImageSrc('trip_boss', '111.webp'),
+  resolveGalleryImageSrc('trip_boss', '112.webp'),
+  resolveGalleryImageSrc('trip_boss', '113.webp'),
+  resolveGalleryImageSrc('trip_boss', '114.webp'),
+  resolveGalleryImageSrc('trip_boss', '115.webp'),
+  resolveGalleryImageSrc('trip_boss', '116.webp'),
+  resolveGalleryImageSrc('trip_boss', '117.webp'),
+  resolveGalleryImageSrc('trip_boss', '118.jpg'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({

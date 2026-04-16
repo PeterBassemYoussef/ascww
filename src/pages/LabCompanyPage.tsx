@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Company laboratories - ${index + 1}` : `معامل الشركة - ${index + 1}`;
@@ -10,18 +10,18 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/labs_dep/80.webp',
-  '/images/labs_dep/81.webp',
-  '/images/labs_dep/83.webp',
-  '/images/labs_dep/84.webp',
-  '/images/labs_dep/85.webp',
-  '/images/labs_dep/86.webp',
-  '/images/labs_dep/87.webp',
-  '/images/labs_dep/88.webp',
-  '/images/labs_dep/89.webp',
-  '/images/labs_dep/90.webp',
-  '/images/labs_dep/91.webp',
-  '/images/labs_dep/92.webp',
+  resolveGalleryImageSrc('labs_dep', '80.webp'),
+  resolveGalleryImageSrc('labs_dep', '81.webp'),
+  resolveGalleryImageSrc('labs_dep', '83.webp'),
+  resolveGalleryImageSrc('labs_dep', '84.webp'),
+  resolveGalleryImageSrc('labs_dep', '85.webp'),
+  resolveGalleryImageSrc('labs_dep', '86.webp'),
+  resolveGalleryImageSrc('labs_dep', '87.webp'),
+  resolveGalleryImageSrc('labs_dep', '88.webp'),
+  resolveGalleryImageSrc('labs_dep', '89.webp'),
+  resolveGalleryImageSrc('labs_dep', '90.webp'),
+  resolveGalleryImageSrc('labs_dep', '91.webp'),
+  resolveGalleryImageSrc('labs_dep', '92.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Wastewater stations - ${index + 1}` : `محطات الصرف - ${index + 1}`;
@@ -10,15 +10,15 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/waste_dep/140.webp',
-  '/images/waste_dep/141.webp',
-  '/images/waste_dep/142.webp',
-  '/images/waste_dep/143.webp',
-  '/images/waste_dep/144.webp',
-  '/images/waste_dep/145.webp',
-  '/images/waste_dep/146.jpg',
-  '/images/waste_dep/147.jpg',
-  '/images/waste_dep/148.webp',
+  resolveGalleryImageSrc('waste_dep', '140.webp'),
+  resolveGalleryImageSrc('waste_dep', '141.webp'),
+  resolveGalleryImageSrc('waste_dep', '142.webp'),
+  resolveGalleryImageSrc('waste_dep', '143.webp'),
+  resolveGalleryImageSrc('waste_dep', '144.webp'),
+  resolveGalleryImageSrc('waste_dep', '145.webp'),
+  resolveGalleryImageSrc('waste_dep', '146.jpg'),
+  resolveGalleryImageSrc('waste_dep', '147.jpg'),
+  resolveGalleryImageSrc('waste_dep', '148.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({

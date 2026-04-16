@@ -3,6 +3,21 @@ const extractImages = (value: unknown): string[] => {
   return value.filter((item) => typeof item === 'string');
 };
 
+const galleryFolderOverrides: Record<string, string> = {
+  labs_dep: 'Photo-Gallery/labs_dep',
+  school_dep: 'Photo-Gallery/school_dep',
+  sport_dep: 'Photo-Gallery/sport_dep',
+  traning_dep: 'Photo-Gallery/traning_dep',
+  trip_boss: 'Photo-Gallery/trip_boss',
+  waste_dep: 'Photo-Gallery/waste_dep',
+};
+
+export const resolveGalleryFolderPath = (galleryKey: string): string =>
+  galleryFolderOverrides[galleryKey] ?? galleryKey;
+
+export const resolveGalleryImageSrc = (galleryKey: string, fileName: string): string =>
+  `/images/${resolveGalleryFolderPath(galleryKey)}/${encodeURIComponent(fileName)}`;
+
 export const fetchGallerySources = async (
   galleryKey: string,
   signal?: AbortSignal

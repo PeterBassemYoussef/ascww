@@ -4,6 +4,46 @@ import path from 'path';
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']);
 const isSafeGalleryName = (value = '') => /^[a-zA-Z0-9_-]+$/.test(value);
 
+const resolveGalleryDirectory = (imagesRoot, folder) => {
+  if (!fs.existsSync(imagesRoot) || !fs.statSync(imagesRoot).isDirectory()) {
+    return null;
+  }
+
+  const directDir = path.join(imagesRoot, folder);
+  if (fs.existsSync(directDir) && fs.statSync(directDir).isDirectory()) {
+    return {
+      dirPath: directDir,
+      publicPath: folder,
+    };
+  }
+
+  const directoriesToVisit = [imagesRoot];
+  while (directoriesToVisit.length > 0) {
+    const currentDir = directoriesToVisit.shift();
+    if (!currentDir) continue;
+
+    const childDirectories = fs
+      .readdirSync(currentDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory());
+
+    for (const entry of childDirectories) {
+      const candidateDir = path.join(currentDir, entry.name);
+      const relativePath = path.relative(imagesRoot, candidateDir).split(path.sep).join('/');
+
+      if (entry.name === folder) {
+        return {
+          dirPath: candidateDir,
+          publicPath: relativePath,
+        };
+      }
+
+      directoriesToVisit.push(candidateDir);
+    }
+  }
+
+  return null;
+};
+
 const loadManifest = (rootDir) => {
   const manifestPath = path.join(rootDir, 'public', 'gallery-manifest.json');
   if (!fs.existsSync(manifestPath) || !fs.statSync(manifestPath).isFile()) {
@@ -18,18 +58,18 @@ const loadManifest = (rootDir) => {
 };
 
 const listFromFilesystem = (rootDir, folder) => {
-  const galleryDir = path.join(rootDir, 'public', 'images', folder);
-  if (!fs.existsSync(galleryDir) || !fs.statSync(galleryDir).isDirectory()) {
+  const gallery = resolveGalleryDirectory(path.join(rootDir, 'public', 'images'), folder);
+  if (!gallery) {
     return [];
   }
 
   return fs
-    .readdirSync(galleryDir, { withFileTypes: true })
+    .readdirSync(gallery.dirPath, { withFileTypes: true })
     .filter((entry) => entry.isFile())
     .map((entry) => entry.name)
     .filter((name) => IMAGE_EXTENSIONS.has(path.extname(name).toLowerCase()))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
-    .map((name) => `/images/${folder}/${encodeURIComponent(name)}`);
+    .map((name) => `/images/${gallery.publicPath}/${encodeURIComponent(name)}`);
 };
 
 const listGalleryImages = (rootDir, folder) => {

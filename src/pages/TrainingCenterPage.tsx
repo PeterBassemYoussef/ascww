@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
-import { fetchGallerySources } from '../utils/gallery';
+import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Training center - ${index + 1}` : `مركز التدريب - ${index + 1}`;
@@ -10,14 +10,14 @@ const toImageAlt = (index: number, isEnglish: boolean) =>
 type GalleryImage = { src: string; alt: string };
 
 const fallbackImageSources = [
-  '/images/traning_dep/131.webp',
-  '/images/traning_dep/132.webp',
-  '/images/traning_dep/133.webp',
-  '/images/traning_dep/134.webp',
-  '/images/traning_dep/135.webp',
-  '/images/traning_dep/136.webp',
-  '/images/traning_dep/137.webp',
-  '/images/traning_dep/138.webp',
+  resolveGalleryImageSrc('traning_dep', '131.webp'),
+  resolveGalleryImageSrc('traning_dep', '132.webp'),
+  resolveGalleryImageSrc('traning_dep', '133.webp'),
+  resolveGalleryImageSrc('traning_dep', '134.webp'),
+  resolveGalleryImageSrc('traning_dep', '135.webp'),
+  resolveGalleryImageSrc('traning_dep', '136.webp'),
+  resolveGalleryImageSrc('traning_dep', '137.webp'),
+  resolveGalleryImageSrc('traning_dep', '138.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({
