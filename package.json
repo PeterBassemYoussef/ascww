@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "description": "ASCWW website migrated to React + TypeScript",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "node scripts/generate-gallery-manifest.js && npm run typecheck && vite build",
     "preview": "vite preview",
     "start": "node server.js",
+    "start:prod": "node server.js",
     "typecheck": "tsc --noEmit",
     "build:css": "tailwindcss -i ./src/input.css -o ./css/tailwind.generated.css --minify",
     "watch:css": "tailwindcss -i ./src/input.css -o ./css/tailwind.generated.css --watch"

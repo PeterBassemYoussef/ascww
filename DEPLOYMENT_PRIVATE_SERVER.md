@@ -1,87 +1,163 @@
-# Private Server Deployment (Vite + React SPA)
+# Private Linux Server Deployment
 
-## 1) Build
+This project should not be deployed as a static `dist` folder only if you want it to behave like Vercel.
+
+The current production behavior depends on:
+
+1. `server.js` for SPA fallback.
+2. `api/ssr.js` for SEO and Open Graph tags on archive/detail routes.
+3. `/api/*` proxying to `https://backend.ascww.org`.
+4. `/api/gallery/*` dynamic gallery responses.
+
+To match that behavior on your own Linux server, run the Node server behind Nginx.
+
+## 1) Server requirements
+
+- Ubuntu/Debian or another Linux distro
+- Node.js 20 or newer
+- Nginx
+- A domain name pointed to the server
+
+## 2) Upload the project
+
+Example target path:
 
 ```bash
+/var/www/ascww
+```
+
+Copy the full project, not only `dist`.
+
+## 3) Install dependencies and build
+
+Inside the project directory on the Linux server:
+
+```bash
+npm ci
+cp .env.server.example .env.production
 npm run build
 ```
 
-Upload the `dist` folder to your server.
+Then edit `.env.production` and replace:
 
-## 2) SPA Rewrite (Required)
+- `https://your-domain.com` with your real domain
+- any API values if your backend URL is different
 
-Your server must return `index.html` for unknown routes, otherwise direct links like `/news/123` will return `404`.
-
-### Nginx
-
-```nginx
-server {
-  listen 80;
-  server_name your-domain.com;
-  root /var/www/ascww/dist;
-  index index.html;
-
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
-}
-```
-
-### Apache (.htaccess inside dist)
-
-```apache
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
-```
-
-### IIS (web.config inside dist)
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <system.webServer>
-    <rewrite>
-      <rules>
-        <rule name="ReactRoutes" stopProcessing="true">
-          <match url=".*" />
-          <conditions logicalGrouping="MatchAll">
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-          </conditions>
-          <action type="Rewrite" url="/index.html" />
-        </rule>
-      </rules>
-    </rewrite>
-  </system.webServer>
-</configuration>
-```
-
-## 3) If deploying under sub-path (example: /portal/)
-
-Set Vite base path before build:
+Recommended `.env.production`:
 
 ```bash
-npm run build -- --base=/portal/
+VITE_API_BASE_URL=/api
+VITE_SITE_URL=https://your-domain.com
+VITE_ROUTER_MODE=browser
 ```
 
-Then deploy the built output under `/portal/`.
+Important:
 
-## 4) White Screen Quick Fix
+- Do not use `.env.production.private` for this setup.
+- That file switches the app to hash routing as a fallback for static-only hosting.
+- For Vercel-like behavior on Linux, keep browser routing and run `server.js`.
 
-If you still get a white page on private hosting, it is usually one of:
-1. Missing SPA rewrite to `index.html`.
-2. Wrong deploy base path.
-
-Temporary fallback (works even without rewrite):
-1. Copy `.env.production.private` content into `.env.production`.
-2. Build again:
+## 4) Test locally on the server
 
 ```bash
+npm run start:prod
+```
+
+Open:
+
+```bash
+http://127.0.0.1:3000
+```
+
+If the app works, stop it and continue with systemd.
+
+## 5) Create the systemd service
+
+Use the template in `deploy/systemd/ascww.service`.
+
+Example:
+
+```bash
+sudo cp deploy/systemd/ascww.service /etc/systemd/system/ascww.service
+sudo nano /etc/systemd/system/ascww.service
+```
+
+Change these values:
+
+- `WorkingDirectory=/var/www/ascww`
+- `VITE_SITE_URL=https://your-domain.com`
+- `BACKEND_BASE_URL=https://backend.ascww.org` if needed
+- `ExecStart=/usr/bin/node server.js` if Node is installed elsewhere
+
+Then enable the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable ascww
+sudo systemctl start ascww
+sudo systemctl status ascww
+```
+
+## 6) Configure Nginx
+
+Use the template in `deploy/nginx/ascww.conf`.
+
+Example:
+
+```bash
+sudo cp deploy/nginx/ascww.conf /etc/nginx/sites-available/ascww
+sudo nano /etc/nginx/sites-available/ascww
+sudo ln -s /etc/nginx/sites-available/ascww /etc/nginx/sites-enabled/ascww
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Replace:
+
+- `your-domain.com`
+- `www.your-domain.com`
+
+This proxies all traffic to the local Node server on port `3000`, which preserves:
+
+- SPA routing
+- SSR metadata
+- backend API rewrites
+- gallery API endpoints
+
+## 7) Optional SSL
+
+After Nginx is working, add HTTPS:
+
+```bash
+sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+```
+
+## 8) Updating the site later
+
+When you upload a new version:
+
+```bash
+cd /var/www/ascww
+npm ci
 npm run build
+sudo systemctl restart ascww
 ```
 
-This enables hash routing (`/#/about-company`) and avoids blank pages caused by server routing.
+## 9) Troubleshooting
+
+If the site does not behave like Vercel, check these first:
+
+1. The server is running through `node server.js`, not static hosting only.
+2. `VITE_SITE_URL` is your real public domain.
+3. `VITE_API_BASE_URL=/api` is present during build.
+4. Nginx is proxying to `127.0.0.1:3000`.
+5. `BACKEND_BASE_URL` points to the correct backend origin.
+
+## 10) Verified locally
+
+The production build and local runtime were verified successfully with:
+
+- `/` returning `200`
+- `/news-archive` returning `200`
+- `/api/gallery/school_dep` returning `200`
+- SSR meta tags present on rendered HTML
