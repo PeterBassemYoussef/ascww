@@ -79,6 +79,15 @@ const getFieldRequiredMessage = (field: FormFieldKey) => {
   return getRequiredFieldMessage(field);
 };
 
+const FORM_PANEL_CLASS = 'space-y-5 rounded-[24px] border border-white/80 bg-white/90 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6';
+const FORM_FIELD_LABEL_CLASS = 'mb-2 inline-flex items-center gap-1 text-sm font-bold text-[#0a3555] sm:text-base';
+const FORM_FIELD_CLASS = 'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-right text-base text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-[#1170b0] focus:outline-none focus:ring-4 focus:ring-[#1170b0]/10';
+const FORM_HINT_CLASS = 'mt-2 block text-xs leading-6 text-slate-500';
+const FORM_ERROR_CLASS = 'mt-2 block text-xs font-semibold text-rose-700';
+const FORM_REQUIRED_MARK_CLASS = 'mr-1 text-rose-600';
+const PRIMARY_ACTION_BUTTON_CLASS = 'rounded-2xl bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(17,112,176,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(17,112,176,0.28)] disabled:cursor-not-allowed disabled:opacity-70';
+const SECONDARY_ACTION_BUTTON_CLASS = 'rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70';
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
@@ -646,200 +655,329 @@ function SchoolSubmissionDataPage() {
                   ) : null}
 
                   {showSubmissionForm ? (
-                    <section className="rounded-xl border border-[#d8cec1] bg-[#e7ded3] px-4 py-5 sm:px-8 sm:py-7">
-                      {submitError ? (
-                        <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
-                          {submitError}
-                        </div>
-                      ) : null}
-                      <form
-                        className="grid gap-x-6 gap-y-5 md:grid-cols-2"
-                        onSubmit={handleSubmit}
-                        onReset={() => {
-                          setFileError('');
-                          setSelectedFileName('');
-                          setFieldErrors({});
-                          setSubmitError('');
-                          setSubmitSuccess('');
-                          if (isManualReset) {
-                            setSuccessModal(null);
-                            setIsManualReset(false);
-                          }
-                        }}
-                      >
-                        <div className="space-y-5 md:col-span-1">
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              الاسم
-                              {fieldErrors.studentName ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="studentName" type="text" inputMode="text" maxLength={30} pattern="^[A-Za-z\u0600-\u06FF\s]{1,30}$" title="الاسم يجب أن يكون حروف فقط وبحد أقصى 30 حرفًا" onChange={() => clearFieldError('studentName')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[0-9٠-٩]/g, '').slice(0, 30); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.studentName ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.studentName}</span> : null}
-                            <span className="mt-1 block text-xs text-slate-500">0 / 30</span>
-                          </label>
+                    <section className="relative overflow-hidden rounded-[28px] border border-[#d8e5f0] bg-[#f7fbfe] px-4 py-5 shadow-[0_22px_50px_rgba(10,53,85,0.08)] sm:px-8 sm:py-8">
+                      <div className="pointer-events-none absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#1170b0]/10 blur-3xl" />
+                      <div className="pointer-events-none absolute -bottom-8 left-0 h-32 w-32 rounded-full bg-[#d7b05a]/15 blur-3xl" />
 
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              تاريخ الميلاد
-                              {fieldErrors.birthDate ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="birthDate" type="date" onChange={() => clearFieldError('birthDate')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.birthDate ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.birthDate}</span> : null}
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              رقم تليفون الطالب
-                              {fieldErrors.studentPhone ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="studentPhone" type="tel" inputMode="numeric" minLength={11} maxLength={11} pattern="^[0-9]{11}$" title="رقم الهاتف يجب أن يكون 11 رقمًا" onChange={() => clearFieldError('studentPhone')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.studentPhone ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.studentPhone}</span> : null}
-                            <span className="mt-1 block text-xs text-slate-500">0 / 11</span>
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              الرقم القومي للطالب
-                              {fieldErrors.nationalId ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="nationalId" type="text" inputMode="numeric" minLength={14} maxLength={14} pattern="^[0-9]{14}$" title="الرقم القومي يجب أن يكون 14 رقمًا" onChange={() => clearFieldError('nationalId')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 14); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.nationalId ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.nationalId}</span> : null}
-                            <span className="mt-1 block text-xs text-slate-500">0 / 14</span>
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              العنوان
-                              {fieldErrors.address ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="address" type="text" inputMode="text" maxLength={50} pattern="^[A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]{1,50}$" title="العنوان يجب أن يكون حروفًا وأرقامًا فقط وبحد أقصى 50 حرفًا" onChange={() => clearFieldError('address')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]/g, '').slice(0, 50); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.address ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.address}</span> : null}
-                            <span className="mt-1 block text-xs text-slate-500">0 / 50</span>
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              المحافظة
-                              {fieldErrors.governorate ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <select name="governorate" defaultValue="" onChange={() => clearFieldError('governorate')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none">
-                              <option value="" disabled>اختر المحافظة</option>
-                              <option value="سوهاج">سوهاج</option>
-                              <option value="قنا">قنا</option>
-                              <option value="اسيوط">اسيوط</option>
-                              <option value="الاقصر">الاقصر</option>
-                              <option value="اسوان">اسوان</option>
-                            </select>
-                            {fieldErrors.governorate ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.governorate}</span> : null}
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              رقم تليفون ولي الأمر
-                              {fieldErrors.guardianPhone ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="guardianPhone" type="tel" inputMode="numeric" minLength={11} maxLength={11} pattern="^[0-9]{11}$" title="رقم الهاتف يجب أن يكون 11 رقمًا" onChange={() => clearFieldError('guardianPhone')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.guardianPhone ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.guardianPhone}</span> : null}
-                            <span className="mt-1 block text-xs text-slate-500">0 / 11</span>
-                          </label>
-                        </div>
-
-                        <div className="space-y-5 md:col-span-1">
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              سنة الحصول على الشهادة الإعدادية
-                              {fieldErrors.graduationYear ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <select name="graduationYear" defaultValue="" onChange={() => clearFieldError('graduationYear')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none">
-                              <option value="" disabled>اختر السنة</option>
-                              {graduationYearOptions.map((year) => (
-                                <option key={year} value={year}>{year}</option>
-                              ))}
-                            </select>
-                            {fieldErrors.graduationYear ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.graduationYear}</span> : null}
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              السن أول أكتوبر
-                              {fieldErrors.ageOctober ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="ageOctober" type="text" inputMode="numeric" minLength={2} maxLength={2} pattern="^[0-9]{2}$" title="السن أول أكتوبر يجب أن يكون رقمين فقط" onChange={() => clearFieldError('ageOctober')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.ageOctober ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.ageOctober}</span> : null}
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              الشهادة
-                              {fieldErrors.certificate ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <select name="certificate" defaultValue="" onChange={() => clearFieldError('certificate')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none">
-                              <option value="" disabled>اختر نوع الشهادة</option>
-                              <option value="الاعدادية العامة">الإعدادية العامة</option>
-                              <option value="الاعدادية الأزهرية">الإعدادية الأزهرية</option>
-                            </select>
-                            {fieldErrors.certificate ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.certificate}</span> : null}
-                          </label>
-
-                          <label className="block text-right">
-                            <span className="text-lg text-slate-700">
-                              مجموع درجات الطالب في الشهادة الإعدادية
-                              {fieldErrors.score ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input name="score" type="text" inputMode="numeric" minLength={3} maxLength={3} pattern="^[0-9]{3}$" title="مجموع الدرجات يجب أن يكون 3 أرقام فقط" onChange={() => clearFieldError('score')} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 3); }} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none" />
-                            {fieldErrors.score ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.score}</span> : null}
-                          </label>
-
-                          <div>
-                            <span className="text-lg text-slate-700">
-                              رفع الملف
-                              {(fieldErrors.attachment || fileError) ? <span className="mr-1 text-rose-600">*</span> : null}
-                            </span>
-                            <input
-                              name="attachment"
-                              type="file"
-                              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                              onChange={handleFileChange}
-                              className="mt-2 block w-full text-sm text-slate-700 file:ml-3 file:rounded file:border-0 file:bg-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-semibold"
-                            />
-                            {selectedFileName ? (
-                              <p className="mt-2 text-xs font-semibold text-emerald-700">الملف المختار: {selectedFileName}</p>
-                            ) : null}
-                            {fileError ? (
-                              <p className="mt-2 text-xs font-semibold text-rose-700">{fileError}</p>
-                            ) : null}
-                            {!fileError && fieldErrors.attachment ? (
-                              <p className="mt-2 text-xs font-semibold text-rose-700">{fieldErrors.attachment}</p>
-                            ) : null}
-
-                            <ul className="mt-3 list-disc space-y-1 pr-5 text-sm leading-7 text-slate-700">
-                              <li>استمارة النجاح للشهادة الإعدادية معتمدة.</li>
-                              <li>بيان نجاح الطالب للصف الأول والثاني الإعدادي معتمد من نفس المحافظة الحاصل منها على الشهادة الإعدادية.</li>
-                              <li>شهادة الميلاد.</li>
-                              <li>صورة بطاقة الرقم القومي للطالب وولي الأمر.</li>
-                              <li>صورة شخصية 4x6.</li>
-                              <li>يجب أن يكون امتداد الملف المرفق (pdf - word).</li>
-                              <li>حجم الملف لا يتعدى 3 ميجابايت.</li>
-                              <li>يفضل أن يكون اسم الملف المرفق بنفس اسم الطالب.</li>
-                              <li>يجب طباعة الرسالة بعد التسجيل لإرفاقها مع الأوراق المطلوبة يوم المقابلة الشخصية.</li>
-                            </ul>
+                      <div className="relative">
+                        {submitError ? (
+                          <div className="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+                            {submitError}
                           </div>
+                        ) : null}
+
+                        <div className="mb-2">
+                          <span className="inline-flex rounded-full bg-[#0a3555]/8 px-5 py-2 text-sm font-extrabold text-[#0a3555] sm:text-base">
+                            نموذج التقديم
+                          </span>
                         </div>
 
-                        <div dir="ltr" className="md:col-span-2 mt-2 flex justify-start gap-3">
-                          <button type="submit" disabled={isSubmitting} className="rounded bg-[#d08a2f] px-6 py-2 text-sm font-semibold text-white transition hover:bg-[#b97824] disabled:cursor-not-allowed disabled:bg-[#d08a2f]/70">
-                            {isSubmitting ? 'جارٍ التسجيل...' : 'تسجيل'}
-                          </button>
-                          <button
-                            type="reset"
-                            disabled={isSubmitting}
-                            onClick={() => setIsManualReset(true)}
-                            className="rounded bg-slate-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:bg-slate-400"
-                          >
-                            مسح البيانات
-                          </button>
-                        </div>
-                      </form>
+                        <form
+                          dir="rtl"
+                          className="grid gap-6 xl:grid-cols-2"
+                          onSubmit={handleSubmit}
+                          onReset={() => {
+                            setFileError('');
+                            setSelectedFileName('');
+                            setFieldErrors({});
+                            setSubmitError('');
+                            setSubmitSuccess('');
+                            if (isManualReset) {
+                              setSuccessModal(null);
+                              setIsManualReset(false);
+                            }
+                          }}
+                        >
+                          <div className={FORM_PANEL_CLASS}>
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                الاسم
+                                {fieldErrors.studentName ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="studentName"
+                                type="text"
+                                inputMode="text"
+                                maxLength={30}
+                                pattern="^[A-Za-z\u0600-\u06FF\s]{1,30}$"
+                                title="الاسم يجب أن يكون حروف فقط وبحد أقصى 30 حرفًا"
+                                placeholder="ادخل الاسم بالكامل"
+                                onChange={() => clearFieldError('studentName')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[0-9٠-٩]/g, '').slice(0, 30); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.studentName ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentName}</span> : null}
+                              <span className={FORM_HINT_CLASS}>حروف فقط وبحد أقصى 30 حرفًا.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                تاريخ الميلاد
+                                {fieldErrors.birthDate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="birthDate"
+                                type="date"
+                                onChange={() => clearFieldError('birthDate')}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.birthDate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.birthDate}</span> : null}
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                رقم تليفون الطالب
+                                {fieldErrors.studentPhone ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="studentPhone"
+                                type="tel"
+                                inputMode="numeric"
+                                minLength={11}
+                                maxLength={11}
+                                pattern="^[0-9]{11}$"
+                                title="رقم الهاتف يجب أن يكون 11 رقمًا"
+                                placeholder="01xxxxxxxxx"
+                                onChange={() => clearFieldError('studentPhone')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.studentPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentPhone}</span> : null}
+                              <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا باللغة الإنجليزية.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                الرقم القومي للطالب
+                                {fieldErrors.nationalId ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="nationalId"
+                                type="text"
+                                inputMode="numeric"
+                                minLength={14}
+                                maxLength={14}
+                                pattern="^[0-9]{14}$"
+                                title="الرقم القومي يجب أن يكون 14 رقمًا"
+                                placeholder="14 رقمًا"
+                                onChange={() => clearFieldError('nationalId')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 14); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.nationalId ? <span className={FORM_ERROR_CLASS}>{fieldErrors.nationalId}</span> : null}
+                              <span className={FORM_HINT_CLASS}>يجب إدخال 14 رقمًا بدون فواصل أو مسافات.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                العنوان
+                                {fieldErrors.address ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="address"
+                                type="text"
+                                inputMode="text"
+                                maxLength={50}
+                                pattern="^[A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]{1,50}$"
+                                title="العنوان يجب أن يكون حروفًا وأرقامًا فقط وبحد أقصى 50 حرفًا"
+                                placeholder="المدينة - المركز - القرية"
+                                onChange={() => clearFieldError('address')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]/g, '').slice(0, 50); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.address ? <span className={FORM_ERROR_CLASS}>{fieldErrors.address}</span> : null}
+                              <span className={FORM_HINT_CLASS}>بحد أقصى 50 حرفًا.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                المحافظة
+                                {fieldErrors.governorate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <select
+                                name="governorate"
+                                defaultValue=""
+                                onChange={() => clearFieldError('governorate')}
+                                className={FORM_FIELD_CLASS}
+                              >
+                                <option value="" disabled>اختر المحافظة</option>
+                                <option value="سوهاج">سوهاج</option>
+                                <option value="قنا">قنا</option>
+                                <option value="اسيوط">اسيوط</option>
+                                <option value="الاقصر">الاقصر</option>
+                                <option value="اسوان">اسوان</option>
+                              </select>
+                              {fieldErrors.governorate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.governorate}</span> : null}
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                رقم تليفون ولي الأمر
+                                {fieldErrors.guardianPhone ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="guardianPhone"
+                                type="tel"
+                                inputMode="numeric"
+                                minLength={11}
+                                maxLength={11}
+                                pattern="^[0-9]{11}$"
+                                title="رقم الهاتف يجب أن يكون 11 رقمًا"
+                                placeholder="01xxxxxxxxx"
+                                onChange={() => clearFieldError('guardianPhone')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.guardianPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.guardianPhone}</span> : null}
+                              <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا للتواصل عند الحاجة.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                سنة الحصول على الشهادة الإعدادية
+                                {fieldErrors.graduationYear ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <select
+                                name="graduationYear"
+                                defaultValue=""
+                                onChange={() => clearFieldError('graduationYear')}
+                                className={FORM_FIELD_CLASS}
+                              >
+                                <option value="" disabled>اختر السنة</option>
+                                {graduationYearOptions.map((year) => (
+                                  <option key={year} value={year}>{year}</option>
+                                ))}
+                              </select>
+                              {fieldErrors.graduationYear ? <span className={FORM_ERROR_CLASS}>{fieldErrors.graduationYear}</span> : null}
+                            </label>
+
+                          </div>
+
+                          <div className={FORM_PANEL_CLASS}>
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                الشهادة
+                                {fieldErrors.certificate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <select
+                                name="certificate"
+                                defaultValue=""
+                                onChange={() => clearFieldError('certificate')}
+                                className={FORM_FIELD_CLASS}
+                              >
+                                <option value="" disabled>اختر نوع الشهادة</option>
+                                <option value="الاعدادية العامة">الإعدادية العامة</option>
+                                <option value="الاعدادية الأزهرية">الإعدادية الأزهرية</option>
+                              </select>
+                              {fieldErrors.certificate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.certificate}</span> : null}
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                السن أول أكتوبر
+                                {fieldErrors.ageOctober ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="ageOctober"
+                                type="text"
+                                inputMode="numeric"
+                                minLength={2}
+                                maxLength={2}
+                                pattern="^[0-9]{2}$"
+                                title="السن أول أكتوبر يجب أن يكون رقمين فقط"
+                                placeholder="مثال: 15"
+                                onChange={() => clearFieldError('ageOctober')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.ageOctober ? <span className={FORM_ERROR_CLASS}>{fieldErrors.ageOctober}</span> : null}
+                              <span className={FORM_HINT_CLASS}>يتم إدخال العمر برقمين فقط.</span>
+                            </label>
+
+                            <label className="block text-right">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                مجموع درجات الطالب في الشهادة الإعدادية
+                                {fieldErrors.score ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <input
+                                name="score"
+                                type="text"
+                                inputMode="numeric"
+                                minLength={3}
+                                maxLength={3}
+                                pattern="^[0-9]{3}$"
+                                title="مجموع الدرجات يجب أن يكون 3 أرقام فقط"
+                                placeholder="مثال: 280"
+                                onChange={() => clearFieldError('score')}
+                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 3); }}
+                                className={FORM_FIELD_CLASS}
+                              />
+                              {fieldErrors.score ? <span className={FORM_ERROR_CLASS}>{fieldErrors.score}</span> : null}
+                              <span className={FORM_HINT_CLASS}>يكتب المجموع على هيئة 3 أرقام فقط.</span>
+                            </label>
+
+                            <div className="rounded-[24px] border border-dashed border-[#8bb9d6] bg-white/95 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-6">
+                              <span className={FORM_FIELD_LABEL_CLASS}>
+                                رفع الملف
+                                {(fieldErrors.attachment || fileError) ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
+                              </span>
+                              <p className="mt-2 text-sm leading-7 text-slate-600">
+                                ارفع ملفًا واحدًا يجمع كل المستندات المطلوبة بصيغة PDF أو Word.
+                              </p>
+                              <input
+                                name="attachment"
+                                type="file"
+                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                onChange={handleFileChange}
+                                className="mt-4 block w-full rounded-2xl border border-dashed border-[#b8d3e6] bg-[#f8fbff] px-4 py-4 text-sm text-slate-700 transition file:ml-3 file:rounded-xl file:border-0 file:bg-[#0a3555] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:border-[#1170b0] file:hover:bg-[#1170b0]"
+                              />
+                              {selectedFileName ? (
+                                <p className="mt-3 rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+                                  الملف المختار: {selectedFileName}
+                                </p>
+                              ) : null}
+                              {fileError ? (
+                                <p className={FORM_ERROR_CLASS}>{fileError}</p>
+                              ) : null}
+                              {!fileError && fieldErrors.attachment ? (
+                                <p className={FORM_ERROR_CLASS}>{fieldErrors.attachment}</p>
+                              ) : null}
+                              <span className={FORM_HINT_CLASS}>الحد الأقصى لحجم الملف هو 3 ميجابايت.</span>
+                            </div>
+
+                            <div className="rounded-[24px] border border-[#d7e6f1] bg-white/85 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-6">
+                              <h3 className="text-base font-extrabold text-[#0a3555]">
+                                المستندات المطلوبة
+                              </h3>
+                              <ul className="mt-4 list-disc space-y-2 pr-5 text-sm leading-7 text-slate-700 marker:text-[#1170b0]">
+                                <li>استمارة النجاح للشهادة الإعدادية معتمدة.</li>
+                                <li>بيان نجاح الطالب للصف الأول والثاني الإعدادي معتمد من نفس المحافظة الحاصل منها على الشهادة الإعدادية.</li>
+                                <li>شهادة الميلاد.</li>
+                                <li>صورة بطاقة الرقم القومي للطالب وولي الأمر.</li>
+                                <li>صورة شخصية 4x6.</li>
+                                <li>يجب أن يكون امتداد الملف المرفق (pdf - word).</li>
+                                <li>حجم الملف لا يتعدى 3 ميجابايت.</li>
+                                <li>يفضل أن يكون اسم الملف المرفق بنفس اسم الطالب.</li>
+                                <li>يجب طباعة الرسالة بعد التسجيل لإرفاقها مع الأوراق المطلوبة يوم المقابلة الشخصية.</li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          <div dir="ltr" className="mt-1 flex flex-wrap justify-start gap-3 xl:col-span-2">
+                            <button type="submit" disabled={isSubmitting} className={PRIMARY_ACTION_BUTTON_CLASS}>
+                              {isSubmitting ? 'جارٍ التسجيل...' : 'تسجيل'}
+                            </button>
+                            <button
+                              type="reset"
+                              disabled={isSubmitting}
+                              onClick={() => setIsManualReset(true)}
+                              className={SECONDARY_ACTION_BUTTON_CLASS}
+                            >
+                              مسح البيانات
+                            </button>
+                          </div>
+                        </form>
+                      </div>
                     </section>
                   ) : null}
                 </div>
