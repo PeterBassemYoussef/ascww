@@ -323,6 +323,7 @@ function SchoolSubmissionDataPage() {
   const [submitSuccess, setSubmitSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successModal, setSuccessModal] = useState<SubmissionSuccessState | null>(null);
+  const [isManualReset, setIsManualReset] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -660,7 +661,10 @@ function SchoolSubmissionDataPage() {
                           setFieldErrors({});
                           setSubmitError('');
                           setSubmitSuccess('');
-                          setSuccessModal(null);
+                          if (isManualReset) {
+                            setSuccessModal(null);
+                            setIsManualReset(false);
+                          }
                         }}
                       >
                         <div className="space-y-5 md:col-span-1">
@@ -826,7 +830,12 @@ function SchoolSubmissionDataPage() {
                           <button type="submit" disabled={isSubmitting} className="rounded bg-[#d08a2f] px-6 py-2 text-sm font-semibold text-white transition hover:bg-[#b97824] disabled:cursor-not-allowed disabled:bg-[#d08a2f]/70">
                             {isSubmitting ? 'جارٍ التسجيل...' : 'تسجيل'}
                           </button>
-                          <button type="reset" disabled={isSubmitting} className="rounded bg-slate-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:bg-slate-400">
+                          <button
+                            type="reset"
+                            disabled={isSubmitting}
+                            onClick={() => setIsManualReset(true)}
+                            className="rounded bg-slate-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:bg-slate-400"
+                          >
                             مسح البيانات
                           </button>
                         </div>
