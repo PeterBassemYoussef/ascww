@@ -152,7 +152,7 @@
 
   .nav-submenu-menu {
     @apply invisible absolute top-0 z-[70] w-64 rounded-xl border border-[#d7b05a]/35 bg-white p-2 shadow-xl;
-    right: calc(100% + 0.15rem);
+    right: calc(100% - 0.2rem);
     opacity: 0;
     pointer-events: none;
     transform: translateX(4px);
@@ -202,7 +202,7 @@
   }
 
   [dir="ltr"] .nav-submenu-menu {
-    left: calc(100% + 0.15rem);
+    left: calc(100% - 0.2rem);
     right: auto;
     transform: translateX(-4px);
   }

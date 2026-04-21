@@ -96,9 +96,18 @@ const sanitizeHtml = (value: string) => {
   const doc = new DOMParser().parseFromString(value, 'text/html');
   doc.querySelectorAll('script, style, iframe, object, embed').forEach((node) => node.remove());
   doc.querySelectorAll('*').forEach((node) => {
+    const allowedAttributes = new Set(['class', 'style', 'dir', 'href', 'title']);
+
     Array.from(node.attributes).forEach((attribute) => {
       const attrName = attribute.name.toLowerCase();
-      if (node.tagName.toLowerCase() === 'a' && attrName === 'href') return;
+      if (allowedAttributes.has(attrName)) {
+        if (attrName !== 'href') return;
+
+        const hrefValue = attribute.value.trim();
+        const isSafeHref = /^(https?:|mailto:|tel:|\/|#)/i.test(hrefValue);
+        if (isSafeHref) return;
+      }
+
       node.removeAttribute(attribute.name);
     });
 
@@ -197,7 +206,7 @@ function SchoolSubmissionDataPage() {
     };
   }, []);
 
-  const closeMessageHtml = data?.closeMessage?.trim() ?? '';
+  const closeMessageHtml = useMemo(() => sanitizeHtml(data?.closeMessage ?? ''), [data?.closeMessage]);
   const introductionHtml = useMemo(() => sanitizeHtml(data?.introductionMessage ?? ''), [data?.introductionMessage]);
   const submissionTermsHtml = useMemo(() => sanitizeHtml(data?.submissionTerms ?? ''), [data?.submissionTerms]);
   const graduationYearOptions = data?.graduationYears ?? [];
@@ -338,22 +347,20 @@ function SchoolSubmissionDataPage() {
                 <div className="space-y-6">
 
                   {!showSubmissionForm && closeMessageHtml ? (
-                    <section className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-slate-700 text-center [&_*]:!text-center [&_ul]:list-disc [&_ul]:pr-5 [&_li]:mb-2">
-                      <div dangerouslySetInnerHTML={{ __html: closeMessageHtml }} />
+                    <section className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-slate-700 [&_ul]:list-disc [&_ul]:pr-5 [&_li]:mb-2">
+                      <div className="ql-editor text-slate-700" dangerouslySetInnerHTML={{ __html: closeMessageHtml }} />
                     </section>
                   ) : null}
 
                   {showSubmissionForm && introductionHtml ? (
                     <section className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-slate-700 [&_ul]:list-disc [&_ul]:pr-5 [&_li]:mb-2">
-                      <h2 className="mb-3 text-sm font-bold text-[#0a3555]">مقدمة</h2>
-                      <div dangerouslySetInnerHTML={{ __html: introductionHtml }} />
+                      <div className="ql-editor text-slate-700" dangerouslySetInnerHTML={{ __html: introductionHtml }} />
                     </section>
                   ) : null}
 
                   {showSubmissionForm && submissionTermsHtml ? (
                     <section className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-slate-700 [&_ul]:list-disc [&_ul]:pr-5 [&_li]:mb-2">
-                      <h2 className="mb-3 text-sm font-bold text-[#0a3555]">شروط التقديم</h2>
-                      <div dangerouslySetInnerHTML={{ __html: submissionTermsHtml }} />
+                      <div className="ql-editor text-slate-700" dangerouslySetInnerHTML={{ __html: submissionTermsHtml }} />
                     </section>
                   ) : null}
 

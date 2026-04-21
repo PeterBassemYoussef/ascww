@@ -324,6 +324,8 @@ function Header() {
             clearTimer(closeTimers, dropdown);
             stopAnimation(menu);
 
+            const wasOpen = dropdown.classList.contains('is-open');
+
             dropdowns.forEach((otherDropdown) => {
                 if (otherDropdown !== dropdown) {
                     closeDropdown(otherDropdown, true);
@@ -336,6 +338,12 @@ function Header() {
             menu.style.pointerEvents = 'auto';
             menu.style.overflow = 'hidden';
             setExpandedState(dropdown, menu, true);
+
+            if (wasOpen) {
+                menu.style.height = 'auto';
+                menu.style.overflow = '';
+                return;
+            }
 
             const startHeight = menu.getBoundingClientRect().height;
             const targetHeight = menu.scrollHeight;
