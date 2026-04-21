@@ -154,6 +154,19 @@ const extractErrorMessage = (payload: unknown) => {
 
   const error = payload.error;
   if (typeof error === 'string' && error.trim()) return error.trim();
+  if (Array.isArray(error)) {
+    const firstError = error.find((item) => typeof item === 'string' && item.trim());
+    if (typeof firstError === 'string') return firstError.trim();
+  }
+  if (isRecord(error)) {
+    for (const value of Object.values(error)) {
+      if (typeof value === 'string' && value.trim()) return value.trim();
+      if (Array.isArray(value)) {
+        const firstNestedError = value.find((item) => typeof item === 'string' && item.trim());
+        if (typeof firstNestedError === 'string') return firstNestedError.trim();
+      }
+    }
+  }
 
   return '';
 };
@@ -190,6 +203,14 @@ const extractSubmissionSuccessState = (
   payload: unknown,
   fallbackStudentName: string,
 ): SubmissionSuccessState => {
+  if (typeof payload === 'string' && payload.trim()) {
+    return {
+      studentName: fallbackStudentName,
+      registrationLabel: payload.trim(),
+      downloadUrl: SCHOOL_SUBMISSION_DOWNLOAD_FALLBACK_PATH,
+    };
+  }
+
   const fallback: SubmissionSuccessState = {
     studentName: fallbackStudentName,
     registrationLabel: fallbackStudentName,
@@ -447,7 +468,8 @@ function SchoolSubmissionDataPage() {
 
       try {
         const uploadFormData = new FormData();
-        uploadFormData.append('file', attachmentFile);
+        uploadFormData.append('key[0]', attachmentFile);
+        uploadFormData.append('key[1]', attachmentFile);
 
         const uploadResponse = await fetch(SCHOOL_SUBMISSION_UPLOAD_ENDPOINT, {
           method: 'POST',
@@ -525,52 +547,50 @@ function SchoolSubmissionDataPage() {
       <Header />
       <main className="min-h-screen bg-slate-50" dir="rtl">
         {successModal ? (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/40 px-4 backdrop-blur-[2px]">
-            <div className="relative w-full max-w-sm rounded-2xl bg-white px-6 py-5 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)]">
+          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0f172a]/30 px-4 backdrop-blur-[1.5px]">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="رسالة نجاح التسجيل"
+              className="relative w-full max-w-[300px] rounded-md border border-slate-200 bg-white px-5 py-4 text-center shadow-[0_18px_48px_rgba(15,23,42,0.24)]"
+            >
               <button
                 type="button"
                 aria-label="إغلاق"
                 onClick={() => setSuccessModal(null)}
-                className="absolute left-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute left-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"
               >
                 ×
               </button>
               <img
                 src="/images/ascww-logo.png"
                 alt="شعار الشركة"
-                className="mx-auto mb-3 h-12 w-auto"
+                className="mx-auto mb-2 h-10 w-auto"
               />
-              <p className="text-sm font-semibold text-slate-700">
-                تم التسجيل بنجاح
+              <p className="text-[13px] font-medium leading-6 text-slate-600">
+                تم التسجيل بنجاح {successModal.registrationLabel}
               </p>
-              <p className="mt-1 text-sm text-slate-600">
-                {successModal.registrationLabel}
-              </p>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                لتحميل استمارة الالتحاق بالمدرسة اضغط
-                {' '}
+              <p className="mt-1 text-[13px] leading-6 text-slate-500">
+                لتحميل استمارة الالتحاق بالمدرسة اضغط{' '}
                 <a
                   href={successModal.downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-[#1170b0] underline underline-offset-2 transition hover:text-[#0a3555]"
+                  className="font-medium text-[#2f80c0] underline underline-offset-2 transition hover:text-[#0a3555]"
                 >
                   هنا
                 </a>
+                <span
+                  aria-hidden="true"
+                  className="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-sm bg-[#39a852] text-[9px] font-black leading-none text-white"
+                >
+                  ملف
+                </span>
               </p>
-              <a
-                href={successModal.downloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mx-auto mt-4 inline-flex items-center gap-2 rounded-lg bg-[#eef7fb] px-4 py-2 text-sm font-bold text-[#0a3555] transition hover:bg-[#dff1f8]"
-              >
-                <span aria-hidden="true" className="inline-flex h-5 w-5 items-center justify-center rounded bg-[#27ae60] text-xs font-black text-white">PDF</span>
-                تحميل الاستمارة
-              </a>
               <button
                 type="button"
                 onClick={() => setSuccessModal(null)}
-                className="mt-4 block w-full rounded-lg bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
+                className="mt-4 block w-full rounded-md bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
               >
                 غلق
               </button>
@@ -626,11 +646,6 @@ function SchoolSubmissionDataPage() {
 
                   {showSubmissionForm ? (
                     <section className="rounded-xl border border-[#d8cec1] bg-[#e7ded3] px-4 py-5 sm:px-8 sm:py-7">
-                      {submitSuccess ? (
-                        <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                          {submitSuccess}
-                        </div>
-                      ) : null}
                       {submitError ? (
                         <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
                           {submitError}
