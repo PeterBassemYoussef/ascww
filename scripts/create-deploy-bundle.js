@@ -43,6 +43,7 @@ copyIntoBundle('server.js');
 copyIntoBundle(path.join('api', 'ssr.js'));
 copyIntoBundle('.env.server.example');
 copyIntoBundle(path.join('deploy', 'systemd', 'ascww-apache.service'));
+copyIntoBundle('DEPLOYMENT_RELEASE_BUNDLE_AR.md');
 
 const sourcePackageJsonPath = path.join(rootDir, 'package.json');
 const sourcePackageJson = JSON.parse(fs.readFileSync(sourcePackageJsonPath, 'utf8'));
@@ -80,6 +81,7 @@ Included files
 - package.json
 - .env.server.example
 - deploy/systemd/ascww-apache.service
+- DEPLOYMENT_RELEASE_BUNDLE_AR.md
 
 Server steps
 1. Upload this folder to your server.
@@ -89,6 +91,7 @@ Server steps
 
 Notes
 - This bundle keeps the Node server behavior, including SPA fallback, SSR metadata, /api proxying, and gallery endpoints.
+- Arabic deployment instructions are included in DEPLOYMENT_RELEASE_BUNDLE_AR.md.
 - Source folders such as src/, node_modules/, testsprite_tests/, and local docs are intentionally excluded.
 `;
 
