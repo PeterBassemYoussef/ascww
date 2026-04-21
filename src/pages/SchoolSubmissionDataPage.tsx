@@ -6,10 +6,14 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 const SCHOOL_SUBMISSION_DATA_PATH = '/school-submission-data';
 const API_BASE_ENDPOINT = import.meta.env.VITE_API_BASE_URL
   || (import.meta.env.DEV ? '/api' : 'https://backend.ascww.org/api');
+const API_BASE_ENDPOINT_NORMALIZED = API_BASE_ENDPOINT.replace(/\/$/, '');
 const SCHOOL_SUBMISSION_DATA_ENDPOINT = API_BASE_ENDPOINT.replace(/\/$/, '').endsWith(SCHOOL_SUBMISSION_DATA_PATH)
   ? API_BASE_ENDPOINT.replace(/\/$/, '')
   : `${API_BASE_ENDPOINT.replace(/\/$/, '')}${SCHOOL_SUBMISSION_DATA_PATH}`;
 const SCHOOL_SUBMISSION_DATA_PROXY_ENDPOINT = `/api${SCHOOL_SUBMISSION_DATA_PATH}`;
+const SCHOOL_SUBMISSION_UPLOAD_ENDPOINT = `${API_BASE_ENDPOINT_NORMALIZED}/upload`;
+const SCHOOL_SUBMISSION_ADD_STUDENT_ENDPOINT = `${API_BASE_ENDPOINT_NORMALIZED}/addStudent`;
+const SCHOOL_SUBMISSION_DOWNLOAD_FALLBACK_PATH = '/api/school/download/ssrf';
 
 type SchoolSubmissionApiPayload = {
   show_submission_form?: boolean | string | number;
@@ -25,6 +29,17 @@ type SchoolSubmissionData = {
   introductionMessage: string;
   submissionTerms: string;
   graduationYears: string[];
+};
+
+type UploadResponseData = {
+  receiptFileName?: string;
+  studentFileName?: string;
+};
+
+type SubmissionSuccessState = {
+  studentName: string;
+  registrationLabel: string;
+  downloadUrl: string;
 };
 
 type FormFieldKey =
@@ -130,6 +145,111 @@ const parseGraduationYears = (rawValue: string) => {
     .filter(Boolean);
 };
 
+const extractErrorMessage = (payload: unknown) => {
+  if (typeof payload === 'string' && payload.trim()) return payload.trim();
+  if (!isRecord(payload)) return '';
+
+  const message = payload.message;
+  if (typeof message === 'string' && message.trim()) return message.trim();
+
+  const error = payload.error;
+  if (typeof error === 'string' && error.trim()) return error.trim();
+
+  return '';
+};
+
+const extractUploadData = (payload: unknown): UploadResponseData => {
+  if (!isRecord(payload)) return {};
+
+  const nestedData = isRecord(payload.data) ? payload.data : null;
+  const source = nestedData ?? payload;
+
+  return {
+    receiptFileName: typeof source.receiptFileName === 'string' ? source.receiptFileName.trim() : '',
+    studentFileName: typeof source.studentFileName === 'string' ? source.studentFileName.trim() : '',
+  };
+};
+
+const readResponsePayload = async (response: Response) => {
+  const contentType = String(response.headers.get('content-type') || '').toLowerCase();
+  if (contentType.includes('application/json')) {
+    return await response.json() as unknown;
+  }
+
+  const text = await response.text();
+  return text;
+};
+
+const buildAbsoluteApiUrl = (pathValue: string) => {
+  if (/^https?:\/\//i.test(pathValue)) return pathValue;
+  if (!pathValue.startsWith('/')) return `${API_BASE_ENDPOINT_NORMALIZED}/${pathValue.replace(/^\/+/, '')}`;
+  return pathValue;
+};
+
+const extractSubmissionSuccessState = (
+  payload: unknown,
+  fallbackStudentName: string,
+): SubmissionSuccessState => {
+  const fallback: SubmissionSuccessState = {
+    studentName: fallbackStudentName,
+    registrationLabel: fallbackStudentName,
+    downloadUrl: SCHOOL_SUBMISSION_DOWNLOAD_FALLBACK_PATH,
+  };
+
+  if (!isRecord(payload)) return fallback;
+
+  const nestedData = isRecord(payload.data) ? payload.data : null;
+  const source = nestedData ?? payload;
+
+  const studentName =
+    toStringValue(source.name)
+    || toStringValue(source.student_name)
+    || toStringValue(source.studentName)
+    || fallbackStudentName;
+
+  const registrationCode =
+    toStringValue(source.code)
+    || toStringValue(source.registration_code)
+    || toStringValue(source.registrationCode)
+    || toStringValue(source.student_id)
+    || toStringValue(source.studentId)
+    || toStringValue(source.id);
+
+  const explicitDownloadUrl =
+    toStringValue(source.download_url)
+    || toStringValue(source.downloadUrl)
+    || toStringValue(source.url);
+
+  const explicitDownloadPath =
+    toStringValue(source.download_path)
+    || toStringValue(source.downloadPath)
+    || toStringValue(source.path);
+
+  const slugOrToken =
+    toStringValue(source.slug)
+    || toStringValue(source.token)
+    || toStringValue(source.hash)
+    || toStringValue(source.reference)
+    || toStringValue(source.ref);
+
+  let downloadUrl = SCHOOL_SUBMISSION_DOWNLOAD_FALLBACK_PATH;
+  if (explicitDownloadUrl) {
+    downloadUrl = buildAbsoluteApiUrl(explicitDownloadUrl);
+  } else if (explicitDownloadPath) {
+    downloadUrl = buildAbsoluteApiUrl(explicitDownloadPath);
+  } else if (slugOrToken) {
+    downloadUrl = `${API_BASE_ENDPOINT_NORMALIZED}/school/download/${encodeURIComponent(slugOrToken)}`;
+  }
+
+  const registrationLabel = [studentName, registrationCode].filter(Boolean).join(' - ') || fallbackStudentName;
+
+  return {
+    studentName,
+    registrationLabel,
+    downloadUrl,
+  };
+};
+
 const normalizePayload = (payload: unknown): SchoolSubmissionData => {
   const payloadObject = isRecord(payload) ? payload : {};
   const nestedData = isRecord(payloadObject.data) ? payloadObject.data : {};
@@ -178,6 +298,10 @@ function SchoolSubmissionDataPage() {
   const [fileError, setFileError] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FormFieldKey, string>>>({});
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successModal, setSuccessModal] = useState<SubmissionSuccessState | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -306,17 +430,153 @@ function SchoolSubmissionDataPage() {
       nextErrors.attachment = 'يجب عليك رفع الملف المطلوب';
     }
 
+    setSubmitError('');
+    setSubmitSuccess('');
+    setSuccessModal(null);
     setFieldErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0 || fileError) {
       return;
     }
+
+    const submitForm = async () => {
+      const attachmentFile = attachmentInput?.files?.[0];
+      if (!attachmentFile) return;
+
+      setIsSubmitting(true);
+
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', attachmentFile);
+
+        const uploadResponse = await fetch(SCHOOL_SUBMISSION_UPLOAD_ENDPOINT, {
+          method: 'POST',
+          body: uploadFormData,
+          credentials: 'same-origin',
+        });
+
+        const uploadPayload = await readResponsePayload(uploadResponse);
+        if (!uploadResponse.ok) {
+          throw new Error(extractErrorMessage(uploadPayload) || 'تعذر رفع الملف. حاول مرة أخرى.');
+        }
+
+        const uploadData = extractUploadData(uploadPayload);
+        if (!uploadData.receiptFileName || !uploadData.studentFileName) {
+          throw new Error('لم يتم استلام أسماء الملفات من خدمة الرفع.');
+        }
+
+        const csrfToken = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute('content')
+          ?.trim();
+
+        const payload = {
+          name: getValue('studentName'),
+          user_id: getValue('nationalId'),
+          date: getValue('birthDate'),
+          age_in_october: getValue('ageOctober'),
+          city: getValue('governorate'),
+          year_of_graduated: getValue('graduationYear'),
+          phone: getValue('guardianPhone'),
+          student_phone: getValue('studentPhone'),
+          address: getValue('address'),
+          junior_certificate: getValue('certificate') === 'الاعدادية العامة' ? '0' : '1',
+          total_grade: getValue('score'),
+          receipt_file_name: uploadData.receiptFileName,
+          file_name: uploadData.studentFileName,
+          ...(csrfToken ? { _token: csrfToken } : {}),
+        };
+
+        const addStudentResponse = await fetch(SCHOOL_SUBMISSION_ADD_STUDENT_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin',
+        });
+
+        const addStudentPayload = await readResponsePayload(addStudentResponse);
+        if (!addStudentResponse.ok) {
+          throw new Error(extractErrorMessage(addStudentPayload) || 'تعذر إرسال بيانات الطالب. حاول مرة أخرى.');
+        }
+
+        const successState = extractSubmissionSuccessState(addStudentPayload, getValue('studentName'));
+        const successMessage = extractErrorMessage(addStudentPayload) || 'تم تسجيل بيانات الطالب ورفع الملف بنجاح.';
+        setSubmitSuccess(successMessage);
+        setSuccessModal(successState);
+        setFieldErrors({});
+        setFileError('');
+        setSelectedFileName('');
+        form.reset();
+      } catch (submitErrorValue) {
+        setSubmitError(submitErrorValue instanceof Error ? submitErrorValue.message : 'حدث خطأ غير متوقع أثناء حفظ البيانات.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    void submitForm();
   };
 
   return (
     <>
       <Header />
       <main className="min-h-screen bg-slate-50" dir="rtl">
+        {successModal ? (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/40 px-4 backdrop-blur-[2px]">
+            <div className="relative w-full max-w-sm rounded-2xl bg-white px-6 py-5 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)]">
+              <button
+                type="button"
+                aria-label="إغلاق"
+                onClick={() => setSuccessModal(null)}
+                className="absolute left-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              >
+                ×
+              </button>
+              <img
+                src="/images/ascww-logo.png"
+                alt="شعار الشركة"
+                className="mx-auto mb-3 h-12 w-auto"
+              />
+              <p className="text-sm font-semibold text-slate-700">
+                تم التسجيل بنجاح
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                {successModal.registrationLabel}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">
+                لتحميل استمارة الالتحاق بالمدرسة اضغط
+                {' '}
+                <a
+                  href={successModal.downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-[#1170b0] underline underline-offset-2 transition hover:text-[#0a3555]"
+                >
+                  هنا
+                </a>
+              </p>
+              <a
+                href={successModal.downloadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-auto mt-4 inline-flex items-center gap-2 rounded-lg bg-[#eef7fb] px-4 py-2 text-sm font-bold text-[#0a3555] transition hover:bg-[#dff1f8]"
+              >
+                <span aria-hidden="true" className="inline-flex h-5 w-5 items-center justify-center rounded bg-[#27ae60] text-xs font-black text-white">PDF</span>
+                تحميل الاستمارة
+              </a>
+              <button
+                type="button"
+                onClick={() => setSuccessModal(null)}
+                className="mt-4 block w-full rounded-lg bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
+              >
+                غلق
+              </button>
+            </div>
+          </div>
+        ) : null}
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
             <div className={`${headerGradientClass} px-6 py-7 text-white`}>
@@ -366,6 +626,16 @@ function SchoolSubmissionDataPage() {
 
                   {showSubmissionForm ? (
                     <section className="rounded-xl border border-[#d8cec1] bg-[#e7ded3] px-4 py-5 sm:px-8 sm:py-7">
+                      {submitSuccess ? (
+                        <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                          {submitSuccess}
+                        </div>
+                      ) : null}
+                      {submitError ? (
+                        <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+                          {submitError}
+                        </div>
+                      ) : null}
                       <form
                         className="grid gap-x-6 gap-y-5 md:grid-cols-2"
                         onSubmit={handleSubmit}
@@ -373,6 +643,9 @@ function SchoolSubmissionDataPage() {
                           setFileError('');
                           setSelectedFileName('');
                           setFieldErrors({});
+                          setSubmitError('');
+                          setSubmitSuccess('');
+                          setSuccessModal(null);
                         }}
                       >
                         <div className="space-y-5 md:col-span-1">
@@ -432,11 +705,11 @@ function SchoolSubmissionDataPage() {
                             </span>
                             <select name="governorate" defaultValue="" onChange={() => clearFieldError('governorate')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none">
                               <option value="" disabled>اختر المحافظة</option>
-                              <option value="sohag">سوهاج</option>
-                              <option value="qena">قنا</option>
-                              <option value="assiut">اسيوط</option>
-                              <option value="luxor">الاقصر</option>
-                              <option value="aswan">اسوان</option>
+                              <option value="سوهاج">سوهاج</option>
+                              <option value="قنا">قنا</option>
+                              <option value="اسيوط">اسيوط</option>
+                              <option value="الاقصر">الاقصر</option>
+                              <option value="اسوان">اسوان</option>
                             </select>
                             {fieldErrors.governorate ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.governorate}</span> : null}
                           </label>
@@ -483,8 +756,8 @@ function SchoolSubmissionDataPage() {
                             </span>
                             <select name="certificate" defaultValue="" onChange={() => clearFieldError('certificate')} className="w-full border-0 border-b border-[#8f887f] bg-transparent px-0 py-2 text-right text-base text-slate-800 focus:border-[#6f675f] focus:outline-none">
                               <option value="" disabled>اختر نوع الشهادة</option>
-                              <option value="general">الإعدادية العامة</option>
-                              <option value="azhar">الإعدادية الأزهرية</option>
+                              <option value="الاعدادية العامة">الإعدادية العامة</option>
+                              <option value="الاعدادية الأزهرية">الإعدادية الأزهرية</option>
                             </select>
                             {fieldErrors.certificate ? <span className="mt-1 block text-xs font-semibold text-rose-700">{fieldErrors.certificate}</span> : null}
                           </label>
@@ -535,10 +808,10 @@ function SchoolSubmissionDataPage() {
                         </div>
 
                         <div dir="ltr" className="md:col-span-2 mt-2 flex justify-start gap-3">
-                          <button type="submit" className="rounded bg-[#d08a2f] px-6 py-2 text-sm font-semibold text-white transition hover:bg-[#b97824]">
-                            تسجيل
+                          <button type="submit" disabled={isSubmitting} className="rounded bg-[#d08a2f] px-6 py-2 text-sm font-semibold text-white transition hover:bg-[#b97824] disabled:cursor-not-allowed disabled:bg-[#d08a2f]/70">
+                            {isSubmitting ? 'جارٍ التسجيل...' : 'تسجيل'}
                           </button>
-                          <button type="reset" className="rounded bg-slate-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600">
+                          <button type="reset" disabled={isSubmitting} className="rounded bg-slate-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:bg-slate-400">
                             مسح البيانات
                           </button>
                         </div>
