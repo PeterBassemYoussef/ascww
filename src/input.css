@@ -64,10 +64,6 @@
     @apply absolute -bottom-1 right-3 h-0.5 w-0 rounded-full bg-[#d7b05a] transition-all duration-300;
   }
 
-  .nav-link-classic:hover::after {
-    @apply w-[calc(100%-1.5rem)];
-  }
-
   .nav-link-classic--active {
     @apply text-[#c79d41];
   }
@@ -93,9 +89,11 @@
     @apply absolute -bottom-1 right-3 h-0.5 w-0 rounded-full bg-[#d7b05a] transition-all duration-300;
   }
 
-  .nav-dropdown:hover .nav-dropdown-trigger::after,
-  .nav-dropdown:focus-within .nav-dropdown-trigger::after,
-  .nav-dropdown.is-open .nav-dropdown-trigger::after {
+  .nav-dropdown-trigger--active {
+    @apply text-[#c79d41];
+  }
+
+  .nav-dropdown-trigger--active::after {
     @apply w-[calc(100%-1.5rem)];
   }
 

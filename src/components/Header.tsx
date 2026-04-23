@@ -20,6 +20,71 @@ function Header() {
     const { language, setLanguage } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+    const normalizePath = (path: string) => {
+        if (!path) return ROUTES.home;
+        return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+    };
+    const currentPath = normalizePath(location.pathname);
+    const matchesRoute = (...routes: string[]) => routes.some((route) => {
+        const normalizedRoute = normalizePath(route);
+        return currentPath === normalizedRoute || (normalizedRoute !== ROUTES.home && currentPath.startsWith(`${normalizedRoute}/`));
+    });
+    const matchesPrefix = (...prefixes: string[]) => prefixes.some((prefix) => currentPath.startsWith(prefix));
+    const getDesktopNavLinkClassName = (isActive: boolean) => `nav-link-classic${isActive ? ' nav-link-classic--active' : ''}`;
+    const getDesktopNavTriggerClassName = (isActive: boolean) => `nav-dropdown-trigger${isActive ? ' nav-dropdown-trigger--active' : ''}`;
+
+    const isHomeActive = currentPath === ROUTES.home;
+    const isAboutActive = matchesRoute(
+        ROUTES.aboutCompany,
+        ROUTES.branches,
+        ROUTES.projectsArchive,
+        ROUTES.newsArchive,
+        ROUTES.waterQuality,
+        ROUTES.refiningWater,
+        ROUTES.labOfCompanyWater,
+        ROUTES.sewageTreatment,
+        ROUTES.safeSewageDisposal,
+        ROUTES.saveSewageNetwork,
+        ROUTES.industrialWaste,
+        ROUTES.industrialWasteRole,
+        ROUTES.visionAndMessage,
+        ROUTES.informationTechnologyOfCompany,
+        ROUTES.organizationStructure,
+        ROUTES.companyAchievements,
+        ROUTES.contractsRegulation,
+    ) || matchesPrefix('/news/', '/projects/');
+    const isAwarenessActive = matchesRoute(
+        ROUTES.adviceAndContact,
+        ROUTES.cyberSecurityGuidelines,
+        ROUTES.forKidsAndWomen,
+    );
+    const isTendersActive = matchesRoute(ROUTES.tendersArchive) || matchesPrefix('/tenders/');
+    const isTrainingActive = matchesRoute(ROUTES.generalAdminTraining, ROUTES.schoolSubmissionData);
+    const isJobsActive = matchesRoute(ROUTES.jobsAndCompetition, ROUTES.resultOfWorker);
+    const isServicesActive = matchesRoute(
+        ROUTES.callCenter,
+        ROUTES.hotlineApp,
+        ROUTES.search,
+        ROUTES.myReadingApp,
+        ROUTES.customerCharter,
+        ROUTES.servicesEvidance,
+        ROUTES.contractOnService,
+        ROUTES.provideRequest,
+        ROUTES.provideComplaine,
+    );
+    const isIntegrityActive = matchesRoute(
+        ROUTES.integritySupportOverview,
+        ROUTES.integritySupportHighlights,
+        ROUTES.professionalConduct,
+    );
+    const isGalleryActive = matchesRoute(
+        ROUTES.bossTrips,
+        ROUTES.labOfCompany,
+        ROUTES.wasteOfCompany,
+        ROUTES.trainingOfCompany,
+        ROUTES.schoolGallery,
+        ROUTES.sportOfCompany,
+    );
 
     useEffect(() => {
         setIsMobileMenuOpen(false);
@@ -687,12 +752,12 @@ function Header() {
                         </Link>
 
                         <nav ref={desktopMenuRef} aria-label={t('القائمة الرئيسية', 'Main navigation')} className={`main-menu-wrap order-3 hidden min-w-0 items-center gap-0.5 text-sm font-bold text-slate-800 xl:order-2 xl:flex ${desktopMenuAlignmentClass}`}>
-                            <Link className="nav-link-classic nav-link-classic--active" to={ROUTES.home}>{t('الرئيسية', 'Home')}</Link>
+                            <Link className={getDesktopNavLinkClassName(isHomeActive)} to={ROUTES.home}>{t('الرئيسية', 'Home')}</Link>
 
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isAboutActive)}
                                     aria-haspopup="true"
                                     aria-label={t('قائمة عن الشركة', 'About company menu')}
                                 >
@@ -738,7 +803,7 @@ function Header() {
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isAwarenessActive)}
                                     aria-haspopup="true"
                                     aria-label={t('قائمة التوعية والاتصال', 'Awareness and communication menu')}
                                 >
@@ -751,12 +816,12 @@ function Header() {
                                 </div>
                             </div>
 
-                            <Link className="nav-link-classic" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
+                            <Link className={getDesktopNavLinkClassName(isTendersActive)} to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
 
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isTrainingActive)}
                                     aria-label={t('قائمة التدريب', 'Training menu')}
                                 >
                                     {t('التدريب', 'Training')}
@@ -770,7 +835,7 @@ function Header() {
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isJobsActive)}
                                     aria-label={t('قائمة الوظائف', 'Jobs menu')}
                                 >
                                     {t('وظائف', 'Jobs')}
@@ -784,7 +849,7 @@ function Header() {
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isServicesActive)}
                                     aria-label={t('قائمة الخدمات', 'Services menu')}
                                 >
                                     {t('خدمات', 'Services')}
@@ -806,7 +871,7 @@ function Header() {
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isIntegrityActive)}
                                     aria-label={t('قائمة دعم النزاهة', 'Integrity support menu')}
                                 >
                                     {t('دعم النزاهة', 'Integrity support')}
@@ -821,7 +886,7 @@ function Header() {
                             <div className="nav-dropdown group">
                                 <button
                                     type="button"
-                                    className="nav-dropdown-trigger"
+                                    className={getDesktopNavTriggerClassName(isGalleryActive)}
                                     aria-label={t('قائمة معرض الصور', 'Gallery menu')}
                                 >
                                     {t('معرض الصور', 'Gallery')}

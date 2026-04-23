@@ -655,7 +655,7 @@ function SchoolSubmissionDataPage() {
                   ) : null}
 
                   {showSubmissionForm ? (
-                    <section className="relative overflow-hidden rounded-[28px] border border-[#d8e5f0] bg-[#f7fbfe] px-4 py-5 shadow-[0_22px_50px_rgba(10,53,85,0.08)] sm:px-8 sm:py-8">
+                    <section className="relative overflow-hidden rounded-[16px] border border-[#d8e5f0] bg-[#f7fbfe] px-4 py-5 shadow-[0_22px_50px_rgba(10,53,85,0.08)] sm:px-8 sm:py-8">
                       <div className="pointer-events-none absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#1170b0]/10 blur-3xl" />
                       <div className="pointer-events-none absolute -bottom-8 left-0 h-32 w-32 rounded-full bg-[#d7b05a]/15 blur-3xl" />
 
