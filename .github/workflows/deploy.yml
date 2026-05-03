@@ -32,7 +32,15 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors' # This will be replaced by ssh-keyscan
+          # known_hosts: 'just-a-placeholder-so-we-dont-get-errors' # This will be replaced by ssh-keyscan
+          known_hosts: ${{ secrets.CPANEL_SSH_KNOWN_HOSTS }}
+          if_key_exists: replace
+
+      - name: Unlock SSH Key
+        run: |
+          eval $(ssh-agent -s)
+          echo "${{ secrets.CPANEL_SSH_KEY_PASSPHRASE }}" | \
+          ssh-add ~/.ssh/id_rsa
 
       - name: Add Known Hosts
         run: ssh-keyscan -p ${{ secrets.CPANEL_SSH_PORT }} -H ${{ secrets.CPANEL_SSH_HOST }} >> ~/.ssh/known_hosts
