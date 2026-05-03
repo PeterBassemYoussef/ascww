@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - live # or master, depending on your default branch
+  workflow_dispatch:  # enables manual trigger
 
 jobs:
   deploy:
@@ -19,12 +20,12 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci  # faster & safer than npm install in CI
 
       - name: Build React App
         run: npm run build
-        #env:
-          # REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        # env:
+          # REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}  # ← uncommented
           # Add other REACT_APP_ variables here if needed
 
       - name: Install SSH Key
@@ -34,7 +35,11 @@ jobs:
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors' # This will be replaced by ssh-keyscan
 
       - name: Add Known Hosts
-        run: ssh-keyscan -H ${{ secrets.CPANEL_SSH_HOST }} >> ~/.ssh/known_hosts
+        run: ssh-keyscan -p ${{ secrets.CPANEL_SSH_PORT }} -H ${{ secrets.CPANEL_SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy with Rsync
-        run: rsync -avz --delete ./build/ ${{ secrets.CPANEL_SSH_USERNAME }}@${{ secrets.CPANEL_SSH_HOST }}:/home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/staging.ascww.org/ # This is your subdomain's directory
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.CPANEL_SSH_PORT }}" \
+            ./dist/ \
+            ${{ secrets.CPANEL_SSH_USERNAME }}@${{ secrets.CPANEL_SSH_HOST }}:/home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/staging.ascww.org/
