@@ -116,7 +116,7 @@ function GalleryLightbox({
           <button
             type="button"
             aria-label={previousLabel}
-            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-3xl font-bold leading-none text-slate-800 shadow transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:left-6 sm:h-12 sm:w-12"
+            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-[#1170b0]/90 text-2xl font-bold leading-none text-white shadow-[0_12px_32px_rgba(10,53,85,0.35)] backdrop-blur transition hover:bg-[#0a3555] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:left-6 sm:h-12 sm:w-12"
             onClick={showPrevious}
           >
             &larr;
@@ -124,7 +124,7 @@ function GalleryLightbox({
           <button
             type="button"
             aria-label={nextLabel}
-            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-3xl font-bold leading-none text-slate-800 shadow transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:right-6 sm:h-12 sm:w-12"
+            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-[#1170b0]/90 text-2xl font-bold leading-none text-white shadow-[0_12px_32px_rgba(10,53,85,0.35)] backdrop-blur transition hover:bg-[#0a3555] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:right-6 sm:h-12 sm:w-12"
             onClick={showNext}
           >
             &rarr;
