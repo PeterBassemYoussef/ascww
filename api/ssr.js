@@ -84,7 +84,7 @@ const ORG_SCHEMA = {
   sameAs: [
     'https://www.facebook.com/ASCWWeg',
     'https://api.whatsapp.com/send?phone=01280733990',
-    'https://youtube.com/channel/UC73LZeR5Yr5TE7fsTzvZSVw',
+    'https://www.youtube.com/@waterassiutguide',
   ],
   address: {
     '@type': 'PostalAddress',
@@ -453,5 +453,4 @@ export default async function handler(request, response) {
   response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
   return response.status(200).send(html);
 }
-
 

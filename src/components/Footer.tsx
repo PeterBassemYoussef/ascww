@@ -52,7 +52,7 @@ function Footer() {
                             <a href="https://api.whatsapp.com/send?phone=201281565653" target="_blank" rel="noopener noreferrer" aria-label={t('واتساب', 'WhatsApp')} className="social-icon social-icon--whatsapp">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                             </a>
-                            <a href="https://youtube.com/channel/UC73LZeR5Yr5TE7fsTzvZSVw" target="_blank" rel="noopener noreferrer" aria-label={t('يوتيوب', 'YouTube')} className="social-icon social-icon--youtube">
+                            <a href="https://www.youtube.com/@waterassiutguide" target="_blank" rel="noopener noreferrer" aria-label={t('يوتيوب', 'YouTube')} className="social-icon social-icon--youtube">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.96-2C18.88 4 12 4 12 4s-6.88 0-8.58.46a2.78 2.78 0 0 0-1.96 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.42 19c1.7.46 8.58.46 8.58.46s6.88 0 8.58-.46a2.78 2.78 0 0 0 1.96-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" /></svg>
                             </a>
                         </div>

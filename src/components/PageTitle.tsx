@@ -448,7 +448,7 @@ function PageTitle() {
     sameAs: [
       'https://www.facebook.com/ASCWWeg',
       'https://api.whatsapp.com/send?phone=01280733990',
-      'https://youtube.com/channel/UC73LZeR5Yr5TE7fsTzvZSVw',
+      'https://www.youtube.com/@waterassiutguide',
     ],
     address: {
       '@type': 'PostalAddress',
