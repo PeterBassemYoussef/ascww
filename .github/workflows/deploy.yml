@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Dependencies
         run: npm ci  # faster & safer than npm install in CI
@@ -32,18 +32,8 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
-          # known_hosts: 'just-a-placeholder-so-we-dont-get-errors' # This will be replaced by ssh-keyscan
           known_hosts: ${{ secrets.CPANEL_SSH_KNOWN_HOSTS }}
           if_key_exists: replace
-
-      - name: Unlock SSH Key
-        run: |
-          eval $(ssh-agent -s)
-          echo "${{ secrets.CPANEL_SSH_KEY_PASSPHRASE }}" | \
-          ssh-add ~/.ssh/id_rsa
-
-      - name: Add Known Hosts
-        run: ssh-keyscan -p ${{ secrets.CPANEL_SSH_PORT }} -H ${{ secrets.CPANEL_SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy with Rsync
         run: |
