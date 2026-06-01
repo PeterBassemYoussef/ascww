@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
+import GalleryLightbox, { type GalleryLightboxImage } from '../components/GalleryLightbox';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
@@ -7,7 +8,7 @@ import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 const toImageAlt = (index: number, isEnglish: boolean) =>
   isEnglish ? `Wastewater stations - ${index + 1}` : `محطات الصرف - ${index + 1}`;
 
-type GalleryImage = { src: string; alt: string };
+type GalleryImage = GalleryLightboxImage;
 
 const fallbackImageSources = [
   resolveGalleryImageSrc('waste_dep', '140.webp'),
@@ -33,9 +34,7 @@ function WasteStationsPage() {
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const [galleryImages, setGalleryImages] = useState(fallbackImages);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(
-    null
-  );
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     setGalleryImages((previous) => previous.map((image, index) => ({ ...image, alt: toImageAlt(index, isEnglish) })));
@@ -92,13 +91,13 @@ function WasteStationsPage() {
                 </div>
               ) : null}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {galleryImages.map((image) => (
+                {galleryImages.map((image, index) => (
                   <button
                     key={image.src}
                     type="button"
                     aria-label={t(`تكبير ${image.alt}`, `Open ${image.alt}`)}
                     className="group cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
-                    onClick={() => setLightboxImage(image)}
+                    onClick={() => setLightboxIndex(index)}
                   >
                     <img
                       src={image.src}
@@ -113,34 +112,15 @@ function WasteStationsPage() {
           </section>
         </div>
       </main>
-      {lightboxImage ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4"
-          onClick={() => setLightboxImage(null)}
-        >
-          <div
-            className="relative max-h-[90vh] w-full max-w-[95vw]"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              aria-label={t('إغلاق الصورة', 'Close image')}
-              className="absolute -top-3 right-0 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-slate-700 shadow transition hover:bg-white"
-              onClick={() => setLightboxImage(null)}
-            >
-              {t('إغلاق', 'Close')}
-            </button>
-            <img
-              src={lightboxImage.src}
-              alt={lightboxImage.alt}
-              loading="lazy"
-              className="max-h-[90vh] w-full rounded-2xl object-contain"
-            />
-          </div>
-        </div>
-      ) : null}
+      <GalleryLightbox
+        images={galleryImages}
+        currentIndex={lightboxIndex}
+        closeLabel={t('إغلاق', 'Close')}
+        previousLabel={t('الصورة السابقة', 'Previous image')}
+        nextLabel={t('الصورة التالية', 'Next image')}
+        onClose={() => setLightboxIndex(null)}
+        onChange={setLightboxIndex}
+      />
       <Footer />
     </>
   );
