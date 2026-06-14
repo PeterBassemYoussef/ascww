@@ -79,8 +79,8 @@ function BossTripsPage() {
       <main className="bg-[radial-gradient(circle_at_12%_8%,_rgba(17,112,176,0.12),_transparent_45%)]" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
-              <h1 className="text-2xl font-extrabold sm:text-3xl">{t('جولات رئيس مجلس الإداره', 'Chairman Tours')}</h1>
+            <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
+              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('جولات رئيس مجلس الإداره', 'Chairman Tours')}</h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">

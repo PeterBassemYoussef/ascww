@@ -145,14 +145,14 @@ function AboutCompanyPage() {
             >
                 <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
                     <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-                        <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
-                            <div className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-bold tracking-wide">
+                        <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
+                            <div className="hidden">
                                 {t('عن الشركة', 'About the company')}
                             </div>
-                            <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl">
+                            <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">
                                 {t('شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد', 'Assiut and New Valley Water and Wastewater Company')}
                             </h1>
-                            <p className="mt-2 text-sm text-white/90 text-justify sm:text-base">
+                            <p className="mt-2 text-sm leading-7 text-slate-600 text-justify sm:text-base">
                                 {t('نبذة رسمية عن قرار الإنشاء، الأهداف الاستراتيجية، وتشكيل مجلس الإدارة.', 'An official overview of the company establishment, strategic goals, and board formation.')}
                             </p>
                         </div>

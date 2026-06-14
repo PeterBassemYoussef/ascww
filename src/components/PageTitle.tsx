@@ -51,7 +51,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.labOfCompany]: 'معامل الشركه',
   [ROUTES.wasteOfCompany]: 'محطات الصرف',
   [ROUTES.trainingOfCompany]: 'مركز التدريب',
-  [ROUTES.informationTechnologyOfCompany]: 'قطاع تكنولوجيا المعلومات',
+  [ROUTES.informationTechnologyOfCompany]: 'إدارة تكنولوجيا المعلومات',
   [ROUTES.schoolSubmissionData]: 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد',
   [ROUTES.schoolGallery]: 'المدرسه الفنيه',
   [ROUTES.sportOfCompany]: 'النشاط الرياضي',

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import GalleryLightbox, { type GalleryLightboxImage } from '../components/GalleryLightbox';
 import { useSpeech } from '../hooks/useSpeech';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import type { NewsItem } from '../types';
@@ -39,7 +40,7 @@ function NewsDetails() {
     const [news, setNews] = useState<NewsItem | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [openedImageUrl, setOpenedImageUrl] = useState<string | null>(null);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const { speak, stop, isReading } = useSpeech();
 
     useEffect(() => {
@@ -123,6 +124,15 @@ function NewsDetails() {
         return `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(images[currentIndex].path || '')}`;
     }, [images, currentIndex]);
 
+    const lightboxImages = useMemo<GalleryLightboxImage[]>(
+        () =>
+            images.map((image, index) => ({
+                src: `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(image.path || '')}`,
+                alt: `${news?.title || t('صورة الخبر', 'News image')} ${index + 1}`,
+            })),
+        [images, news?.title, isEnglish]
+    );
+
     const shareDescription = useMemo(() => {
         if (!news) return '';
         return extractPlainTextFromHtml(news.description || '').slice(0, 180);
@@ -161,17 +171,6 @@ function NewsDetails() {
         if (images.length < 2) return;
         setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     };
-
-    useEffect(() => {
-        if (!openedImageUrl) return;
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                setOpenedImageUrl(null);
-            }
-        };
-        window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
-    }, [openedImageUrl]);
 
     if (loading) {
         return (
@@ -224,7 +223,7 @@ function NewsDetails() {
                         <div
                             className="relative h-[300px] cursor-zoom-in overflow-hidden bg-gray-100 md:h-[500px]"
                             onClick={() => {
-                                if (currentImageUrl) setOpenedImageUrl(currentImageUrl);
+                                if (currentImageUrl) setLightboxIndex(currentIndex);
                             }}
                         >
                             <img loading="lazy" decoding="async"
@@ -413,31 +412,16 @@ function NewsDetails() {
                     </div>
                 </div>
             </main>
-            {openedImageUrl ? (
-                <div
-                    className="fixed inset-0 z-[140] flex items-center justify-center bg-slate-950/80 p-4"
-                    onClick={() => setOpenedImageUrl(null)}
-                >
-                    <div
-                        className="relative w-full max-w-[95vw] overflow-hidden rounded-xl border border-white/20 bg-slate-950"
-                        onClick={(event) => event.stopPropagation()}
-                    >
-                        <button
-                            type="button"
-                            onClick={() => setOpenedImageUrl(null)}
-                            className="absolute left-3 top-3 z-10 rounded-lg bg-black/60 px-3 py-1 text-sm font-bold text-white transition hover:bg-black/80"
-                        >
-                            {t('إغلاق', 'Close')}
-                        </button>
-                        <img
-                            src={openedImageUrl}
-                            alt={news.title || t('صورة الخبر', 'News image')}
-                            loading="lazy"
-                            className="max-h-[85vh] w-full object-contain"
-                        />
-                    </div>
-                </div>
-            ) : null}
+            <GalleryLightbox
+                images={lightboxImages}
+                currentIndex={lightboxIndex}
+                closeLabel={t('إغلاق', 'Close')}
+                previousLabel={t('الصورة السابقة', 'Previous image')}
+                nextLabel={t('الصورة التالية', 'Next image')}
+                closeButtonSide={isEnglish ? 'left' : 'right'}
+                onClose={() => setLightboxIndex(null)}
+                onChange={setLightboxIndex}
+            />
             <Footer />
         </>
     );

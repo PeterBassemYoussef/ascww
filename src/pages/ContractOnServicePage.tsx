@@ -93,14 +93,14 @@ function ContractOnServicePage() {
       >
         <div className="container mx-auto max-w-6xl px-4 py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
-            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
+            <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
               <h1 className={`text-xl font-extrabold sm:text-2xl ${textAlignmentClass}`}>
                 {t({
                   ar: 'رحلة المتعامل للتعاقد على طلب خدمة',
                   en: 'Customer Journey for Service Contract Requests',
                 })}
               </h1>
-              <p className={`mt-2 text-sm text-white/80 ${textAlignmentClass}`}>
+              <p className={`mt-2 text-sm leading-7 text-slate-600 ${textAlignmentClass}`}>
                 {t({
                   ar: 'أربع مراحل مختصرة توضح رحلتك من الاستعلام حتى تركيب العداد.',
                   en: 'Four concise stages explain your journey from inquiry to meter installation.',

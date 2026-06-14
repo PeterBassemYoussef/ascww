@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import GalleryLightbox, { type GalleryLightboxImage } from '../components/GalleryLightbox';
 import { useSpeech } from '../hooks/useSpeech';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import type { TenderItem } from '../types';
@@ -41,7 +42,7 @@ function TenderDetails() {
     const [tender, setTender] = useState<TenderItem | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [openedImageUrl, setOpenedImageUrl] = useState<string | null>(null);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const { speak, stop, isReading } = useSpeech();
 
     useEffect(() => {
@@ -127,6 +128,18 @@ function TenderDetails() {
         return `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(path)}`;
     }, [imageFiles, currentIndex]);
 
+    const lightboxImages = useMemo<GalleryLightboxImage[]>(
+        () =>
+            imageFiles.map((file, index) => {
+                const path = String(file.path || '').trim();
+                return {
+                    src: `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(path)}`,
+                    alt: `${tender?.title || t('صورة المناقصة', 'Tender image')} ${index + 1}`,
+                };
+            }),
+        [imageFiles, tender?.title, isEnglish]
+    );
+
     const shareDescription = useMemo(
         () => extractPlainTextFromHtml(tender?.description || '').slice(0, 180),
         [tender]
@@ -141,17 +154,6 @@ function TenderDetails() {
         if (imageFiles.length < 2) return;
         setCurrentIndex((prev) => (prev === 0 ? imageFiles.length - 1 : prev - 1));
     };
-
-    useEffect(() => {
-        if (!openedImageUrl) return;
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                setOpenedImageUrl(null);
-            }
-        };
-        window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
-    }, [openedImageUrl]);
 
     useEffect(() => {
         if (!tender) return;
@@ -236,7 +238,7 @@ function TenderDetails() {
                         <div
                             className="relative h-[280px] cursor-zoom-in overflow-hidden bg-gray-100 md:h-[500px]"
                             onClick={() => {
-                                if (currentImageUrl) setOpenedImageUrl(currentImageUrl);
+                                if (currentImageUrl) setLightboxIndex(currentIndex);
                             }}
                         >
                             <img loading="lazy" decoding="async"
@@ -451,31 +453,16 @@ function TenderDetails() {
                     </div>
                 </div>
             </main>
-            {openedImageUrl ? (
-                <div
-                    className="fixed inset-0 z-[140] flex items-center justify-center bg-slate-950/80 p-4"
-                    onClick={() => setOpenedImageUrl(null)}
-                >
-                    <div
-                        className="relative w-full max-w-[95vw] overflow-hidden rounded-xl border border-white/20 bg-slate-950"
-                        onClick={(event) => event.stopPropagation()}
-                    >
-                        <button
-                            type="button"
-                            onClick={() => setOpenedImageUrl(null)}
-                            className="absolute left-3 top-3 z-10 rounded-lg bg-black/60 px-3 py-1 text-sm font-bold text-white transition hover:bg-black/80"
-                        >
-                            {t('إغلاق', 'Close')}
-                        </button>
-                        <img
-                            src={openedImageUrl}
-                            alt={tender.title || t('صورة المناقصة', 'Tender image')}
-                            loading="lazy"
-                            className="max-h-[85vh] w-full object-contain"
-                        />
-                    </div>
-                </div>
-            ) : null}
+            <GalleryLightbox
+                images={lightboxImages}
+                currentIndex={lightboxIndex}
+                closeLabel={t('إغلاق', 'Close')}
+                previousLabel={t('الصورة السابقة', 'Previous image')}
+                nextLabel={t('الصورة التالية', 'Next image')}
+                closeButtonSide={isEnglish ? 'left' : 'right'}
+                onClose={() => setLightboxIndex(null)}
+                onChange={setLightboxIndex}
+            />
             <Footer />
         </>
     );

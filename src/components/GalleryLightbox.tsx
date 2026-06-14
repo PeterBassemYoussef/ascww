@@ -11,6 +11,7 @@ type GalleryLightboxProps = {
   closeLabel: string;
   previousLabel: string;
   nextLabel: string;
+  closeButtonSide?: 'left' | 'right';
   onClose: () => void;
   onChange: (index: number) => void;
 };
@@ -21,6 +22,7 @@ function GalleryLightbox({
   closeLabel,
   previousLabel,
   nextLabel,
+  closeButtonSide = 'right',
   onClose,
   onChange,
 }: GalleryLightboxProps) {
@@ -101,11 +103,14 @@ function GalleryLightbox({
       aria-modal="true"
       aria-label={currentImage.alt}
       className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 p-3 sm:p-5"
+      onClick={onClose}
     >
       <button
         type="button"
         aria-label={closeLabel}
-        className="absolute right-4 top-4 z-10 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-slate-800 shadow transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+        className={`absolute top-4 z-10 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-slate-800 shadow transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black ${
+          closeButtonSide === 'left' ? 'left-4' : 'right-4'
+        }`}
         onClick={onClose}
       >
         {closeLabel}
@@ -117,7 +122,10 @@ function GalleryLightbox({
             type="button"
             aria-label={previousLabel}
             className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-[#1170b0]/90 text-2xl font-bold leading-none text-white shadow-[0_12px_32px_rgba(10,53,85,0.35)] backdrop-blur transition hover:bg-[#0a3555] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:left-6 sm:h-12 sm:w-12"
-            onClick={showPrevious}
+            onClick={(event) => {
+              event.stopPropagation();
+              showPrevious();
+            }}
           >
             &larr;
           </button>
@@ -125,7 +133,10 @@ function GalleryLightbox({
             type="button"
             aria-label={nextLabel}
             className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-[#1170b0]/90 text-2xl font-bold leading-none text-white shadow-[0_12px_32px_rgba(10,53,85,0.35)] backdrop-blur transition hover:bg-[#0a3555] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black sm:right-6 sm:h-12 sm:w-12"
-            onClick={showNext}
+            onClick={(event) => {
+              event.stopPropagation();
+              showNext();
+            }}
           >
             &rarr;
           </button>
@@ -136,6 +147,7 @@ function GalleryLightbox({
         src={currentImage.src}
         alt={currentImage.alt}
         className="max-h-[92vh] max-w-[92vw] object-contain shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
       />
     </div>
   );

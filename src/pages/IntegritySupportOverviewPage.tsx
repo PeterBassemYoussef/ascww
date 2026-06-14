@@ -157,12 +157,12 @@ function IntegritySupportOverviewPage() {
       <Header />
       <main className="integrity-support-overview-page bg-white py-6" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="mx-auto w-full max-w-6xl px-4">
-          <div className={`mb-8 overflow-hidden rounded-3xl px-6 py-8 text-white shadow-[0_18px_40px_rgba(2,6,23,0.15)] ${headerGradientClass}`}>
+          <div className="mb-8 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm">
             <div className={textAlignmentClass}>
-              <h1 className="text-2xl font-extrabold sm:text-3xl">
+              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">
                 {t({ ar: 'نبذه عن إداره دعم النزاهة', en: 'Overview of the Integrity Support Department' })}
               </h1>
-              <p className="mt-3 text-sm text-white/90 sm:text-base">
+              <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
                 {t({ ar: 'نبذة تعريفية عن الإدارة، وأبرز الإنجازات ومؤشرات الأداء.', en: 'An introduction to the department, its key achievements, and performance indicators.' })}
               </p>
             </div>

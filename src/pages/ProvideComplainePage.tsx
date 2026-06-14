@@ -14,10 +14,10 @@ function ProvideComplainePage() {
       <Header />
       <main className="bg-white py-4" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="mx-auto w-full max-w-6xl px-4">
-          <div className={`mb-6 overflow-hidden rounded-3xl ${headerGradientClass} px-6 py-6 text-white shadow-[0_18px_40px_rgba(2,6,23,0.15)]`}>
+          <div className="mb-6 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
             <div className={textAlignmentClass}>
-              <h1 className="text-2xl font-extrabold sm:text-3xl">{t('تقديم شكوي', 'Submit a Complaint')}</h1>
-              <p className="mt-2 text-sm text-white/90 sm:text-base">
+              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('تقديم شكوي', 'Submit a Complaint')}</h1>
+              <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
                 {t('شركه مياه الشرب والصرف الصحي بأسيوط والوادي الجديد', 'Assiut and New Valley Water and Wastewater Company')}
               </p>
             </div>

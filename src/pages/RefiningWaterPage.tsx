@@ -49,9 +49,9 @@ function RefiningWaterPage() {
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <div className="grid gap-6 lg:grid-cols-12">
             <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)] lg:col-span-8">
-              <div className="bg-gradient-to-l from-[#0a3555] to-[#1170b0] px-6 py-7 text-white sm:px-8">
-                <h1 className="text-2xl font-extrabold sm:text-3xl">{t('تنقيه مياه الشرب', 'Drinking Water Purification')}</h1>
-                <p className="mt-2 text-sm font-semibold text-white/90 sm:text-base">{t('المهام الرئيسيه لتنقيه مياه الشرب', 'Main tasks of drinking water purification')}</p>
+              <div className="border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8">
+                <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('تنقيه مياه الشرب', 'Drinking Water Purification')}</h1>
+                <p className="mt-2 text-sm font-semibold leading-7 text-slate-600 sm:text-base">{t('المهام الرئيسيه لتنقيه مياه الشرب', 'Main tasks of drinking water purification')}</p>
               </div>
 
               <div className="space-y-6 px-4 py-6 sm:px-8 sm:py-8">
