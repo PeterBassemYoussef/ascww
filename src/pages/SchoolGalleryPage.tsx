@@ -119,6 +119,7 @@ function SchoolGalleryPage() {
         closeLabel={t('إغلاق', 'Close')}
         previousLabel={t('الصورة السابقة', 'Previous image')}
         nextLabel={t('الصورة التالية', 'Next image')}
+        closeButtonSide={isEnglish ? 'left' : 'right'}
         onClose={() => setLightboxIndex(null)}
         onChange={setLightboxIndex}
       />

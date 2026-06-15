@@ -307,7 +307,7 @@ function TechCenterPage() {
                         </p>
                     </div>
 
-                    <div className="grid gap-6 lg:grid-cols-2">
+                    <div className="space-y-6">
                         <section className="rounded-2xl border border-[#1170b0]/25 bg-white p-4 shadow-sm sm:p-5">
                             <div className="mb-5 flex items-center gap-3">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1170b0] text-white">
@@ -322,7 +322,7 @@ function TechCenterPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="grid gap-4">
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                                 {ownedPrograms.map((program) => (
                                     <ProgramCard key={program.name.en} program={program} isEnglish={isEnglish} />
                                 ))}
@@ -343,7 +343,7 @@ function TechCenterPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="grid gap-4">
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {supportedPrograms.map((program) => (
                                     <ProgramCard key={program.name.en} program={program} isEnglish={isEnglish} />
                                 ))}
