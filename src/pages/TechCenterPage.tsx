@@ -262,7 +262,7 @@ function TechCenterPage() {
                                 )}
                             </p>
                             <img
-                                src="/images/information-technology-of-company.webp"
+                                src="/images/information-technology/information-technology-of-company.webp"
                                 alt={t('إدارة تكنولوجيا المعلومات والتحول الرقمي', 'Information Technology and Digital Transformation Department')}
                                 loading="lazy"
                                 className="h-full min-h-80 w-full rounded-xl border border-[#d7b05a]/35 object-cover shadow-sm"
@@ -305,6 +305,12 @@ function TechCenterPage() {
                                 'A structured view of in-house systems and external platforms supported by the Information Technology Department.'
                             )}
                         </p>
+                        <img
+                            src="/images/information-technology/program.webp"
+                            alt={t('قسم البرامج والتطبيقات', 'Programs and Applications Section')}
+                            loading="lazy"
+                            className="mt-4 max-h-[280px] w-full rounded-xl border border-[#1170b0]/25 object-cover shadow-sm"
+                        />
                     </div>
 
                     <div className="space-y-6">
