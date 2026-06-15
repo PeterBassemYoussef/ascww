@@ -1024,12 +1024,12 @@ function Header() {
                                 ref={toggleRef}
                                 type="button"
                                 onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                                className="relative z-[90] inline-flex touch-manipulation rounded-lg border border-slate-300 p-1.5 text-slate-700 xl:hidden sm:p-2"
+                                className="relative z-[90] inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-lg border border-slate-300 p-0 text-slate-700 xl:hidden"
                                 aria-expanded={isMobileMenuOpen}
                                 aria-controls="mobile-menu"
                                 aria-label={isMobileMenuOpen ? t('إغلاق القائمة', 'Close menu') : t('فتح القائمة', 'Open menu')}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
                             </button>
