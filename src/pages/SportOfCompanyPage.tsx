@@ -6,19 +6,22 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
-  isEnglish ? `Training center - ${index + 1}` : `مركز التدريب - ${index + 1}`;
+  isEnglish ? `Sports activity - ${index + 1}` : `النشاط الرياضي - ${index + 1}`;
 
 type GalleryImage = GalleryLightboxImage;
 
 const fallbackImageSources = [
-  resolveGalleryImageSrc('traning_dep', '131.webp'),
-  resolveGalleryImageSrc('traning_dep', '132.webp'),
-  resolveGalleryImageSrc('traning_dep', '133.webp'),
-  resolveGalleryImageSrc('traning_dep', '134.webp'),
-  resolveGalleryImageSrc('traning_dep', '135.webp'),
-  resolveGalleryImageSrc('traning_dep', '136.webp'),
-  resolveGalleryImageSrc('traning_dep', '137.webp'),
-  resolveGalleryImageSrc('traning_dep', '138.webp'),
+  resolveGalleryImageSrc('sport_dep', '122.webp'),
+  resolveGalleryImageSrc('sport_dep', '123.webp'),
+  resolveGalleryImageSrc('sport_dep', '124.webp'),
+  resolveGalleryImageSrc('sport_dep', '126.webp'),
+  resolveGalleryImageSrc('sport_dep', '127.webp'),
+  resolveGalleryImageSrc('sport_dep', '128.webp'),
+  resolveGalleryImageSrc('sport_dep', '129.webp'),
+  resolveGalleryImageSrc('sport_dep', '130.webp'),
+  resolveGalleryImageSrc('sport_dep', '165.webp'),
+  resolveGalleryImageSrc('sport_dep', '166.webp'),
+  resolveGalleryImageSrc('sport_dep', '167.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({
@@ -26,7 +29,7 @@ const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => 
   alt: toImageAlt(index, false),
 }));
 
-function TrainingCenterPage() {
+function SportOfCompanyPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -45,7 +48,7 @@ function TrainingCenterPage() {
 
     const loadImages = async () => {
       try {
-        const sources = await fetchGallerySources('traning_dep', controller.signal);
+        const sources = await fetchGallerySources('sport_dep', controller.signal);
         if (sources.length === 0) return;
 
         const nextImages = sources.map((src, index) => ({
@@ -80,7 +83,7 @@ function TrainingCenterPage() {
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
             <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
-              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('مركز التدريب', 'Training Center')}</h1>
+              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('النشاط الرياضي', 'Sports Activity')}</h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">
@@ -126,4 +129,4 @@ function TrainingCenterPage() {
   );
 }
 
-export default TrainingCenterPage;
+export default SportOfCompanyPage;

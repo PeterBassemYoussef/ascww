@@ -27,7 +27,7 @@ const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => 
   alt: toImageAlt(index, false),
 }));
 
-function WasteStationsPage() {
+function WasteOfCompanyPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -127,4 +127,4 @@ function WasteStationsPage() {
   );
 }
 
-export default WasteStationsPage;
+export default WasteOfCompanyPage;

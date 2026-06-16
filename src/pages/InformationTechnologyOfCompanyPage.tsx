@@ -183,18 +183,8 @@ const supportedPrograms: Program[] = [
 const departmentSections = [
     {
         title: {
-            ar: 'أولاً: إدارة الدعم الفني',
-            en: 'First: Technical Support Department',
-        },
-        description: {
-            ar: 'تختص إدارة الدعم الفني بتقديم الدعم المباشر للمستخدمين وتحليل المشاكل التقنية المتعلقة بأجهزة الحاسب الآلي وابلاغ القسم التابع لها. كما تتولى أعمال الصيانة الدورية والتعامل مع الأعطال المفاجئة، بالإضافة إلى إعداد وتجهيز الأجهزة وتوصيفها بما يتناسب مع احتياجات العمل المختلفة. وتمثل هذه الإدارة خط الدفاع الأول لضمان استمرارية العمل وتقليل فترات التوقف الناتجة عن الأعطال التقنية.',
-            en: 'The Technical Support Department provides direct support to users, analyzes technical issues related to computers, and reports them to the relevant section. It also handles periodic maintenance, sudden faults, device preparation, and configuration according to work needs, helping ensure business continuity and reduce downtime.',
-        },
-    },
-    {
-        title: {
-            ar: 'ثانياً: قسم البرامج والتطبيقات',
-            en: 'Second: Programs and Applications Section',
+            ar: 'أولاً: قسم البرامج والتطبيقات',
+            en: 'First: Programs and Applications Section',
         },
         description: {
             ar: 'يُعد قسم البرامج والتطبيقات المسؤول عن دعم وتشغيل الأنظمة والبرامج المستخدمة داخل الشركة، سواء كانت مطورة داخلياً أو من خلال جهات خارجية. ويتولى القسم متابعة التحديثات الدورية، ومعالجة الأعطال البرمجية، وتقديم الدعم الفني للمستخدمين، بالإضافة إلى المساهمة في تطوير الحلول الرقمية التي تساعد على تحسين الأداء ورفع كفاءة الخدمات.',
@@ -203,12 +193,22 @@ const departmentSections = [
     },
     {
         title: {
-            ar: 'ثالثاً: قسم البنية التحتية',
-            en: 'Third: Infrastructure Section',
+            ar: 'ثانياً: قسم البنية التحتية والشبكات',
+            en: 'Second: Infrastructure Section',
         },
         description: {
             ar: 'يتولى قسم البنية التحتية إدارة الخوادم (Servers) وشبكات الاتصال وخدمات الإنترنت داخل الشركة، مع ضمان استقرار وكفاءة عملها على مدار الساعة. كما يختص بمراقبة الأنظمة والشبكات، وتأمين البيانات، ومعالجة المشاكل المتعلقة بالبنية التحتية التقنية، بما يضمن استمرارية الخدمات الرقمية ودعم مختلف قطاعات الشركة.',
             en: 'The Infrastructure Section manages servers, communication networks, and internet services across the company while maintaining their stability and efficiency. It monitors systems and networks, protects data, and handles infrastructure-related issues to keep digital services available for company sectors.',
+        },
+    },
+    {
+        title: {
+            ar: 'ثالثاً: إدارة الدعم الفني',
+            en: 'Third: Technical Support Department',
+        },
+        description: {
+            ar: 'تختص إدارة الدعم الفني بتقديم الدعم المباشر للمستخدمين وتحليل المشاكل التقنية المتعلقة بأجهزة الحاسب الآلي وابلاغ القسم التابع لها. كما تتولى أعمال الصيانة الدورية والتعامل مع الأعطال المفاجئة، بالإضافة إلى إعداد وتجهيز الأجهزة وتوصيفها بما يتناسب مع احتياجات العمل المختلفة. وتمثل هذه الإدارة خط الدفاع الأول لضمان استمرارية العمل وتقليل فترات التوقف الناتجة عن الأعطال التقنية.',
+            en: 'The Technical Support Department provides direct support to users, analyzes technical issues related to computers, and reports them to the relevant section. It also handles periodic maintenance, sudden faults, device preparation, and configuration according to work needs, helping ensure business continuity and reduce downtime.',
         },
     },
 ];
@@ -235,7 +235,7 @@ function ProgramCard({ program, isEnglish }: { program: Program; isEnglish: bool
     );
 }
 
-function TechCenterPage() {
+function InformationTechnologyOfCompanyPage() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -247,7 +247,7 @@ function TechCenterPage() {
                 <section className="border-b border-[#d7b05a]/35 bg-white">
                     <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
                         <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">
-                            {t('إدارة تكنولوجيا المعلومات والتحول الرقمي', 'Information Technology and Digital Transformation Department')}
+                            {t('الإدارة العامة لتكنولوجيا المعلومات والتحول الرقمي', 'Information Technology and Digital Transformation Department')}
                         </h1>
                     </div>
                 </section>
@@ -257,20 +257,20 @@ function TechCenterPage() {
                         <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
                             <p className="flex min-h-80 items-center text-justify text-xl leading-[3.6rem] text-slate-700">
                                 {t(
-                                    'تُعد إدارة تكنولوجيا المعلومات والتحول الرقمي أحد الركائز الأساسية في شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد، حيث تقوم بدور محوري في دعم التحول الرقمي ورفع كفاءة العمل وتحسين جودة الخدمات المقدمة. وتسعى الإدارة إلى توفير بيئة تقنية متطورة وآمنة تضمن استمرارية الأعمال وتدعم اتخاذ القرار من خلال الأنظمة والتطبيقات الحديثة.',
+                                    'تُعد الإدارة العامة لتكنولوجيا المعلومات والتحول الرقمي أحد الركائز الأساسية في شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد، حيث تقوم بدور محوري في دعم التحول الرقمي ورفع كفاءة العمل وتحسين جودة الخدمات المقدمة. وتسعى الإدارة إلى توفير بيئة تقنية متطورة وآمنة تضمن استمرارية الأعمال وتدعم اتخاذ القرار من خلال الأنظمة والتطبيقات الحديثة.',
                                     'The Information Technology and Digital Transformation Department is one of the core pillars of the Assiut and New Valley Water and Wastewater Company. It plays a central role in supporting digital transformation, improving work efficiency, and enhancing service quality. The department works to provide an advanced and secure technical environment that ensures business continuity and supports decision-making through modern systems and applications.'
                                 )}
                             </p>
                             <img
-                                src="/images/information-technology/information-technology-of-company.webp"
-                                alt={t('إدارة تكنولوجيا المعلومات والتحول الرقمي', 'Information Technology and Digital Transformation Department')}
+                                src="/images/information-technology-of-company/information-technology-of-company.webp"
+                                alt={t('الإدارة العامة لتكنولوجيا المعلومات والتحول الرقمي', 'Information Technology and Digital Transformation Department')}
                                 loading="lazy"
                                 className="h-full min-h-80 w-full rounded-xl border border-[#d7b05a]/35 object-cover shadow-sm"
                             />
                         </div>
 
                         <h3 className="mt-6 border-t border-[#d7b05a]/25 pt-5 text-xl font-black text-[#0a3555]">
-                            {t('أقسام الإدارة', 'Department Sections')}
+                            {t('الإدارات الفرعية', 'Department Sections')}
                         </h3>
 
                         <div className="mt-4 grid gap-4">
@@ -306,7 +306,7 @@ function TechCenterPage() {
                             )}
                         </p>
                         <img
-                            src="/images/information-technology/program.webp"
+                            src="/images/information-technology-of-company/program.webp"
                             alt={t('قسم البرامج والتطبيقات', 'Programs and Applications Section')}
                             loading="lazy"
                             className="mt-4 max-h-[280px] w-full rounded-xl border border-[#1170b0]/25 object-cover shadow-sm"
@@ -363,4 +363,4 @@ function TechCenterPage() {
     );
 }
 
-export default TechCenterPage;
+export default InformationTechnologyOfCompanyPage;

@@ -6,22 +6,21 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { fetchGallerySources, resolveGalleryImageSrc } from '../utils/gallery';
 
 const toImageAlt = (index: number, isEnglish: boolean) =>
-  isEnglish ? `Sports activity - ${index + 1}` : `النشاط الرياضي - ${index + 1}`;
+  isEnglish ? `Technical school - ${index + 1}` : `المدرسة الفنية - ${index + 1}`;
 
 type GalleryImage = GalleryLightboxImage;
 
 const fallbackImageSources = [
-  resolveGalleryImageSrc('sport_dep', '122.webp'),
-  resolveGalleryImageSrc('sport_dep', '123.webp'),
-  resolveGalleryImageSrc('sport_dep', '124.webp'),
-  resolveGalleryImageSrc('sport_dep', '126.webp'),
-  resolveGalleryImageSrc('sport_dep', '127.webp'),
-  resolveGalleryImageSrc('sport_dep', '128.webp'),
-  resolveGalleryImageSrc('sport_dep', '129.webp'),
-  resolveGalleryImageSrc('sport_dep', '130.webp'),
-  resolveGalleryImageSrc('sport_dep', '165.webp'),
-  resolveGalleryImageSrc('sport_dep', '166.webp'),
-  resolveGalleryImageSrc('sport_dep', '167.webp'),
+  resolveGalleryImageSrc('school_dep', '96.webp'),
+  resolveGalleryImageSrc('school_dep', '97.webp'),
+  resolveGalleryImageSrc('school_dep', '98.webp'),
+  resolveGalleryImageSrc('school_dep', '99.webp'),
+  resolveGalleryImageSrc('school_dep', '100.webp'),
+  resolveGalleryImageSrc('school_dep', '101.webp'),
+  resolveGalleryImageSrc('school_dep', '102.webp'),
+  resolveGalleryImageSrc('school_dep', '103.webp'),
+  resolveGalleryImageSrc('school_dep', '104.webp'),
+  resolveGalleryImageSrc('school_dep', '108.webp'),
 ];
 
 const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => ({
@@ -29,7 +28,7 @@ const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => 
   alt: toImageAlt(index, false),
 }));
 
-function SportActivityPage() {
+function SchoolOfCompanyPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -48,7 +47,7 @@ function SportActivityPage() {
 
     const loadImages = async () => {
       try {
-        const sources = await fetchGallerySources('sport_dep', controller.signal);
+        const sources = await fetchGallerySources('school_dep', controller.signal);
         if (sources.length === 0) return;
 
         const nextImages = sources.map((src, index) => ({
@@ -83,7 +82,7 @@ function SportActivityPage() {
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
             <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
-              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('النشاط الرياضي', 'Sports Activity')}</h1>
+              <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">{t('المدرسة الفنية', 'Technical School')}</h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">
@@ -129,4 +128,4 @@ function SportActivityPage() {
   );
 }
 
-export default SportActivityPage;
+export default SchoolOfCompanyPage;
