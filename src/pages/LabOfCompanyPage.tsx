@@ -30,7 +30,7 @@ const fallbackImages: GalleryImage[] = fallbackImageSources.map((src, index) => 
   alt: toImageAlt(index, false),
 }));
 
-function LabCompanyPage() {
+function LabOfCompanyPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -130,4 +130,4 @@ function LabCompanyPage() {
   );
 }
 
-export default LabCompanyPage;
+export default LabOfCompanyPage;

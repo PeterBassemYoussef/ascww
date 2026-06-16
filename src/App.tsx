@@ -22,13 +22,13 @@ const ForKidsAndWomenPage = lazy(() => import('./pages/ForKidsAndWomenPage'));
 const WaterQualityPage = lazy(() => import('./pages/WaterQualityPage'));
 const RefiningWaterPage = lazy(() => import('./pages/RefiningWaterPage'));
 const LabOfCompanyWaterPage = lazy(() => import('./pages/LabOfCompanyWaterPage'));
-const LabCompanyPage = lazy(() => import('./pages/LabCompanyPage'));
-const WasteStationsPage = lazy(() => import('./pages/WasteStationsPage'));
-const TrainingCenterPage = lazy(() => import('./pages/TrainingCenterPage'));
-const TechCenterPage = lazy(() => import('./pages/TechCenterPage'));
+const LabOfCompanyPage = lazy(() => import('./pages/LabOfCompanyPage'));
+const WasteOfCompanyPage = lazy(() => import('./pages/WasteOfCompanyPage'));
+const TrainingOfCompanyPage = lazy(() => import('./pages/TrainingOfCompanyPage'));
+const InformationTechnologyOfCompanyPage = lazy(() => import('./pages/InformationTechnologyOfCompanyPage'));
 const SchoolSubmissionDataPage = lazy(() => import('./pages/SchoolSubmissionDataPage'));
-const SchoolGalleryPage = lazy(() => import('./pages/SchoolGalleryPage'));
-const SportActivityPage = lazy(() => import('./pages/SportActivityPage'));
+const SchoolOfCompanyPage = lazy(() => import('./pages/SchoolOfCompanyPage'));
+const SportOfCompanyPage = lazy(() => import('./pages/SportOfCompanyPage'));
 const SewageTreatmentPage = lazy(() => import('./pages/SewageTreatmentPage'));
 const SafeSewageDisposalPage = lazy(() => import('./pages/SafeSewageDisposalPage'));
 const SaveSewageNetworkPage = lazy(() => import('./pages/SaveSewageNetworkPage'));
@@ -82,16 +82,16 @@ function App() {
           <Route path={ROUTES.waterQuality} element={<WaterQualityPage />} />
           <Route path={ROUTES.refiningWater} element={<RefiningWaterPage />} />
           <Route path={ROUTES.labOfCompanyWater} element={<LabOfCompanyWaterPage />} />
-          <Route path={ROUTES.labOfCompany} element={<LabCompanyPage />} />
-          <Route path={ROUTES.wasteOfCompany} element={<WasteStationsPage />} />
-          <Route path={ROUTES.trainingOfCompany} element={<TrainingCenterPage />} />
+          <Route path={ROUTES.labOfCompany} element={<LabOfCompanyPage />} />
+          <Route path={ROUTES.wasteOfCompany} element={<WasteOfCompanyPage />} />
+          <Route path={ROUTES.trainingOfCompany} element={<TrainingOfCompanyPage />} />
           <Route
             path={ROUTES.informationTechnologyOfCompany}
-            element={<TechCenterPage />}
+            element={<InformationTechnologyOfCompanyPage />}
           />
           <Route path={ROUTES.schoolSubmissionData} element={<SchoolSubmissionDataPage />} />
-          <Route path={ROUTES.schoolGallery} element={<SchoolGalleryPage />} />
-          <Route path={ROUTES.sportOfCompany} element={<SportActivityPage />} />
+          <Route path={ROUTES.schoolGallery} element={<SchoolOfCompanyPage />} />
+          <Route path={ROUTES.sportOfCompany} element={<SportOfCompanyPage />} />
           <Route path={ROUTES.sewageTreatment} element={<SewageTreatmentPage />} />
           <Route path={ROUTES.safeSewageDisposal} element={<SafeSewageDisposalPage />} />
           <Route path={ROUTES.saveSewageNetwork} element={<SaveSewageNetworkPage />} />
