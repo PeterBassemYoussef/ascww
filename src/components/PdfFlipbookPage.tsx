@@ -556,7 +556,7 @@ function PdfFlipbookPage({
       >
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
+            <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
               <h1 className="text-xl font-extrabold sm:text-2xl">
                 {title}
               </h1>

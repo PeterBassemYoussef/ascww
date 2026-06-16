@@ -58,12 +58,10 @@ function CompanyAchievementsPage() {
                         <span className="pointer-events-none absolute -top-24 left-8 h-56 w-56 rounded-full bg-[#1170b0]/10 blur-3xl"></span>
                         <span className="pointer-events-none absolute -bottom-24 right-8 h-56 w-56 rounded-full bg-[#0f766e]/10 blur-3xl"></span>
 
-                        <div className="px-6 py-7 text-white sm:px-8" style={headerGradientStyle}>
-                            <div className="relative">
-                                <div className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-base font-extrabold tracking-wide sm:text-lg">
-                                    {t('إنجازات الشركة', 'Company achievements')}
-                                </div>
-                            </div>
+                        <div className="border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8">
+                            <h1 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl">
+                                {t('إنجازات الشركة', 'Company achievements')}
+                            </h1>
                         </div>
 
                         <div className="space-y-6 px-6 py-6 sm:px-8">

@@ -161,14 +161,14 @@ function ProvideRequestPage() {
       <main className="bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.08),_transparent_55%)] py-8" dir={isEnglish ? 'ltr' : 'rtl'}>
         <div className="container mx-auto max-w-6xl px-4">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <div className={`${headerGradientClass} px-6 py-7 text-white sm:px-8`}>
-              <h1 className={`text-2xl font-extrabold sm:text-3xl ${textAlignmentClass}`}>
+            <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8`}>
+              <h1 className={`text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl ${textAlignmentClass}`}>
                 {t({
                   ar: 'الأسئلة الشائعة عن طلبات شركة المياه',
                   en: 'Frequently Asked Questions About Water Company Requests',
                 })}
               </h1>
-              <p className={`mt-2 text-sm text-white/90 sm:text-base ${textAlignmentClass}`}>
+              <p className={`mt-2 text-sm leading-7 text-slate-600 sm:text-base ${textAlignmentClass}`}>
                 {t({
                   ar: 'كل ما تحتاج معرفته قبل تقديم طلبات المياه أو الصرف الصحي.',
                   en: 'Everything you need to know before submitting water or wastewater service requests.',

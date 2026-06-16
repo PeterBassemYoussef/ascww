@@ -609,7 +609,7 @@ function SchoolSubmissionDataPage() {
         ) : null}
         <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
-            <div className={`${headerGradientClass} px-6 py-7 text-white`}>
+            <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555]`}>
               <h1
                 className={`text-lg font-semibold sm:text-xl ${isEnglish ? 'text-left' : 'text-right'}`}
                 dir={isEnglish ? 'ltr' : 'rtl'}
