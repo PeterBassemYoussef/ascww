@@ -29,7 +29,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.safeSewageDisposal]: 'أهمية التخلص الآمن من الصرف الصحى',
   [ROUTES.saveSewageNetwork]: 'أهمية الحفاظ على شبكة الصرف الصحى',
   [ROUTES.industrialWaste]: 'الصرف الصناعي',
-  [ROUTES.industrialWasteRole]: 'دور إداره الصرف الصناعي',
+  [ROUTES.industrialWasteRole]: 'دور إدارة الصرف الصناعي',
   [ROUTES.customerCharter]: 'ميثاق المتعاملين',
   [ROUTES.newsArchive]: 'أرشيف الأخبار',
   '/projects': 'أرشيف المشروعات',
@@ -44,10 +44,10 @@ const routeTitles: Record<string, string> = {
   [ROUTES.servicesEvidance]: 'دليل المستخدمين',
   [ROUTES.contractOnService]: 'رحلة المتعامل للتعاقد على طلب خدمة',
   [ROUTES.search]: 'نتائج البحث',
-  [ROUTES.integritySupportOverview]: 'نبذه عن إداره دعم النزاهة',
+  [ROUTES.integritySupportOverview]: 'نبذه عن إدارة دعم النزاهة',
   [ROUTES.integritySupportHighlights]: 'أبرز أعمال دعم النزاهة',
   [ROUTES.professionalConduct]: 'السلوك الوظيفي',
-  [ROUTES.bossTrips]: 'جولات رئيس مجلس الإداره',
+  [ROUTES.bossTrips]: 'جولات رئيس مجلس الإدارة',
   [ROUTES.labOfCompany]: 'معامل الشركه',
   [ROUTES.wasteOfCompany]: 'محطات الصرف',
   [ROUTES.trainingOfCompany]: 'مركز التدريب',
@@ -107,7 +107,7 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
   }
 
   if (pathname === ROUTES.bossTrips) {
-    return isEnglish ? 'Chairman Tours' : 'جولات رئيس مجلس الإداره';
+    return isEnglish ? 'Chairman Tours' : 'جولات رئيس مجلس الإدارة';
   }
 
   if (pathname === ROUTES.labOfCompany) {
@@ -181,7 +181,7 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
   }
 
   if (pathname === ROUTES.integritySupportOverview) {
-    return isEnglish ? 'Integrity Support Overview' : 'نبذه عن إداره دعم النزاهة';
+    return isEnglish ? 'Integrity Support Overview' : 'نبذه عن إدارة دعم النزاهة';
   }
 
   if (pathname === ROUTES.integritySupportHighlights) {
