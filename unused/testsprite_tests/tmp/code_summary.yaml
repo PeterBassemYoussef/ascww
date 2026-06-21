@@ -1,0 +1,105 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - React
+  - React Router DOM
+  - Vite
+routes:
+  - path: /
+    file: src/pages/HomePage.tsx
+    auth_required: false
+    description: Home page
+  - path: /about-company
+    file: src/pages/AboutCompanyPage.tsx
+    auth_required: false
+    description: About company page
+  - path: /branches
+    file: src/pages/BranchesPage.tsx
+    auth_required: false
+    description: Branches listing page
+  - path: /news-archive
+    file: src/pages/NewsArchive.tsx
+    auth_required: false
+    description: News archive page
+  - path: /news/:id
+    file: src/pages/NewsDetails.tsx
+    auth_required: false
+    description: News details page
+  - path: /projects-archive
+    file: src/pages/ProjectsArchive.tsx
+    auth_required: false
+    description: Projects archive page
+  - path: /projects/:id
+    file: src/pages/ProjectDetails.tsx
+    auth_required: false
+    description: Project details page
+  - path: /tenders-archive
+    file: src/pages/TendersArchive.tsx
+    auth_required: false
+    description: Tenders archive page
+  - path: /tenders/:id
+    file: src/pages/TenderDetails.tsx
+    auth_required: false
+    description: Tender details page
+  - path: /search
+    file: src/pages/SearchPage.tsx
+    auth_required: false
+    description: Site search page
+features:
+  - name: Content Navigation
+    description: Users browse company informational pages through route-based navigation.
+    files:
+      - src/App.tsx
+      - src/constants/routes.ts
+      - src/components/Header.tsx
+    entry_route: /
+    user_interactions:
+      - Open navigation menu
+      - Click a section link
+      - Load target content page
+    api_calls: []
+    auth_required: false
+  - name: News Browsing
+    description: Users browse archived news and open details pages.
+    files:
+      - src/pages/NewsArchive.tsx
+      - src/pages/NewsDetails.tsx
+      - src/components/LatestNews.tsx
+    entry_route: /news-archive
+    user_interactions:
+      - Open news archive page
+      - Select a news card
+      - Read news details content
+    api_calls: []
+    auth_required: false
+  - name: Projects and Tenders Catalog
+    description: Users browse project/tender cards and open details pages.
+    files:
+      - src/pages/ProjectsArchive.tsx
+      - src/pages/TendersArchive.tsx
+      - src/pages/ProjectDetails.tsx
+      - src/pages/TenderDetails.tsx
+    entry_route: /projects-archive
+    user_interactions:
+      - Open archive list page
+      - Click project or tender card
+      - View item details page
+    api_calls: []
+    auth_required: false
+  - name: Keyword Search
+    description: Users search site content from a dedicated search page.
+    files:
+      - src/pages/SearchPage.tsx
+      - src/components/MainContent.tsx
+    entry_route: /search
+    user_interactions:
+      - Open search page
+      - Type search keywords
+      - Review matching results
+    api_calls: []
+    auth_required: false
+known_limitations:
+  - issue: No explicit authenticated routes are defined.
+    location: src/App.tsx
+    impact: All pages are publicly accessible and auth flows are not testable.

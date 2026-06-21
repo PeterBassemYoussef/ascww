@@ -1,0 +1,49 @@
+/* ' Remon_gamal front.Dev   Peter_Kostandy Back.Dev &  '*/
+/*
+  Runtime overrides loaded after src/input.css.
+  Keep quick custom CSS changes here when needed.
+*/
+
+.topbar-link span {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+@media (min-width: 1280px) {
+  body .uwy.userway_p1 .userway_buttons_wrapper {
+    top: 132px !important;
+    transform: translate(-100%, 0) !important;
+  }
+}
+
+@media (max-width: 1279px) {
+
+  body .uwy.userway_p1 .userway_buttons_wrapper,
+  body .uwy .userway_buttons_wrapper {
+    top: 84px !important;
+    right: 10px !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .flipbook-stage-glass {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .book-viewer-shell {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .book-viewer-shell .stf__parent {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}

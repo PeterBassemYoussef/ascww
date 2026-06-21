@@ -1,0 +1,11 @@
+
+node_modules/
+.DS_Store
+Thumbs.db
+dist/
+*.tsbuildinfo
+.cache/
+public/gallery-manifest.json
+release/ASCWW-New-Website-Adoption-Notes.md
+
+release/ASCWW-IT-New-Website-Approval-10-Slides.pptx
