@@ -1,0 +1,39 @@
+.vscode
+release
+testsprite_tests
+deploy
+~$end edit.pptx
+تطوير محتوى الموقع الالكتروني.docx
+دليل-المواقع-الحكومية-المتميزة.pdf
+all program.pptx
+ara.traineddata
+branches-13-analysis.pdf
+branches-analysis.pdf
+check_api_news.js
+DEPLOYMENT_APACHE_AR.md
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_CONFIG_COMPARISON.md
+DEPLOYMENT_HANDOFF_AR.md
+DEPLOYMENT_PRIVATE_SERVER.md
+DEPLOYMENT_QUICK_START.md
+DEPLOYMENT_RELEASE_BUNDLE_AR.md
+DEPLOYMENT_SUMMARY.md
+DEPLOYMENT_TROUBLESHOOTING.md
+DEPLOYMENT_VERCEL_VS_APACHE.md
+discover_api.js
+end edit.pptx
+eng.traineddata
+fetch_news.js
+fetch_test.ts
+find_images.js
+GTmetrix-report-ascww-main.vercel.app-20260309T111903-J4ShcnUf.pdf
+GTmetrix-report-ascww.org-20260309T113333-qIfMSuOP.pdf
+lab1.pdf
+link.txt
+news.json
+old site M.pdf
+old site PC.pdf
+Presentation-Redesign.pdf
+README.md
+scan_js_context.js
+scan_js.js

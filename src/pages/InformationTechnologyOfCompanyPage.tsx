@@ -183,21 +183,21 @@ const supportedPrograms: Program[] = [
 const departmentSections = [
     {
         title: {
-            ar: 'أولاً: قسم البرامج والتطبيقات',
+            ar: 'أولاً: إدارة البرامج والتطبيقات',
             en: 'First: Programs and Applications Section',
         },
         description: {
-            ar: 'يُعد قسم البرامج والتطبيقات المسؤول عن دعم وتشغيل الأنظمة والبرامج المستخدمة داخل الشركة، سواء كانت مطورة داخلياً أو من خلال جهات خارجية. ويتولى القسم متابعة التحديثات الدورية، ومعالجة الأعطال البرمجية، وتقديم الدعم الفني للمستخدمين، بالإضافة إلى المساهمة في تطوير الحلول الرقمية التي تساعد على تحسين الأداء ورفع كفاءة الخدمات.',
+            ar: 'تُعد إدارة البرامج والتطبيقات المسؤولة عن دعم وتشغيل الأنظمة والبرامج المستخدمة داخل الشركة، سواء كانت مطورة داخلياً أو من خلال جهات خارجية. وتتولى الإدارة متابعة التحديثات الدورية، ومعالجة الأعطال البرمجية، وتقديم الدعم الفني للمستخدمين، بالإضافة إلى المساهمة في تطوير الحلول الرقمية التي تساعد على تحسين الأداء ورفع كفاءة الخدمات.',
             en: 'The Programs and Applications Section supports and operates the systems used across the company, whether developed internally or supplied by external providers. It follows up periodic updates, resolves software issues, supports users, and contributes to digital solutions that improve performance and service efficiency.',
         },
     },
     {
         title: {
-            ar: 'ثانياً: قسم البنية التحتية والشبكات',
+            ar: 'ثانياً: إدارة البنية التحتية والشبكات',
             en: 'Second: Infrastructure Section',
         },
         description: {
-            ar: 'يتولى قسم البنية التحتية إدارة الخوادم (Servers) وشبكات الاتصال وخدمات الإنترنت داخل الشركة، مع ضمان استقرار وكفاءة عملها على مدار الساعة. كما يختص بمراقبة الأنظمة والشبكات، وتأمين البيانات، ومعالجة المشاكل المتعلقة بالبنية التحتية التقنية، بما يضمن استمرارية الخدمات الرقمية ودعم مختلف قطاعات الشركة.',
+            ar: 'تتولى إدارة البنية التحتية والشبكات إدارة الخوادم (Servers) وشبكات الاتصال وخدمات الإنترنت داخل الشركة، مع ضمان استقرار وكفاءة عملها على مدار الساعة. كما تختص بمراقبة الأنظمة والشبكات، وتأمين البيانات، ومعالجة المشاكل المتعلقة بالبنية التحتية التقنية، بما يضمن استمرارية الخدمات الرقمية ودعم مختلف قطاعات الشركة.',
             en: 'The Infrastructure Section manages servers, communication networks, and internet services across the company while maintaining their stability and efficiency. It monitors systems and networks, protects data, and handles infrastructure-related issues to keep digital services available for company sectors.',
         },
     },
@@ -207,7 +207,7 @@ const departmentSections = [
             en: 'Third: Technical Support Department',
         },
         description: {
-            ar: 'تختص إدارة الدعم الفني بتقديم الدعم المباشر للمستخدمين وتحليل المشاكل التقنية المتعلقة بأجهزة الحاسب الآلي وابلاغ القسم التابع لها. كما تتولى أعمال الصيانة الدورية والتعامل مع الأعطال المفاجئة، بالإضافة إلى إعداد وتجهيز الأجهزة وتوصيفها بما يتناسب مع احتياجات العمل المختلفة. وتمثل هذه الإدارة خط الدفاع الأول لضمان استمرارية العمل وتقليل فترات التوقف الناتجة عن الأعطال التقنية.',
+            ar: 'تختص إدارة الدعم الفني بتقديم الدعم المباشر للمستخدمين وتحليل المشاكل التقنية المتعلقة بأجهزة الحاسب الآلي وإبلاغ القسم التابع لها. كما تتولى أعمال الصيانة الدورية والتعامل مع الأعطال المفاجئة، بالإضافة إلى إعداد وتجهيز الأجهزة وتوصيفها بما يتناسب مع احتياجات العمل المختلفة. وتمثل هذه الإدارة خط الدفاع الأول لضمان استمرارية العمل وتقليل فترات التوقف الناتجة عن الأعطال التقنية.',
             en: 'The Technical Support Department provides direct support to users, analyzes technical issues related to computers, and reports them to the relevant section. It also handles periodic maintenance, sudden faults, device preparation, and configuration according to work needs, helping ensure business continuity and reduce downtime.',
         },
     },
@@ -297,7 +297,7 @@ function InformationTechnologyOfCompanyPage() {
 
                     <div className="mb-5">
                         <h2 className="text-2xl font-black text-[#0a3555]">
-                            {t('قسم البرامج والتطبيقات', 'Programs and Applications Section')}
+                            {t('إدارة البرامج والتطبيقات', 'Programs and Applications Section')}
                         </h2>
                         <p className="mt-3 text-base leading-8 text-slate-600 lg:whitespace-nowrap">
                             {t(
@@ -307,7 +307,7 @@ function InformationTechnologyOfCompanyPage() {
                         </p>
                         <img
                             src="/images/information-technology-of-company/program.webp"
-                            alt={t('قسم البرامج والتطبيقات', 'Programs and Applications Section')}
+                            alt={t('إدارة البرامج والتطبيقات', 'Programs and Applications Section')}
                             loading="lazy"
                             className="mt-4 max-h-[280px] w-full rounded-xl border border-[#1170b0]/25 object-cover shadow-sm"
                         />

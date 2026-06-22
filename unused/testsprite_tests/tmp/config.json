@@ -1,0 +1,20 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5173",
+  "loginUser": "remongamal282@gmail.com,",
+  "loginPassword": "V8g@8Hf5",
+  "executionArgs": {
+    "projectName": "ascww.main",
+    "projectPath": "C:\\Users\\remon\\Desktop\\ascww.main",
+    "testIds": [],
+    "additionalInstruction": "",
+    "serverMode": "production",
+    "envs": {
+      "API_KEY": "sk-user-QR7l3TRfhGzTkaD_aZWZAzSechxPVoaG3bXChsME_Xq6r5sHA2lKNDa0Bp7kOBnGkSHtaQ7NnMjHEazlTbRDGvna42zgExMMtbJUuIkhMunBbHIsJr-kGAmLa_nq5qai3os"
+    }
+  },
+  "serverPort": 63842,
+  "proxy": "http://09c09f95-ad7f-4778-b1cc-ef9469faf00b:lzwy1Cb0QE9Nm0IwYQR7N4DrWNlonG4h@tun.testsprite.com:8080"
+}
