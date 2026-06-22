@@ -10,7 +10,7 @@ const distDir = path.join(__dirname, 'dist');
 const publicDir = path.join(__dirname, 'public');
 const indexPath = path.join(distDir, 'index.html');
 const PORT = Number(process.env.PORT || 3000);
-const BACKEND_BASE = process.env.BACKEND_BASE_URL || 'https://backend.ascww.org';
+const BACKEND_BASE = (process.env.BACKEND_BASE_URL || 'https://backend.ascww.org').replace(/\/+$/, '');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -107,6 +107,16 @@ const copyUpstreamHeaders = (upstreamHeaders, res, { transformed = false } = {})
   });
 };
 
+const buildBackendApiUrl = (requestUrl) => {
+  const apiPath = requestUrl.pathname.startsWith('/api/')
+    ? requestUrl.pathname
+    : `/api${requestUrl.pathname.startsWith('/') ? '' : '/'}${requestUrl.pathname}`;
+  const normalizedPath = BACKEND_BASE.toLowerCase().endsWith('/api')
+    ? apiPath.replace(/^\/api(?=\/|$)/, '')
+    : apiPath;
+  return `${BACKEND_BASE}${normalizedPath}${requestUrl.search}`;
+};
+
 const shouldTryWebpConversion = (req, pathname, method) => {
   if (method !== 'GET') return false;
   if (!IMAGE_PROXY_PATH_PATTERN.test(pathname)) return false;
@@ -190,7 +200,7 @@ const listGalleryImages = (folder) => {
 };
 
 const proxyApiRequest = async (req, res, requestUrl) => {
-  const targetUrl = `${BACKEND_BASE}${requestUrl.pathname}${requestUrl.search}`;
+  const targetUrl = buildBackendApiUrl(requestUrl);
   const method = req.method || 'GET';
   const headers = { ...req.headers };
   delete headers.host;
@@ -226,14 +236,23 @@ const proxyApiRequest = async (req, res, requestUrl) => {
     }
 
     const sourceBuffer = Buffer.from(await upstream.arrayBuffer());
-    const webpBuffer = await sharp(sourceBuffer).webp({ quality: 75, effort: 4 }).toBuffer();
 
-    copyUpstreamHeaders(upstream.headers, res, { transformed: true });
-    res.setHeader('Content-Type', 'image/webp');
-    res.setHeader('Content-Length', String(webpBuffer.length));
-    res.setHeader('Vary', 'Accept');
-    res.setHeader('X-Image-Format', 'webp');
-    res.end(webpBuffer);
+    try {
+      const webpBuffer = await sharp(sourceBuffer).webp({ quality: 75, effort: 4 }).toBuffer();
+
+      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
+      res.setHeader('Content-Type', 'image/webp');
+      res.setHeader('Content-Length', String(webpBuffer.length));
+      res.setHeader('Vary', 'Accept');
+      res.setHeader('X-Image-Format', 'webp');
+      res.end(webpBuffer);
+    } catch {
+      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/octet-stream');
+      res.setHeader('Content-Length', String(sourceBuffer.length));
+      res.setHeader('X-Image-Format', 'original');
+      res.end(sourceBuffer);
+    }
   } catch (error) {
     send(res, 502, `API proxy failed: ${String(error)}`);
   }
@@ -368,5 +387,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}`);
   console.log('SSR enabled for /, archives, /news/:id, /projects/:id and /projects-company/:id');
-  console.log(`API proxy enabled for /api/* -> ${BACKEND_BASE}/api/*`);
+  console.log(`API proxy enabled for /api/* -> ${BACKEND_BASE}${BACKEND_BASE.toLowerCase().endsWith('/api') ? '/*' : '/api/*'}`);
 });
