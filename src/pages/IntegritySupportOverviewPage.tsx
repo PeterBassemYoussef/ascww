@@ -215,13 +215,13 @@ function IntegritySupportOverviewPage() {
                   className="group mx-auto mb-4 block w-full max-w-3xl cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
                   onClick={() =>
                     setLightboxImage({
-                      src: localizedImageSrc('/images/nabza-an-elnazaha/Performance indicator.webp', '/images/nabza-an-elnazaha/Performance indicatorEN.webp'),
+                      src: localizedImageSrc('/images/nabza-an-elnazaha/Performance-indicator.webp', '/images/nabza-an-elnazaha/Performance_indicatorEN.webp'),
                       alt: t({ ar: 'صورة مؤشرات الأداء', en: 'Performance indicators image' }),
                     })
                   }
                 >
                   <img
-                    src={localizedImageSrc('/images/nabza-an-elnazaha/Performance indicator.webp', '/images/nabza-an-elnazaha/Performance indicatorEN.webp')}
+                    src={localizedImageSrc('/images/nabza-an-elnazaha/Performance-indicator.webp', '/images/nabza-an-elnazaha/Performance_indicatorEN.webp')}
                     alt={t({ ar: 'صورة مؤشرات الأداء', en: 'Performance indicators image' })}
                     className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                     loading="lazy"

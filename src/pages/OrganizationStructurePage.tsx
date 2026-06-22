@@ -14,6 +14,12 @@ type OrgSection = {
     members: Member[];
 };
 
+type OrganizationStructureData = {
+    sections?: OrgSection[];
+};
+
+const ORGANIZATION_STRUCTURE_DATA_URL = '/data/organization-structure.json';
+
 const isVacantMember = (member: Member) =>
     member.name.includes('شاغر') || member.role.includes('شاغر');
 
@@ -44,7 +50,7 @@ const normalizeEnglishText = (value: string) =>
 const normalizeSearchText = (value: string, isEnglish: boolean) =>
     isEnglish ? normalizeEnglishText(value) : normalizeArabicText(value);
 
-const ORGANIZATION_SECTIONS: OrgSection[] = [
+const FALLBACK_ORGANIZATION_SECTIONS: OrgSection[] = [
     {
         id: 'upper-management',
         title: 'الإدارة العليا',
@@ -528,7 +534,27 @@ const translateMemberName = (name: string, isEnglish: boolean) => {
     return transliterateArabicName(name);
 };
 
-const CHAIRMAN = ORGANIZATION_SECTIONS.flatMap((section) => section.members).find((member) => member.role.includes('رئيس مجلس الإدارة'));
+const isMember = (value: unknown): value is Member => {
+    if (!value || typeof value !== 'object') return false;
+    const member = value as Member;
+    return typeof member.name === 'string' && typeof member.role === 'string';
+};
+
+const isOrgSection = (value: unknown): value is OrgSection => {
+    if (!value || typeof value !== 'object') return false;
+    const section = value as OrgSection;
+    return (
+        typeof section.id === 'string' &&
+        typeof section.title === 'string' &&
+        Array.isArray(section.members) &&
+        section.members.every(isMember)
+    );
+};
+
+const getSectionsFromData = (data: OrganizationStructureData) =>
+    Array.isArray(data.sections) && data.sections.every(isOrgSection)
+        ? data.sections
+        : null;
 
 const INFOGRAPHIC_COLORS = [
     { from: '#003049', to: '#005b7f', soft: '#e3edf2', badge: '#c7dbe5' },
@@ -549,7 +575,7 @@ const INFOGRAPHIC_COLORS = [
     { from: '#4a2a64', to: '#683c89', soft: '#eee6f4', badge: '#dccfe7' }
 ];
 const ORGANIZATION_PDF_DOWNLOAD_URL = 'https://backend.ascww.org/api/admin-structure/download';
-const DEFAULT_SECTION_ID = ORGANIZATION_SECTIONS.find((section) => section.id === 'upper-management')?.id ?? ORGANIZATION_SECTIONS[0]?.id ?? '';
+const DEFAULT_SECTION_ID = FALLBACK_ORGANIZATION_SECTIONS.find((section) => section.id === 'upper-management')?.id ?? FALLBACK_ORGANIZATION_SECTIONS[0]?.id ?? '';
 
 function OrganizationStructurePage() {
     const { language } = useSiteLanguage();
@@ -563,16 +589,47 @@ function OrganizationStructurePage() {
     const [activeSectionId, setActiveSectionId] = useState<string>(DEFAULT_SECTION_ID);
     const [query, setQuery] = useState('');
     const [selectedLineSectionId, setSelectedLineSectionId] = useState<string | null>(DEFAULT_SECTION_ID);
+    const [organizationSections, setOrganizationSections] = useState<OrgSection[]>(FALLBACK_ORGANIZATION_SECTIONS);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadOrganizationSections = async () => {
+            try {
+                const response = await fetch(ORGANIZATION_STRUCTURE_DATA_URL, { cache: 'no-cache' });
+                if (!response.ok) return;
+
+                const data = await response.json() as OrganizationStructureData;
+                const sections = getSectionsFromData(data);
+                if (sections && isMounted) {
+                    setOrganizationSections(sections);
+                }
+            } catch {
+                // Keep the built-in fallback data if the editable JSON is unavailable or malformed.
+            }
+        };
+
+        void loadOrganizationSections();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
     const normalizedSections = useMemo(
         () =>
-            ORGANIZATION_SECTIONS.map((section) => ({
+            organizationSections.map((section) => ({
                 ...section,
                 members: [
                     ...section.members.filter((member) => !isVacantMember(member)),
                     ...section.members.filter((member) => isVacantMember(member))
                 ]
             })),
-        []
+        [organizationSections]
+    );
+    const chairman = useMemo(
+        () => normalizedSections.flatMap((section) => section.members).find((member) => member.role.includes('رئيس مجلس الإدارة')),
+        [normalizedSections]
     );
 
     const normalizedQuery = normalizeSearchText(query, isEnglish);
@@ -620,7 +677,7 @@ function OrganizationStructurePage() {
 
     const activeSection = filteredSections.find((section) => section.id === activeSectionId) ?? filteredSections[0] ?? normalizedSections[0];
     const activeSectionMembers = (activeSection?.members ?? []).filter((member) => !isVacantMember(member));
-    const activeSectionIndex = normalizedSections.findIndex((section) => section.id === activeSection.id);
+    const activeSectionIndex = activeSection ? normalizedSections.findIndex((section) => section.id === activeSection.id) : -1;
     const activePalette = INFOGRAPHIC_COLORS[(activeSectionIndex >= 0 ? activeSectionIndex : 0) % INFOGRAPHIC_COLORS.length];
     const sectionAccentColorMap = useMemo(
         () =>
@@ -980,7 +1037,7 @@ function OrganizationStructurePage() {
                                                 style={{ top: centerY - (centerCardHeight / 2), left: chairmanCenterX - (centerCardWidth / 2), width: centerCardWidth, height: centerCardHeight }}
                                             >
                                                 <h3 className="mt-1 text-sm font-extrabold text-[#0a3555]">{t('رئيس مجلس الإدارة', 'Chairman of the Board')}</h3>
-                                                <p className="mt-1 text-xs font-semibold text-slate-700">{CHAIRMAN?.name ? translateMemberName(CHAIRMAN.name, isEnglish) : t('غير محدد', 'Not specified')}</p>
+                                                <p className="mt-1 text-xs font-semibold text-slate-700">{chairman?.name ? translateMemberName(chairman.name, isEnglish) : t('غير محدد', 'Not specified')}</p>
                                             </article>
 
                                             {visibleRingNodes.map(({ section, x, y }) => {

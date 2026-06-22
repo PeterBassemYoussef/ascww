@@ -25,8 +25,8 @@ const STAGES: Array<{
         en: 'Reception (3 minutes): initial document review, receiving an introduction card, and assigning a customer number.',
       },
     ],
-    imageAr: '/images/ContractOnService/ContractOnService 1.webp',
-    imageEn: '/images/ContractOnService/ContractOnService 1EN.webp',
+    imageAr: '/images/ContractOnService/ContractOnService1.webp',
+    imageEn: '/images/ContractOnService/ContractOnService1EN.webp',
   },
   {
     title: { ar: 'المرحلة الثانية: تقديم الطلب والسداد المبدئي', en: 'Stage 2: Application Submission and Initial Payment' },

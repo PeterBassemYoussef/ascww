@@ -40,7 +40,7 @@ function Footer() {
                     <div className="h-full px-1 py-1">
                         <h3 className="mb-4 text-base font-bold text-white">{t('بيانات الشركة', 'Company Information')}</h3>
                         <div className="space-y-3 text-sm leading-7 text-slate-300">
-                            <p>{t('عنوان الفرع الرئيسى : محطه مياه المرشحه بنزله عباللاه- اسيوط', 'Main branch address: Al-Marshaha Water Station, Nazlet Abdallah, Assiut')}</p>
+                            <p>{t('عنوان الفرع الرئيسى : محطة مياه المرشحة بنزلة عبد اللاه - أسيوط', 'Main branch address: Al-Marshaha Water Station, Nazlet Abdallah, Assiut')}</p>
                             <p>{t('رقم الهاتف : 2331604-088', 'Phone: 088-2331604')}</p>
                             <p>{t('صندوق بريد : 71111', 'P.O. Box: 71111')}</p>
                             <p>{t('رقم الفاكس : 2131662-088', 'Fax: 088-2131662')}</p>

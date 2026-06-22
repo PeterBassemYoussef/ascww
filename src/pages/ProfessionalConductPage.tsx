@@ -1,7 +1,7 @@
 import PdfFlipbookPage from '../components/PdfFlipbookPage';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
-const professionalConductPdfFileName = 'Code of Professional Conduct.pdf';
+const professionalConductPdfFileName = 'Code-of-Professional-Conduct.pdf';
 const professionalConductPdfUrl = `${import.meta.env.BASE_URL}${encodeURIComponent(professionalConductPdfFileName)}`;
 
 function ProfessionalConductPage() {
