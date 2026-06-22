@@ -1,0 +1,26 @@
+# شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد
+
+> الموقع الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد، ويقدم معلومات وخدمات للمواطنين عن مياه الشرب، الصرف الصحي، جودة المياه، الأخبار، المشروعات، المناقصات، وخدمات العملاء.
+
+## الروابط الأساسية
+
+- [الصفحة الرئيسية](https://ascww.org/)
+- [خريطة الموقع](https://ascww.org/sitemap.xml)
+- [ملف تعليمات الزحف](https://ascww.org/robots.txt)
+- [عن الشركة](https://ascww.org/about-company)
+- [فروع الشركة](https://ascww.org/branches)
+- [الهيكل التنظيمي](https://ascww.org/organization-structure)
+- [جودة المياه](https://ascww.org/water-quality)
+- [معامل مياه الشرب](https://ascww.org/lab-of-company-water)
+- [معالجة الصرف الصحي](https://ascww.org/sewage-treatment)
+- [مركز خدمة العملاء](https://ascww.org/call-center)
+- [الأخبار](https://ascww.org/news-archive)
+- [المشروعات](https://ascww.org/projects-archive)
+- [المناقصات](https://ascww.org/tenders-archive)
+- [دليل الخدمات](https://ascww.org/services-evidance)
+
+## إرشادات للأنظمة الآلية
+
+- يمكن فهرسة الصفحات العامة المسموح بها في ملف robots.txt.
+- لا يتم استخدام مسارات API غير العامة للفهرسة أو التدريب.
+- للحصول على قائمة أحدث بالصفحات العامة، استخدم [sitemap.xml](https://ascww.org/sitemap.xml).
