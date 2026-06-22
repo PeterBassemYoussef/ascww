@@ -35,7 +35,7 @@ const MIME_TYPES = {
 const GALLERY_API_PREFIX = '/api/gallery/';
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']);
 
-const IMAGE_PROXY_PATH_PATTERN = /^\/api\/(?:news|projects)\/image\/|^\/api\/image\//;
+const IMAGE_PROXY_PATH_PATTERN = /^\/api\/(?:news|projects)\/image\//;
 const NON_WEBP_IMAGE_TYPES = ['image/svg+xml', 'image/gif', 'image/webp'];
 const SKIPPED_UPSTREAM_HEADERS = new Set([
   'content-encoding',
