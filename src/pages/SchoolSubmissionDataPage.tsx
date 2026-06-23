@@ -81,12 +81,17 @@ const getFieldRequiredMessage = (field: FormFieldKey) => {
 
 const FORM_PANEL_CLASS = 'space-y-5 rounded-[24px] border border-white/80 bg-white/90 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6';
 const FORM_FIELD_LABEL_CLASS = 'mb-2 inline-flex items-center gap-1 text-sm font-bold text-[#0a3555] sm:text-base';
-const FORM_FIELD_CLASS = 'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-right text-base text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-[#1170b0] focus:outline-none focus:ring-4 focus:ring-[#1170b0]/10';
+const FORM_FIELD_BASE_CLASS = 'w-full rounded-2xl border bg-white px-4 py-3 text-right text-base text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4';
+const FORM_FIELD_DEFAULT_STATE_CLASS = 'border-slate-200 focus:border-[#1170b0] focus:ring-[#1170b0]/10';
+const FORM_FIELD_ERROR_STATE_CLASS = 'border-rose-500 shadow-[0_0_0_3px_rgba(244,63,94,0.12),0_10px_20px_rgba(244,63,94,0.10)] focus:border-rose-600 focus:ring-rose-500/15';
 const FORM_HINT_CLASS = 'mt-2 block text-xs leading-6 text-slate-500';
 const FORM_ERROR_CLASS = 'mt-2 block text-xs font-semibold text-rose-700';
 const FORM_REQUIRED_MARK_CLASS = 'mr-1 text-rose-600';
 const PRIMARY_ACTION_BUTTON_CLASS = 'rounded-2xl bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(17,112,176,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(17,112,176,0.28)] disabled:cursor-not-allowed disabled:opacity-70';
 const SECONDARY_ACTION_BUTTON_CLASS = 'rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70';
+
+const getFormFieldClassName = (hasError?: boolean) =>
+  `${FORM_FIELD_BASE_CLASS} ${hasError ? FORM_FIELD_ERROR_STATE_CLASS : FORM_FIELD_DEFAULT_STATE_CLASS}`;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -154,25 +159,44 @@ const parseGraduationYears = (rawValue: string) => {
     .filter(Boolean);
 };
 
+const UPLOAD_FILE_CONTENT_ERROR = 'تأكد من احتواء الملف المرفق على المستندات المطلوبة';
+
+const normalizeUploadFileErrorMessage = (message: string) => {
+  const normalized = message.trim();
+  if (!normalized) return '';
+
+  const lowerMessage = normalized.toLowerCase();
+  if (
+    lowerMessage.includes('key.0')
+    || lowerMessage.includes('key[0]')
+    || lowerMessage.includes('must be a file of type')
+    || lowerMessage.includes('must be of type')
+  ) {
+    return UPLOAD_FILE_CONTENT_ERROR;
+  }
+
+  return normalized;
+};
+
 const extractErrorMessage = (payload: unknown) => {
-  if (typeof payload === 'string' && payload.trim()) return payload.trim();
+  if (typeof payload === 'string' && payload.trim()) return normalizeUploadFileErrorMessage(payload);
   if (!isRecord(payload)) return '';
 
   const message = payload.message;
-  if (typeof message === 'string' && message.trim()) return message.trim();
+  if (typeof message === 'string' && message.trim()) return normalizeUploadFileErrorMessage(message);
 
   const error = payload.error;
-  if (typeof error === 'string' && error.trim()) return error.trim();
+  if (typeof error === 'string' && error.trim()) return normalizeUploadFileErrorMessage(error);
   if (Array.isArray(error)) {
     const firstError = error.find((item) => typeof item === 'string' && item.trim());
-    if (typeof firstError === 'string') return firstError.trim();
+    if (typeof firstError === 'string') return normalizeUploadFileErrorMessage(firstError);
   }
   if (isRecord(error)) {
     for (const value of Object.values(error)) {
-      if (typeof value === 'string' && value.trim()) return value.trim();
+      if (typeof value === 'string' && value.trim()) return normalizeUploadFileErrorMessage(value);
       if (Array.isArray(value)) {
         const firstNestedError = value.find((item) => typeof item === 'string' && item.trim());
-        if (typeof firstNestedError === 'string') return firstNestedError.trim();
+        if (typeof firstNestedError === 'string') return normalizeUploadFileErrorMessage(firstNestedError);
       }
     }
   }
@@ -332,6 +356,7 @@ function SchoolSubmissionDataPage() {
   const [submitSuccess, setSubmitSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successModal, setSuccessModal] = useState<SubmissionSuccessState | null>(null);
+  const [showFailureModal, setShowFailureModal] = useState(false);
   const [isManualReset, setIsManualReset] = useState(false);
 
   useEffect(() => {
@@ -464,9 +489,11 @@ function SchoolSubmissionDataPage() {
     setSubmitError('');
     setSubmitSuccess('');
     setSuccessModal(null);
+    setShowFailureModal(false);
     setFieldErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0 || fileError) {
+      setShowFailureModal(true);
       return;
     }
 
@@ -541,6 +568,7 @@ function SchoolSubmissionDataPage() {
         setFieldErrors({});
         setFileError('');
         setSelectedFileName('');
+        setShowFailureModal(false);
         form.reset();
       } catch (submitErrorValue) {
         setSubmitError(submitErrorValue instanceof Error ? submitErrorValue.message : 'حدث خطأ غير متوقع أثناء حفظ البيانات.');
@@ -556,6 +584,40 @@ function SchoolSubmissionDataPage() {
     <>
       <Header />
       <main className="min-h-screen bg-slate-50" dir="rtl">
+        {showFailureModal ? (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0f172a]/30 px-4 backdrop-blur-[1.5px]">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="رسالة فشل التسجيل"
+              className="relative w-full max-w-[320px] rounded-md border border-rose-100 bg-white px-5 py-4 text-center shadow-[0_18px_48px_rgba(15,23,42,0.24)]"
+            >
+              <button
+                type="button"
+                aria-label="إغلاق"
+                onClick={() => setShowFailureModal(false)}
+                className="absolute left-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"
+              >
+                ×
+              </button>
+              <img
+                src="/images/ascww-logo.png"
+                alt="شعار الشركة"
+                className="mx-auto mb-3 h-10 w-auto"
+              />
+              <p className="text-[15px] font-bold leading-7 text-rose-700">
+                تسجيل غير ناجح برجاء مراجعة البيانات
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowFailureModal(false)}
+                className="mt-4 block w-full rounded-md bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-100"
+              >
+                غلق
+              </button>
+            </div>
+          </div>
+        ) : null}
         {successModal ? (
           <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0f172a]/30 px-4 backdrop-blur-[1.5px]">
             <div
@@ -614,9 +676,7 @@ function SchoolSubmissionDataPage() {
                 className={`text-lg font-semibold sm:text-xl ${isEnglish ? 'text-left' : 'text-right'}`}
                 dir={isEnglish ? 'ltr' : 'rtl'}
               >
-                {isEnglish
-                  ? 'Technical School Student Results Search for Assiut and New Valley Water and Wastewater'
-                  : 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد'}
+                {isEnglish ? 'Technical School' : 'المدرسة الفنية'}
               </h1>
             </div>
 
@@ -682,6 +742,7 @@ function SchoolSubmissionDataPage() {
                             setFieldErrors({});
                             setSubmitError('');
                             setSubmitSuccess('');
+                            setShowFailureModal(false);
                             if (isManualReset) {
                               setSuccessModal(null);
                               setIsManualReset(false);
@@ -704,7 +765,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="ادخل الاسم بالكامل"
                                 onChange={() => clearFieldError('studentName')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[0-9٠-٩]/g, '').slice(0, 30); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.studentName))}
                               />
                               {fieldErrors.studentName ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentName}</span> : null}
                               <span className={FORM_HINT_CLASS}>حروف فقط وبحد أقصى 30 حرفًا.</span>
@@ -719,7 +780,7 @@ function SchoolSubmissionDataPage() {
                                 name="birthDate"
                                 type="date"
                                 onChange={() => clearFieldError('birthDate')}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.birthDate))}
                               />
                               {fieldErrors.birthDate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.birthDate}</span> : null}
                             </label>
@@ -740,7 +801,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="01xxxxxxxxx"
                                 onChange={() => clearFieldError('studentPhone')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.studentPhone))}
                               />
                               {fieldErrors.studentPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentPhone}</span> : null}
                               <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا باللغة الإنجليزية.</span>
@@ -762,7 +823,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="14 رقمًا"
                                 onChange={() => clearFieldError('nationalId')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 14); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.nationalId))}
                               />
                               {fieldErrors.nationalId ? <span className={FORM_ERROR_CLASS}>{fieldErrors.nationalId}</span> : null}
                               <span className={FORM_HINT_CLASS}>يجب إدخال 14 رقمًا بدون فواصل أو مسافات.</span>
@@ -783,7 +844,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="المدينة - المركز - القرية"
                                 onChange={() => clearFieldError('address')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]/g, '').slice(0, 50); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.address))}
                               />
                               {fieldErrors.address ? <span className={FORM_ERROR_CLASS}>{fieldErrors.address}</span> : null}
                               <span className={FORM_HINT_CLASS}>بحد أقصى 50 حرفًا.</span>
@@ -798,7 +859,7 @@ function SchoolSubmissionDataPage() {
                                 name="governorate"
                                 defaultValue=""
                                 onChange={() => clearFieldError('governorate')}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.governorate))}
                               >
                                 <option value="" disabled>اختر المحافظة</option>
                                 <option value="سوهاج">سوهاج</option>
@@ -826,7 +887,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="01xxxxxxxxx"
                                 onChange={() => clearFieldError('guardianPhone')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.guardianPhone))}
                               />
                               {fieldErrors.guardianPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.guardianPhone}</span> : null}
                               <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا للتواصل عند الحاجة.</span>
@@ -841,7 +902,7 @@ function SchoolSubmissionDataPage() {
                                 name="graduationYear"
                                 defaultValue=""
                                 onChange={() => clearFieldError('graduationYear')}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.graduationYear))}
                               >
                                 <option value="" disabled>اختر السنة</option>
                                 {graduationYearOptions.map((year) => (
@@ -863,7 +924,7 @@ function SchoolSubmissionDataPage() {
                                 name="certificate"
                                 defaultValue=""
                                 onChange={() => clearFieldError('certificate')}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.certificate))}
                               >
                                 <option value="" disabled>اختر نوع الشهادة</option>
                                 <option value="الاعدادية العامة">الإعدادية العامة</option>
@@ -888,7 +949,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="مثال: 15"
                                 onChange={() => clearFieldError('ageOctober')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.ageOctober))}
                               />
                               {fieldErrors.ageOctober ? <span className={FORM_ERROR_CLASS}>{fieldErrors.ageOctober}</span> : null}
                               <span className={FORM_HINT_CLASS}>يتم إدخال العمر برقمين فقط.</span>
@@ -910,7 +971,7 @@ function SchoolSubmissionDataPage() {
                                 placeholder="مثال: 280"
                                 onChange={() => clearFieldError('score')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 3); }}
-                                className={FORM_FIELD_CLASS}
+                                className={getFormFieldClassName(Boolean(fieldErrors.score))}
                               />
                               {fieldErrors.score ? <span className={FORM_ERROR_CLASS}>{fieldErrors.score}</span> : null}
                               <span className={FORM_HINT_CLASS}>يكتب المجموع على هيئة 3 أرقام فقط.</span>
@@ -929,7 +990,11 @@ function SchoolSubmissionDataPage() {
                                 type="file"
                                 accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                 onChange={handleFileChange}
-                                className="mt-4 block w-full rounded-2xl border border-dashed border-[#b8d3e6] bg-[#f8fbff] px-4 py-4 text-sm text-slate-700 transition file:ml-3 file:rounded-xl file:border-0 file:bg-[#0a3555] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:border-[#1170b0] file:hover:bg-[#1170b0]"
+                                className={`mt-4 block w-full rounded-2xl border border-dashed bg-[#f8fbff] px-4 py-4 text-sm text-slate-700 transition file:ml-3 file:rounded-xl file:border-0 file:bg-[#0a3555] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white file:hover:bg-[#1170b0] ${
+                                  fieldErrors.attachment || fileError
+                                    ? 'border-rose-500 shadow-[0_0_0_3px_rgba(244,63,94,0.12),0_10px_20px_rgba(244,63,94,0.10)] hover:border-rose-600 focus:border-rose-600 focus:outline-none focus:ring-4 focus:ring-rose-500/15'
+                                    : 'border-[#b8d3e6] hover:border-[#1170b0]'
+                                }`}
                               />
                               {selectedFileName ? (
                                 <p className="mt-3 rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
@@ -992,14 +1057,6 @@ function SchoolSubmissionDataPage() {
 }
 
 export default SchoolSubmissionDataPage;
-
-
-
-
-
-
-
-
 
 
 
