@@ -73,10 +73,8 @@ function Footer() {
                 </div>
 
                 <div className="mt-10 border-t border-white/10 pt-5 text-center text-xs text-slate-400 sm:text-sm">
-                    {t(
-                        'جميع الحقوق محفوظة © لشركة مياه الشرب و الصرف الصحى بأسيوط و الوادى الجديد 2026 | الموقع من تطوير الإدارة العامة لتكنولوجيا المعلومات بالشركة',
-                        'All rights reserved © Assiut and New Valley Water and Wastewater Company 2026 | Website developed by the General Administration of Information Technology'
-                    )}
+                    <p>{t('جميع الحقوق محفوظة © لشركة مياه الشرب و الصرف الصحى بأسيوط و الوادى الجديد 2026', 'All rights reserved © Assiut and New Valley Water and Wastewater Company 2026')}</p>
+                    <p className="mt-1">{t('الموقع من تطوير الإدارة العامة لتكنولوجيا المعلومات بالشركة', 'Website developed by the General Administration of Information Technology')}</p>
                 </div>
             </div>
         </footer>
