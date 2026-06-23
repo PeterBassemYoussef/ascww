@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
-const IMAGE_URL = '/images/safety-guidelines/Safety%20guidelines.webp';
+const IMAGE_URL = '/images/safety-guidelines/Safety-guidelines.webp';
 
 function CyberSecurityGuidelinesPage() {
   const { language } = useSiteLanguage();
