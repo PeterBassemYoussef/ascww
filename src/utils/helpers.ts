@@ -144,6 +144,27 @@ export const formatArabicDate = (value?: string) => {
     }).format(date);
 };
 
+const parseTenderExpirationDate = (value?: string) => {
+    const rawValue = String(value || '').trim();
+    if (!rawValue) return null;
+
+    const dateOnlyMatch = rawValue.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (dateOnlyMatch) {
+        const [, year, month, day] = dateOnlyMatch;
+        return new Date(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999);
+    }
+
+    const date = new Date(rawValue);
+    if (Number.isNaN(date.getTime())) return null;
+    return date;
+};
+
+export const isTenderAvailable = (tenderItem: TenderItem, now = new Date()) => {
+    const expirationDate = parseTenderExpirationDate(tenderItem.expiration_date);
+    if (!expirationDate) return true;
+    return expirationDate.getTime() >= now.getTime();
+};
+
 export const getLatestNewsImagePath = (newsItem: NewsItem) => {
     const images = newsItem.news_images || [];
     const mainImage = images.find((image) => Number(image.main_image) === 1);
@@ -272,6 +293,7 @@ export const normalizeSearchPayload = (payload: unknown): SearchResultItem[] => 
         const item = rawItem as TenderItem & Record<string, unknown>;
         const title = toTrimmedString(item.title);
         if (!title) return [];
+        if (!isTenderAvailable(item)) return [];
         const descriptionHtml = toTrimmedString(item.description);
         const imagePath = getTenderImagePath(item) || extractFirstImageFromHtml(descriptionHtml);
         const primaryDate = toTrimmedString(item.expiration_date) || toTrimmedString(item.created_at) || toTrimmedString(item.updated_at);
@@ -404,5 +426,4 @@ export const sanitizeHtmlContent = (html?: string) => {
 
     return doc.body.innerHTML;
 };
-
 

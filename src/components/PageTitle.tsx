@@ -52,7 +52,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.wasteOfCompany]: 'محطات الصرف',
   [ROUTES.trainingOfCompany]: 'مركز التدريب',
   [ROUTES.informationTechnologyOfCompany]: 'إدارة تكنولوجيا المعلومات',
-  [ROUTES.schoolSubmissionData]: 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد',
+  [ROUTES.schoolSubmissionData]: 'المدرسة الفنية',
   [ROUTES.schoolGallery]: 'المدرسه الفنيه',
   [ROUTES.sportOfCompany]: 'النشاط الرياضي',
   '/enter-reading': 'إدخل قراءه عدادك',
@@ -167,9 +167,7 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
   }
 
   if (pathname === ROUTES.schoolSubmissionData) {
-    return isEnglish
-      ? 'Technical School Student Results Search for Assiut and New Valley Water and Wastewater'
-      : 'البحث عن نتيجة طلاب المدرسة الفنية لمياه الشرب والصرف الصحي بأسيوط والوادي الجديد';
+    return isEnglish ? 'Technical School' : 'المدرسة الفنية';
   }
 
   if (pathname === ROUTES.schoolGallery) {
