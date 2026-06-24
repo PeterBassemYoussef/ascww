@@ -12,7 +12,7 @@ function Footer() {
         <footer dir={isEnglish ? 'ltr' : 'rtl'} className="relative overflow-hidden bg-slate-950 text-slate-300">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.22),_transparent_55%)]"></div>
             <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-                <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 text-center sm:gap-8 md:grid-cols-2 md:text-start lg:grid-cols-3">
                     <div className="h-full">
                         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-[#f1f5f9d9] p-3 shadow-[0_14px_35px_rgba(2,6,23,0.35)]">
                             <div className="mb-3 flex items-center justify-between">
@@ -30,7 +30,7 @@ function Footer() {
                                 href="https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D8%A7%D9%84%D8%B4%D8%B1%D8%A8+%D9%88%D8%A7%D9%84%D8%B5%D8%B1%D9%81+%D8%A7%D9%84%D8%B5%D8%AD%D9%8A+%D8%A8%D8%A3%D8%B3%D9%8A%D9%88%D8%B7+%D9%88%D8%A7%D9%84%D9%88%D8%A7%D8%AF%D9%8A+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-5 py-2 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:from-[#082b47] hover:to-[#0a3555]"
+                                className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#0a3555] to-[#1170b0] px-5 py-2 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:from-[#082b47] hover:to-[#0a3555]"
                             >
                                 {t('فتح في خرائط جوجل', 'Open in Google Maps')}
                             </a>
@@ -45,7 +45,7 @@ function Footer() {
                             <p>{t('صندوق بريد : 71111', 'P.O. Box: 71111')}</p>
                             <p>{t('رقم الفاكس : 2131662-088', 'Fax: 088-2131662')}</p>
                         </div>
-                        <div className="mt-5 flex flex-wrap items-center gap-2">
+                        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 md:justify-start">
                             <a href="https://www.facebook.com/ASCWWeg" target="_blank" rel="noopener noreferrer" aria-label={t('فيسبوك', 'Facebook')} className="social-icon social-icon--facebook">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a6 6 0 0 0-6 6v4H7v4h2v6h4v-6h3l1-4h-4V8a2 2 0 0 1 2-2h1z" /></svg>
                             </a>
