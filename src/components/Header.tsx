@@ -217,6 +217,8 @@ function Header() {
     const desktopMenuAlignmentClass = isEnglish ? 'justify-start' : 'justify-center';
     const searchInputAlignmentClass = isEnglish ? 'text-left' : 'text-right';
     const mobileMenuAlignmentClass = isEnglish ? 'text-left' : 'text-right';
+    const mobileLogoOrderClass = 'order-2';
+    const mobileActionsOrderClass = 'order-1';
     const nextLanguage: SiteLanguage = isEnglish ? 'ar' : 'en';
     const nextLanguageLabel = isEnglish ? 'العربية' : 'English';
     const languageButtonClass = (targetLanguage: SiteLanguage) => `text-xs font-bold transition ${language === targetLanguage ? 'text-[#d7b05a]' : 'text-white/80 hover:text-white'}`;
@@ -727,8 +729,8 @@ function Header() {
                 </div>
 
                 <div id="site-mainbar" className="site-mainbar border-b border-[#d7b05a]/35 bg-white duration-300">
-                    <div className="mx-auto grid w-full max-w-[1600px] grid-cols-[auto_auto] justify-start items-center gap-2 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-8 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:justify-normal xl:gap-5">
-                        <Link to={ROUTES.home} className="order-2 flex items-center justify-self-start gap-3 xl:order-1 xl:justify-self-end">
+                    <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-8 xl:grid xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:justify-normal xl:gap-5">
+                        <Link to={ROUTES.home} className={`${mobileLogoOrderClass} flex items-center gap-3 xl:order-1 xl:justify-self-end`}>
                             <img
                                 src="/images/egypt.svg"
                                 alt={t('شعار الجمهورية', 'Republic emblem')}
@@ -902,7 +904,7 @@ function Header() {
                             </div>
                         </nav>
 
-                        <div className="order-1 flex items-center justify-self-start gap-3 xl:order-3 xl:justify-self-start">
+                        <div className={`${mobileActionsOrderClass} flex items-center justify-self-start gap-3 xl:order-3 xl:justify-self-start`}>
                             <form
                                 ref={searchFormRef}
                                 className="group relative hidden xl:flex xl:w-80 2xl:w-[26rem]"
@@ -1081,13 +1083,6 @@ function Header() {
 }
 
 export default memo(Header);
-
-
-
-
-
-
-
 
 
 

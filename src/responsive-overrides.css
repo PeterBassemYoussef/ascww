@@ -139,7 +139,7 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
     white-space: nowrap;
   }
 
-  main :where(button:not(.hero-dot), [role="button"], summary, input[type="button"], input[type="submit"]) {
+  main :where(button:not(.hero-dot):not(.hero-nav-btn), [role="button"], summary, input[type="button"], input[type="submit"]) {
     min-height: var(--tap-target-size);
   }
 
@@ -330,4 +330,3 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
     --responsive-gutter: 2rem;
   }
 }
-
