@@ -67,7 +67,7 @@ const whySaveWater: LocalizedText[] = [
 
 const awarenessCards = [
   {
-    imageUrl: 'https://ascww.org/img/10.98017ad9.jpg',
+    imageUrl: '/images/advice-and-contact/1.webp',
     title: {
       ar: 'ترشيد الاستهلاك اليومي',
       en: 'Rational daily consumption',
@@ -78,7 +78,7 @@ const awarenessCards = [
     },
   },
   {
-    imageUrl: 'https://ascww.org/img/11.45d63748.jpg',
+    imageUrl: '/images/advice-and-contact/2.webp',
     title: {
       ar: 'سلوك مائي صحيح',
       en: 'Responsible water behavior',
@@ -89,7 +89,7 @@ const awarenessCards = [
     },
   },
   {
-    imageUrl: 'https://ascww.org/img/12.87637cb4.jpg',
+    imageUrl: '/images/advice-and-contact/3.webp',
     title: {
       ar: 'مشاركة مجتمعية',
       en: 'Community participation',
