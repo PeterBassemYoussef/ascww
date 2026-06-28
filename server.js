@@ -37,6 +37,8 @@ const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.sv
 
 const IMAGE_PROXY_PATH_PATTERN = /^\/api\/(?:news|projects)\/image\//;
 const NON_WEBP_IMAGE_TYPES = ['image/svg+xml', 'image/gif', 'image/webp'];
+const SCHOOL_SUBMISSION_STATE_PATH = '/api/school-submission-data';
+const SCHOOL_SUBMISSION_GUARDED_PATHS = new Set(['/api/upload', '/api/addStudent']);
 const SKIPPED_UPSTREAM_HEADERS = new Set([
   'content-encoding',
   'transfer-encoding',
@@ -124,6 +126,42 @@ const shouldTryWebpConversion = (req, pathname, method) => {
   return acceptHeader.includes('image/webp');
 };
 
+const parseBackendBoolean = (value) => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value !== 'string') return false;
+
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return false;
+  return ['1', 'true', 'yes', 'open', 'active', 'available', 'متاح', 'مفتوح'].includes(normalized);
+};
+
+const extractSchoolSubmissionFormState = (payload) => {
+  const source = payload && typeof payload === 'object' && !Array.isArray(payload)
+    ? (payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data) ? payload.data : payload)
+    : {};
+
+  return parseBackendBoolean(source.show_submission_form);
+};
+
+const ensureSchoolSubmissionIsOpen = async () => {
+  const stateUrl = BACKEND_BASE.toLowerCase().endsWith('/api')
+    ? `${BACKEND_BASE}/school-submission-data`
+    : `${BACKEND_BASE}${SCHOOL_SUBMISSION_STATE_PATH}`;
+  const response = await fetch(stateUrl, {
+    headers: {
+      accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`School submission state request failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  return extractSchoolSubmissionFormState(payload);
+};
+
 const streamUpstreamBody = async (upstream, res) => {
   if (!upstream.body) {
     res.end();
@@ -207,6 +245,19 @@ const proxyApiRequest = async (req, res, requestUrl) => {
   const tryWebp = shouldTryWebpConversion(req, requestUrl.pathname, method);
 
   try {
+    if (method !== 'GET' && SCHOOL_SUBMISSION_GUARDED_PATHS.has(requestUrl.pathname)) {
+      const isSubmissionOpen = await ensureSchoolSubmissionIsOpen();
+      if (!isSubmissionOpen) {
+        send(
+          res,
+          403,
+          JSON.stringify({ message: 'التقديم مغلق حالياً.' }),
+          'application/json; charset=utf-8',
+        );
+        return;
+      }
+    }
+
     const upstream = await fetch(targetUrl, {
       method,
       headers,
