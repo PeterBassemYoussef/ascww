@@ -471,6 +471,19 @@ function SchoolSubmissionDataPage() {
       nextErrors.guardianPhone = 'رقم الهاتف يجب أن يكون 11 رقمًا';
     }
 
+    const certificateValue = getValue('certificate');
+    const scoreValue = getValue('score');
+    if (scoreValue && !nextErrors.score) {
+      const scoreNum = Number(scoreValue);
+      if (isNaN(scoreNum)) {
+        nextErrors.score = 'مجموع الدرجات يجب أن يكون رقماً صحيحاً';
+      } else if (certificateValue === 'الاعدادية الأزهرية' && scoreNum < 474) {
+        nextErrors.score = 'مجموع درجات الإعدادية الأزهرية يجب ألا يقل عن 474';
+      } else if (certificateValue === 'الاعدادية العامة' && scoreNum < 260) {
+        nextErrors.score = 'مجموع درجات الإعدادية العامة يجب ألا يقل عن 260';
+      }
+    }
+
     if (!attachmentInput?.files?.length) {
       nextErrors.attachment = 'يجب عليك رفع الملف المطلوب';
     }
