@@ -14,9 +14,9 @@
 - [معامل مياه الشرب](https://ascww.org/lab-of-company-water)
 - [معالجة الصرف الصحي](https://ascww.org/sewage-treatment)
 - [مركز خدمة العملاء](https://ascww.org/call-center)
-- [الأخبار](https://ascww.org/news-archive)
-- [المشروعات](https://ascww.org/projects-archive)
-- [المناقصات](https://ascww.org/tenders-archive)
+- [الأخبار](https://ascww.org/news)
+- [المشروعات](https://ascww.org/projects)
+- [المناقصات](https://ascww.org/tenders)
 - [دليل الخدمات](https://ascww.org/services-evidance)
 
 ## إرشادات للأنظمة الآلية

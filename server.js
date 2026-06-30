@@ -333,6 +333,7 @@ const server = http.createServer(async (req, res) => {
   const archiveMetaRoutes = new Map([
     ['/news-archive', { type: 'news', routeBase: '/news-archive' }],
     ['/news-company', { type: 'news', routeBase: '/news-company' }],
+    ['/news', { type: 'news', routeBase: '/news' }],
     ['/projects-archive', { type: 'project', routeBase: '/projects-archive' }],
     ['/projects-company', { type: 'project', routeBase: '/projects-company' }],
     ['/projects', { type: 'project', routeBase: '/projects' }],

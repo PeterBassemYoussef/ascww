@@ -32,7 +32,6 @@ const routeTitles: Record<string, string> = {
   [ROUTES.industrialWasteRole]: 'دور إدارة الصرف الصناعي',
   [ROUTES.customerCharter]: 'ميثاق المتعاملين',
   [ROUTES.newsArchive]: 'أرشيف الأخبار',
-  '/projects': 'أرشيف المشروعات',
   [ROUTES.projectsArchive]: 'أرشيف المشروعات',
   [ROUTES.tendersArchive]: 'المناقصات',
   [ROUTES.generalAdminTraining]: 'الإدارة العامة للتدريب',

@@ -6,9 +6,9 @@ import PageTitle from './components/PageTitle';
 import { LEGACY_ROUTE_REDIRECTS, ROUTES } from './constants/routes';
 import { useSiteLanguage } from './context/SiteLanguageContext';
 
-const NewsArchive = lazy(() => import('./pages/NewsArchive'));
+const News = lazy(() => import('./pages/News'));
 const NewsDetails = lazy(() => import('./pages/NewsDetails'));
-const ProjectsArchive = lazy(() => import('./pages/ProjectsArchive'));
+const Projects = lazy(() => import('./pages/Projects'));
 const ProjectDetails = lazy(() => import('./pages/ProjectDetails'));
 const AboutCompanyPage = lazy(() => import('./pages/AboutCompanyPage'));
 const BranchesPage = lazy(() => import('./pages/BranchesPage'));
@@ -35,7 +35,7 @@ const SaveSewageNetworkPage = lazy(() => import('./pages/SaveSewageNetworkPage')
 const IndustrialWastePage = lazy(() => import('./pages/IndustrialWastePage'));
 const IndustrialWasteRolePage = lazy(() => import('./pages/IndustrialWasteRolePage'));
 const CustomerCharterPage = lazy(() => import('./pages/CustomerCharterPage'));
-const TendersArchive = lazy(() => import('./pages/TendersArchive'));
+const Tenders = lazy(() => import('./pages/Tenders'));
 const TenderDetails = lazy(() => import('./pages/TenderDetails'));
 const GeneralAdminTrainingPage = lazy(() => import('./pages/GeneralAdminTrainingPage'));
 const CallCenterPage = lazy(() => import('./pages/CallCenterPage'));
@@ -98,11 +98,11 @@ function App() {
           <Route path={ROUTES.industrialWaste} element={<IndustrialWastePage />} />
           <Route path={ROUTES.industrialWasteRole} element={<IndustrialWasteRolePage />} />
           <Route path={ROUTES.customerCharter} element={<CustomerCharterPage />} />
-          <Route path={ROUTES.newsArchive} element={<NewsArchive />} />
+          <Route path={ROUTES.newsArchive} element={<News />} />
           <Route path={ROUTES.newsDetails} element={<NewsDetails />} />
-          <Route path={ROUTES.projectsArchive} element={<ProjectsArchive />} />
+          <Route path={ROUTES.projectsArchive} element={<Projects />} />
           <Route path={ROUTES.projectDetails} element={<ProjectDetails />} />
-          <Route path={ROUTES.tendersArchive} element={<TendersArchive />} />
+          <Route path={ROUTES.tendersArchive} element={<Tenders />} />
           <Route path={ROUTES.tenderDetails} element={<TenderDetails />} />
           <Route path={ROUTES.generalAdminTraining} element={<GeneralAdminTrainingPage />} />
           <Route path={ROUTES.callCenter} element={<CallCenterPage />} />

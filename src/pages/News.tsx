@@ -9,7 +9,7 @@ const ITEMS_PER_LOAD = 6;
 const NEWS_ARCHIVE_ENDPOINT = 'https://backend.ascww.org/api/news';
 const NEWS_ARCHIVE_PROXY_ENDPOINT = '/api/news';
 
-function NewsArchive() {
+function News() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -190,4 +190,4 @@ function NewsArchive() {
     );
 }
 
-export default NewsArchive;
+export default News;

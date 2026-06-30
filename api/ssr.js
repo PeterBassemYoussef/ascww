@@ -39,6 +39,7 @@ const ROUTE_TITLES = {
   '/waste-water-in-manufactring': 'دور إداره الصرف الصناعي',
   '/news-archive': 'أرشيف الأخبار',
   '/news-company': 'أرشيف الأخبار',
+  '/news': 'أرشيف الأخبار',
   '/projects': 'أرشيف المشروعات',
   '/projects-archive': 'أرشيف المشروعات',
   '/projects-company': 'أرشيف المشروعات',
