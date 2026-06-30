@@ -29,7 +29,7 @@ function setMetaTag(
     element.setAttribute('content', content);
 }
 
-function TendersArchive() {
+function Tenders() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -230,4 +230,4 @@ function TendersArchive() {
     );
 }
 
-export default TendersArchive;
+export default Tenders;

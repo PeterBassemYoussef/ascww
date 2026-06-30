@@ -102,7 +102,7 @@ function HeroSlider() {
                 <div id="hero-content" className="hero-content-animate text-center text-white">
                     <h1 id="hero-title" className="hero-title hero-anim-item">شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد</h1>
                     <p id="hero-subtitle" className="hero-anim-item mx-auto mt-4 max-w-4xl text-base leading-8 text-slate-100 sm:text-lg">ترحب بكم و نفخر بأننا احدي الشركات الرائده في جمهوريه مصر العربيه</p>
-                    <a id="hero-cta" href={`https://ascww.org${ROUTES.aboutCompany}`} target="_blank" rel="noopener noreferrer" className="hero-anim-item mt-7 inline-flex rounded-md border border-[#d7b05a]/80 bg-[#d7b05a]/95 px-7 py-3 text-sm font-bold text-[#0a3555] transition hover:bg-[#d7b05a]">تعرف علي المزيد</a>
+                    <a id="hero-cta" href={ROUTES.aboutCompany} className="hero-anim-item mt-7 inline-flex rounded-md border border-[#d7b05a]/80 bg-[#d7b05a]/95 px-7 py-3 text-sm font-bold text-[#0a3555] transition hover:bg-[#d7b05a]">تعرف علي المزيد</a>
                 </div>
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-5 z-30 flex items-center justify-center gap-2">

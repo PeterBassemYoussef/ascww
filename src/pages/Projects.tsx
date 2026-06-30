@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
@@ -8,7 +8,7 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const ITEMS_PER_LOAD = 6;
 
-function ProjectsArchive() {
+function Projects() {
     const { language } = useSiteLanguage();
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -170,4 +170,4 @@ function ProjectsArchive() {
     );
 }
 
-export default ProjectsArchive;
+export default Projects;

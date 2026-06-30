@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { AdminInfoResponse, NewsItem } from '../types';
 import { ADMIN_INFO_ENDPOINT, NEWS_ENDPOINT } from '../utils/helpers';
 import Header from '../components/Header';
@@ -11,6 +12,7 @@ const MainContent = lazy(() => import('../components/MainContent'));
 const Footer = lazy(() => import('../components/Footer'));
 
 function HomePage() {
+  const navigate = useNavigate();
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
@@ -162,6 +164,25 @@ function HomePage() {
         if (cta) heroCta.textContent = cta;
       }
     };
+
+    if (heroCta) {
+      const onHeroCtaClick = (event: MouseEvent) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+
+        const href = heroCta.getAttribute('href');
+        if (!href) return;
+        const url = new URL(href, window.location.origin);
+        if (url.origin !== window.location.origin) return;
+
+        event.preventDefault();
+        navigate(`${url.pathname}${url.search}${url.hash}`);
+      };
+
+      heroCta.addEventListener('click', onHeroCtaClick);
+      cleanups.push(() => heroCta.removeEventListener('click', onHeroCtaClick));
+    }
 
     if (heroSlides.length > 0) {
       let currentSlide = heroSlides.findIndex((slide) => slide.classList.contains('is-active'));
@@ -328,7 +349,7 @@ function HomePage() {
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, [language]);
+  }, [language, navigate]);
 
   useEffect(() => {
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
