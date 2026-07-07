@@ -149,6 +149,16 @@ const parseGraduationYears = (rawValue: string) => {
     .filter(Boolean);
 };
 
+const formatAgeOctoberValue = (years: string, months: string) => `${years} سنة و${months} أشهر`;
+
+const normalizeDecimalNumberInput = (value: string) => {
+  const normalizedSeparator = value.replace(/[،,٫]/g, '.').replace(/[^0-9.]/g, '');
+  const [integerPart = '', ...decimalParts] = normalizedSeparator.split('.');
+  const limitedInteger = integerPart.slice(0, 3);
+  const limitedDecimal = decimalParts.join('').slice(0, 2);
+  return decimalParts.length > 0 ? `${limitedInteger}.${limitedDecimal}` : limitedInteger;
+};
+
 const UPLOAD_FILE_CONTENT_ERROR = 'تأكد من احتواء الملف المرفق على المستندات المطلوبة';
 
 const normalizeUploadFileErrorMessage = (message: string) => {
@@ -448,7 +458,6 @@ function SchoolSubmissionDataPage() {
       { field: 'graduationYear', name: 'graduationYear' },
       { field: 'guardianPhone', name: 'guardianPhone' },
       { field: 'address', name: 'address' },
-      { field: 'ageOctober', name: 'ageOctober' },
       { field: 'certificate', name: 'certificate' },
       { field: 'nationalId', name: 'nationalId' },
       { field: 'governorate', name: 'governorate' },
@@ -461,6 +470,19 @@ function SchoolSubmissionDataPage() {
       }
     });
 
+    const ageOctoberYearsValue = getValue('ageOctoberYears');
+    const ageOctoberMonthsValue = getValue('ageOctoberMonths');
+    if (!ageOctoberYearsValue || !ageOctoberMonthsValue) {
+      nextErrors.ageOctober = getRequiredFieldMessage('ageOctober');
+    } else if (!/^\d{1,2}$/.test(ageOctoberYearsValue) || !/^\d{1,2}$/.test(ageOctoberMonthsValue)) {
+      nextErrors.ageOctober = 'السن أول أكتوبر يجب أن يحتوي على أرقام فقط';
+    } else {
+      const ageOctoberMonthsNumber = Number(ageOctoberMonthsValue);
+      if (ageOctoberMonthsNumber < 0 || ageOctoberMonthsNumber > 11) {
+        nextErrors.ageOctober = 'عدد الشهور يجب أن يكون من 0 إلى 11';
+      }
+    }
+
     const studentPhoneValue = getValue('studentPhone');
     if (studentPhoneValue && !/^\d{11}$/.test(studentPhoneValue)) {
       nextErrors.studentPhone = 'رقم الهاتف يجب أن يكون 11 رقمًا';
@@ -472,11 +494,11 @@ function SchoolSubmissionDataPage() {
     }
 
     const certificateValue = getValue('certificate');
-    const scoreValue = getValue('score');
+    const scoreValue = normalizeDecimalNumberInput(getValue('score'));
     if (scoreValue && !nextErrors.score) {
       const scoreNum = Number(scoreValue);
-      if (isNaN(scoreNum)) {
-        nextErrors.score = 'مجموع الدرجات يجب أن يكون رقماً صحيحاً';
+      if (!/^\d{1,3}(\.\d{1,2})?$/.test(scoreValue) || isNaN(scoreNum)) {
+        nextErrors.score = 'مجموع الدرجات يجب أن يكون رقمًا صحيحًا أو عشريًا';
       } else if (certificateValue === 'الاعدادية الأزهرية' && scoreNum < 474) {
         nextErrors.score = 'مجموع درجات الإعدادية الأزهرية يجب ألا يقل عن 474';
       } else if (certificateValue === 'الاعدادية العامة' && scoreNum < 260) {
@@ -535,14 +557,14 @@ function SchoolSubmissionDataPage() {
           name: getValue('studentName'),
           user_id: getValue('nationalId'),
           date: getValue('birthDate'),
-          age_in_october: getValue('ageOctober'),
+          age_in_october: formatAgeOctoberValue(getValue('ageOctoberYears'), getValue('ageOctoberMonths')),
           city: getValue('governorate'),
           year_of_graduated: getValue('graduationYear'),
           phone: getValue('guardianPhone'),
           student_phone: getValue('studentPhone'),
           address: getValue('address'),
           junior_certificate: getValue('certificate') === 'الاعدادية العامة' ? '0' : '1',
-          total_grade: getValue('score'),
+          total_grade: normalizeDecimalNumberInput(getValue('score')),
           receipt_file_name: uploadData.receiptFileName,
           file_name: uploadData.studentFileName,
           ...(csrfToken ? { _token: csrfToken } : {}),
@@ -867,6 +889,7 @@ function SchoolSubmissionDataPage() {
                                 <option value="سوهاج">سوهاج</option>
                                 <option value="قنا">قنا</option>
                                 <option value="اسيوط">اسيوط</option>
+                                <option value="الوادي الجديد">الوادي الجديد</option>
                                 <option value="الاقصر">الاقصر</option>
                                 <option value="اسوان">اسوان</option>
                               </select>
@@ -940,21 +963,39 @@ function SchoolSubmissionDataPage() {
                                 السن أول أكتوبر
                                 {fieldErrors.ageOctober ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
-                              <input
-                                name="ageOctober"
-                                type="text"
-                                inputMode="numeric"
-                                minLength={2}
-                                maxLength={2}
-                                pattern="^[0-9]{2}$"
-                                title="السن أول أكتوبر يجب أن يكون رقمين فقط"
-                                placeholder="مثال: 15"
-                                onChange={() => clearFieldError('ageOctober')}
-                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }}
-                                className={getFormFieldClassName(Boolean(fieldErrors.ageOctober))}
-                              />
+                              <div className="grid grid-cols-2 gap-3">
+                                <input
+                                  name="ageOctoberYears"
+                                  type="text"
+                                  inputMode="numeric"
+                                  minLength={1}
+                                  maxLength={2}
+                                  pattern="^[0-9]{1,2}$"
+                                  title="عدد السنوات يجب أن يكون أرقامًا فقط"
+                                  placeholder="السنوات"
+                                  onChange={() => clearFieldError('ageOctober')}
+                                  onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }}
+                                  className={getFormFieldClassName(Boolean(fieldErrors.ageOctober))}
+                                />
+                                <input
+                                  name="ageOctoberMonths"
+                                  type="text"
+                                  inputMode="numeric"
+                                  minLength={1}
+                                  maxLength={2}
+                                  pattern="^(0?[0-9]|1[01])$"
+                                  title="عدد الشهور يجب أن يكون من 0 إلى 11"
+                                  placeholder="الشهور"
+                                  onChange={() => clearFieldError('ageOctober')}
+                                  onInput={(event) => {
+                                    const nextValue = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2);
+                                    event.currentTarget.value = Number(nextValue) > 11 ? '11' : nextValue;
+                                  }}
+                                  className={getFormFieldClassName(Boolean(fieldErrors.ageOctober))}
+                                />
+                              </div>
                               {fieldErrors.ageOctober ? <span className={FORM_ERROR_CLASS}>{fieldErrors.ageOctober}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يتم إدخال العمر برقمين فقط.</span>
+                              <span className={FORM_HINT_CLASS}>مثال: 15 سنة و7 أشهر، واكتب الشهور من 0 إلى 11.</span>
                             </label>
 
                             <label className="block text-right">
@@ -962,21 +1003,25 @@ function SchoolSubmissionDataPage() {
                                 مجموع درجات الطالب في الشهادة الإعدادية
                                 {fieldErrors.score ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
-                              <input
-                                name="score"
-                                type="text"
-                                inputMode="numeric"
-                                minLength={3}
-                                maxLength={3}
-                                pattern="^[0-9]{3}$"
-                                title="مجموع الدرجات يجب أن يكون 3 أرقام فقط"
-                                placeholder="مثال: 280"
-                                onChange={() => clearFieldError('score')}
-                                onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 3); }}
-                                className={getFormFieldClassName(Boolean(fieldErrors.score))}
-                              />
+                              <div className="relative">
+                                <input
+                                  name="score"
+                                  type="text"
+                                  inputMode="decimal"
+                                  maxLength={6}
+                                  pattern="^[0-9]{1,3}([.,٫][0-9]{1,2})?$"
+                                  title="مجموع الدرجات يمكن أن يكون رقمًا صحيحًا أو عشريًا مثل 474.5"
+                                  placeholder="مثال: 474.5"
+                                  onChange={() => clearFieldError('score')}
+                                  onInput={(event) => { event.currentTarget.value = normalizeDecimalNumberInput(event.currentTarget.value); }}
+                                  className={`${getFormFieldClassName(Boolean(fieldErrors.score))} pl-16`}
+                                />
+                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
+                                  درجة
+                                </span>
+                              </div>
                               {fieldErrors.score ? <span className={FORM_ERROR_CLASS}>{fieldErrors.score}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يكتب المجموع على هيئة 3 أرقام فقط.</span>
+                              <span className={FORM_HINT_CLASS}>يمكن كتابة المجموع كرقم صحيح أو عشري، مثل 260 أو 474.5 درجة.</span>
                             </label>
 
                             <div className="rounded-[24px] border border-dashed border-[#8bb9d6] bg-white/95 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-6">
