@@ -7,5 +7,5 @@ dist/
 .cache/
 public/gallery-manifest.json
 release/ASCWW-New-Website-Adoption-Notes.md
-
+.playwright-mcp
 release/ASCWW-IT-New-Website-Approval-10-Slides.pptx

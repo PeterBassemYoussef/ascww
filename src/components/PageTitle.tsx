@@ -37,6 +37,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.projectsArchive]: 'أرشيف المشروعات',
   [ROUTES.tendersArchive]: 'المناقصات',
   [ROUTES.generalAdminTraining]: 'الإدارة العامة للتدريب',
+  [ROUTES.trainingHallsBooking]: 'قاعات التدريب',
   [ROUTES.jobsAndCompetition]: 'مسابقات و وظائف',
   [ROUTES.resultOfWorker]: 'نتائج المسابقات',
   [ROUTES.callCenter]: 'خدمه العملاء',
@@ -121,6 +122,10 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.trainingOfCompany) {
     return isEnglish ? 'Training Center' : 'مركز التدريب';
+  }
+
+  if (pathname === ROUTES.generalAdminTraining) {
+    return isEnglish ? 'General Administration of Training' : 'الإدارة العامة للتدريب';
   }
 
   if (pathname === ROUTES.callCenter) {

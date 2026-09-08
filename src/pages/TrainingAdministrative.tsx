@@ -1,85 +1,101 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type LocalizedText = { ar: string; en: string };
-type TrainingSlide = { src: string; alt: LocalizedText };
 type TrainingTab = { id: string; title: LocalizedText; description: LocalizedText[] };
 type TrainingShowcaseItem = { id: string; title: LocalizedText; image: string; points: LocalizedText[] };
 type TrainingHall = { id: string; image: string; title: LocalizedText; alt: LocalizedText; description: LocalizedText };
 
-const trainingSlides: TrainingSlide[] = [
-  { src: '/images/training/47.webp', alt: { ar: 'قاعة التدريب رقم 1', en: 'Training hall 1' } },
-  { src: '/images/training/48.webp', alt: { ar: 'قاعة التدريب رقم 2', en: 'Training hall 2' } },
-  { src: '/images/training/49.webp', alt: { ar: 'قاعة التدريب رقم 3', en: 'Training hall 3' } },
-  { src: '/images/training/50.webp', alt: { ar: 'قاعة التدريب رقم 4', en: 'Training hall 4' } },
-];
-
-const SLIDE_INTERVAL_MS = 4000;
-
 const trainingTabs: TrainingTab[] = [
-  { id: 'goals', title: { ar: 'أهدافنا الاستراتيجية', en: 'Our Strategic Goals' }, description: [
-    { ar: 'إعداد الكوادر الإدارية والفنية المتخصصة كل في مجاله', en: 'Preparing specialized administrative and technical staff in each field.' },
-    { ar: 'تنمية الموارد البشرية بمساعدتها على اكتساب وتحسين المهارات والكفاءات للقيام بالواجبات الحالية والمستقبلية', en: 'Developing human resources by helping them acquire and improve the skills and competencies needed for current and future responsibilities.' },
-    { ar: 'تمكين الشركة من العمل طبقا لمعايير الجودة المطلوبة', en: 'Enabling the company to operate according to the required quality standards.' },
-    { ar: 'تعزيز فرص النمو والتطور لدى موظفي الشركة من أجل تنمية طاقاتهم', en: 'Enhancing growth and development opportunities for company employees to build their capabilities.' },
-  ] },
-  { id: 'values', title: { ar: 'قيمنا', en: 'Our Values' }, description: [
-    { ar: 'الولاء والانتماء . المصداقية . الالتزام وبناء الثقة . الشفافية', en: 'Loyalty and belonging, credibility, commitment and trust-building, and transparency.' },
-  ] },
-  { id: 'mission', title: { ar: 'رسالتنا', en: 'Our Mission' }, description: [
-    { ar: 'الإشراف الكامل على مختلف صور التدريب', en: 'Providing full supervision over all forms of training.' },
-    { ar: 'حسن اختيار الكوادر المسئولة عن إدارة منظومة التدريب.', en: 'Selecting the most suitable staff to manage the training system.' },
-  ] },
-  { id: 'vision', title: { ar: 'رؤيتنا', en: 'Our Vision' }, description: [
-    { ar: 'الوصول إلى مستوى أداء عالمى فى إطار منظومة من القيم السائدة', en: 'Reaching a world-class level of performance within a strong values-based system.' },
-  ] },
+  {
+    id: 'goals', title: { ar: 'أهدافنا الاستراتيجية', en: 'Our Strategic Goals' }, description: [
+      { ar: 'إعداد الكوادر الإدارية والفنية المتخصصة كل في مجاله', en: 'Preparing specialized administrative and technical staff in each field.' },
+      { ar: 'تنمية الموارد البشرية بمساعدتها على اكتساب وتحسين المهارات والكفاءات للقيام بالواجبات الحالية والمستقبلية', en: 'Developing human resources by helping them acquire and improve the skills and competencies needed for current and future responsibilities.' },
+      { ar: 'تمكين الشركة من العمل طبقا لمعايير الجودة المطلوبة', en: 'Enabling the company to operate according to the required quality standards.' },
+      { ar: 'تعزيز فرص النمو والتطور لدى موظفي الشركة من أجل تنمية طاقاتهم', en: 'Enhancing growth and development opportunities for company employees to build their capabilities.' },
+    ]
+  },
+  {
+    id: 'values', title: { ar: 'قيمنا', en: 'Our Values' }, description: [
+      { ar: 'الولاء والانتماء . المصداقية . الالتزام وبناء الثقة . الشفافية', en: 'Loyalty and belonging, credibility, commitment and trust-building, and transparency.' },
+    ]
+  },
+  {
+    id: 'mission', title: { ar: 'رسالتنا', en: 'Our Mission' }, description: [
+      { ar: 'الإشراف الكامل على مختلف صور التدريب', en: 'Providing full supervision over all forms of training.' },
+      { ar: 'حسن اختيار الكوادر المسئولة عن إدارة منظومة التدريب.', en: 'Selecting the most suitable staff to manage the training system.' },
+    ]
+  },
+  {
+    id: 'vision', title: { ar: 'رؤيتنا', en: 'Our Vision' }, description: [
+      { ar: 'الوصول إلى مستوى أداء عالمى فى إطار منظومة من القيم السائدة', en: 'Reaching a world-class level of performance within a strong values-based system.' },
+    ]
+  },
 ];
 
 const trainingShowcaseItems: TrainingShowcaseItem[] = [
-  { id: 'training-specialist', title: { ar: 'اخصائى تدريب', en: 'Training Specialist' }, image: '/images/training/61.webp', points: [
-    { ar: 'قياس مردود التدريب والعائد على الاستثمار', en: 'Measuring training impact and return on investment.' },
-    { ar: 'برنامج المحاسب المحترف الشامل', en: 'Comprehensive professional accountant program.' },
-    { ar: 'التحويل الرقمى وكيفية تطبيق من خلال البرامج', en: 'Digital transformation and how to apply it through software solutions.' },
-    { ar: 'مهارات اعداد المواد التفاعلية للتدريب الالكتروني', en: 'Skills for preparing interactive materials for e-learning.' },
-    { ar: 'التسويق الالكتروني', en: 'Digital marketing.' },
-  ] },
-  { id: 'item-2-mechanic', title: { ar: 'فنى حملة', en: 'Vehicle Technician' }, image: '/images/training/64.webp', points: [
-    { ar: 'دورة الزيت', en: 'Lubrication cycle.' },
-    { ar: 'الدوائر الاساسية فى المركبات', en: 'Basic circuits in vehicles.' },
-    { ar: 'انواع المركبات و مكوناتها والاعطال الشائعة', en: 'Types of vehicles, their components, and common faults.' },
-    { ar: 'انواع المركبات ومكوناتها والاعطال الشائعة', en: 'Vehicle components and the most common breakdowns.' },
-  ] },
-  { id: 'community-awareness', title: { ar: 'ادارة التوعية -المشاركه الاجتماعيه', en: 'Awareness and Community Participation' }, image: '/images/training/56.webp', points: [
-    { ar: 'كيفية اعداد البحوث الكمية والنوعية واعداد المسوح المجتمعية الميداني', en: 'How to prepare quantitative and qualitative research and field community surveys.' },
-    { ar: 'مهارات الارشاد والتوعية', en: 'Guidance and awareness skills.' },
-    { ar: 'الاتصال والتواصل المجتمعى والمشاركة المجتمعية', en: 'Community communication, outreach, and participation.' },
-  ] },
-  { id: 'admin', title: { ar: 'إدارى', en: 'Administrative' }, image: '/images/training/59.webp', points: [
-    { ar: 'fidic', en: 'FIDIC.' }, { ar: 'مسار وظيفى للدرجات القيادية', en: 'Career path for leadership grades.' }, { ar: 'ادارة الازمات', en: 'Crisis management.' }, { ar: 'ادارة الوقت', en: 'Time management.' },
-    { ar: 'الاتجاهات الحديثة فى الادارة', en: 'Modern management trends.' }, { ar: 'طرق الوقاية من مخاطر بيئة العمل وانواع هذه المخاطر', en: 'Methods of preventing workplace hazards and understanding their types.' },
-    { ar: 'المهارات المتقدمة فى اعداد التقارير والخطابات والمذكرات', en: 'Advanced skills in preparing reports, letters, and memoranda.' }, { ar: 'مهارات وضع معايير التقييم ومؤشرات الاداء', en: 'Skills for setting evaluation criteria and performance indicators.' },
-    { ar: 'TOT', en: 'TOT.' }, { ar: 'اعداد كوادر لصف ثانى', en: 'Preparing second-line cadres.' }, { ar: 'لغة انجليزية', en: 'English language.' },
-  ] },
-  { id: 'hr', title: { ar: 'موارد بشرية', en: 'Human Resources' }, image: '/images/training/60.webp', points: [
-    { ar: 'احكام قانون كسب العمل وتعديلاتة', en: 'Provisions of labor law and its amendments.' }, { ar: 'تقييم الأداء', en: 'Performance evaluation.' }, { ar: 'اعداد الهياكل التنظيمية تحليل الوظائف', en: 'Preparing organizational structures and job analysis.' },
-    { ar: 'التسويات', en: 'Settlements.' }, { ar: 'انشاء وثائق الخدمة', en: 'Preparing service records.' }, { ar: 'اجراءات العمل بالموارد البشرية', en: 'Human resources work procedures.' },
-    { ar: 'اجراءات العمل بالموارد البشرية', en: 'HR operating procedures.' }, { ar: 'استراتيجة الموارد البشرية', en: 'Human resources strategy.' }, { ar: 'دليل لائحة واجراءات', en: 'Regulations and procedures guide.' },
-  ] },
-  { id: 'item-6-public-relations', title: { ar: 'علاقات عامة', en: 'Public Relations' }, image: '/images/training/58.webp', points: [
-    { ar: 'PHOTOSHOP', en: 'Photoshop.' }, { ar: 'التسويق الرقمى', en: 'Digital marketing.' }, { ar: 'بحوث الراى', en: 'Opinion research.' }, { ar: 'العلاقات العامة من منظور جديد', en: 'Public relations from a new perspective.' },
-    { ar: 'ادارة المراسم والبروتوكولات وتنظيم المعارض والمؤتمرات', en: 'Managing ceremonies, protocols, exhibitions, and conferences.' }, { ar: 'كتابة وصياغة الاخبار الصحفية والتقارير الصحفية', en: 'Writing and editing press news and press reports.' },
-  ] },
-  { id: 'item-9-it-programs', title: { ar: 'برامج تكنولوجيا المعلومات', en: 'Information Technology Programs' }, image: '/images/training/57.webp', points: [
-    { ar: 'CCNA Certification', en: 'CCNA Certification.' }, { ar: 'icdl', en: 'ICDL.' },
-  ] },
-  { id: 'secretariat', title: { ar: 'سكرتارية', en: 'Secretariat' }, image: '/images/training/63.webp', points: [
-    { ar: 'الارشفة وحفظ الملفات', en: 'Archiving and file preservation.' }, { ar: 'مهارات السكرتارية', en: 'Secretarial skills.' },
-  ] },
-  { id: 'security-specialist', title: { ar: 'أخصائي أمن', en: 'Security Specialist' }, image: '/images/training/62.webp', points: [
-    { ar: 'كتابة التقارير الامني', en: 'Writing security reports.' }, { ar: 'تأمين المنشأت', en: 'Facility security.' },
-  ] },
+  {
+    id: 'training-specialist', title: { ar: 'اخصائى تدريب', en: 'Training Specialist' }, image: '/images/training/61.webp', points: [
+      { ar: 'قياس مردود التدريب والعائد على الاستثمار', en: 'Measuring training impact and return on investment.' },
+      { ar: 'برنامج المحاسب المحترف الشامل', en: 'Comprehensive professional accountant program.' },
+      { ar: 'التحويل الرقمى وكيفية تطبيق من خلال البرامج', en: 'Digital transformation and how to apply it through software solutions.' },
+      { ar: 'مهارات اعداد المواد التفاعلية للتدريب الالكتروني', en: 'Skills for preparing interactive materials for e-learning.' },
+      { ar: 'التسويق الالكتروني', en: 'Digital marketing.' },
+    ]
+  },
+  {
+    id: 'item-2-mechanic', title: { ar: 'فنى حملة', en: 'Vehicle Technician' }, image: '/images/training/64.webp', points: [
+      { ar: 'دورة الزيت', en: 'Lubrication cycle.' },
+      { ar: 'الدوائر الاساسية فى المركبات', en: 'Basic circuits in vehicles.' },
+      { ar: 'انواع المركبات و مكوناتها والاعطال الشائعة', en: 'Types of vehicles, their components, and common faults.' },
+      { ar: 'انواع المركبات ومكوناتها والاعطال الشائعة', en: 'Vehicle components and the most common breakdowns.' },
+    ]
+  },
+  {
+    id: 'community-awareness', title: { ar: 'ادارة التوعية -المشاركه الاجتماعيه', en: 'Awareness and Community Participation' }, image: '/images/training/56.webp', points: [
+      { ar: 'كيفية اعداد البحوث الكمية والنوعية واعداد المسوح المجتمعية الميداني', en: 'How to prepare quantitative and qualitative research and field community surveys.' },
+      { ar: 'مهارات الارشاد والتوعية', en: 'Guidance and awareness skills.' },
+      { ar: 'الاتصال والتواصل المجتمعى والمشاركة المجتمعية', en: 'Community communication, outreach, and participation.' },
+    ]
+  },
+  {
+    id: 'admin', title: { ar: 'إدارى', en: 'Administrative' }, image: '/images/training/59.webp', points: [
+      { ar: 'fidic', en: 'FIDIC.' }, { ar: 'مسار وظيفى للدرجات القيادية', en: 'Career path for leadership grades.' }, { ar: 'ادارة الازمات', en: 'Crisis management.' }, { ar: 'ادارة الوقت', en: 'Time management.' },
+      { ar: 'الاتجاهات الحديثة فى الادارة', en: 'Modern management trends.' }, { ar: 'طرق الوقاية من مخاطر بيئة العمل وانواع هذه المخاطر', en: 'Methods of preventing workplace hazards and understanding their types.' },
+      { ar: 'المهارات المتقدمة فى اعداد التقارير والخطابات والمذكرات', en: 'Advanced skills in preparing reports, letters, and memoranda.' }, { ar: 'مهارات وضع معايير التقييم ومؤشرات الاداء', en: 'Skills for setting evaluation criteria and performance indicators.' },
+      { ar: 'TOT', en: 'TOT.' }, { ar: 'اعداد كوادر لصف ثانى', en: 'Preparing second-line cadres.' }, { ar: 'لغة انجليزية', en: 'English language.' },
+    ]
+  },
+  {
+    id: 'hr', title: { ar: 'موارد بشرية', en: 'Human Resources' }, image: '/images/training/60.webp', points: [
+      { ar: 'احكام قانون كسب العمل وتعديلاتة', en: 'Provisions of labor law and its amendments.' }, { ar: 'تقييم الأداء', en: 'Performance evaluation.' }, { ar: 'اعداد الهياكل التنظيمية تحليل الوظائف', en: 'Preparing organizational structures and job analysis.' },
+      { ar: 'التسويات', en: 'Settlements.' }, { ar: 'انشاء وثائق الخدمة', en: 'Preparing service records.' }, { ar: 'اجراءات العمل بالموارد البشرية', en: 'Human resources work procedures.' },
+      { ar: 'اجراءات العمل بالموارد البشرية', en: 'HR operating procedures.' }, { ar: 'استراتيجة الموارد البشرية', en: 'Human resources strategy.' }, { ar: 'دليل لائحة واجراءات', en: 'Regulations and procedures guide.' },
+    ]
+  },
+  {
+    id: 'item-6-public-relations', title: { ar: 'علاقات عامة', en: 'Public Relations' }, image: '/images/training/58.webp', points: [
+      { ar: 'PHOTOSHOP', en: 'Photoshop.' }, { ar: 'التسويق الرقمى', en: 'Digital marketing.' }, { ar: 'بحوث الراى', en: 'Opinion research.' }, { ar: 'العلاقات العامة من منظور جديد', en: 'Public relations from a new perspective.' },
+      { ar: 'ادارة المراسم والبروتوكولات وتنظيم المعارض والمؤتمرات', en: 'Managing ceremonies, protocols, exhibitions, and conferences.' }, { ar: 'كتابة وصياغة الاخبار الصحفية والتقارير الصحفية', en: 'Writing and editing press news and press reports.' },
+    ]
+  },
+  {
+    id: 'item-9-it-programs', title: { ar: 'برامج تكنولوجيا المعلومات', en: 'Information Technology Programs' }, image: '/images/training/57.webp', points: [
+      { ar: 'CCNA Certification', en: 'CCNA Certification.' }, { ar: 'icdl', en: 'ICDL.' },
+    ]
+  },
+  {
+    id: 'secretariat', title: { ar: 'سكرتارية', en: 'Secretariat' }, image: '/images/training/63.webp', points: [
+      { ar: 'الارشفة وحفظ الملفات', en: 'Archiving and file preservation.' }, { ar: 'مهارات السكرتارية', en: 'Secretarial skills.' },
+    ]
+  },
+  {
+    id: 'security-specialist', title: { ar: 'أخصائي أمن', en: 'Security Specialist' }, image: '/images/training/62.webp', points: [
+      { ar: 'كتابة التقارير الامني', en: 'Writing security reports.' }, { ar: 'تأمين المنشأت', en: 'Facility security.' },
+    ]
+  },
 ];
 
 const hallFeatures: LocalizedText[] = [
@@ -135,51 +151,14 @@ function GeneralAdminTrainingPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = useCallback((text: LocalizedText) => (isEnglish ? text.en : text.ar), [isEnglish]);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [activeTab, setActiveTab] = useState(trainingTabs[0]?.id ?? 'goals');
   const [openedHallImage, setOpenedHallImage] = useState<{ src: string; alt: string } | null>(null);
-  const autoplayRef = useRef<number | null>(null);
   const currentTab = trainingTabs.find((tab) => tab.id === activeTab) ?? trainingTabs[0];
-  const activeSlideItem = trainingSlides[activeSlide];
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
   const textAlignmentClass = isEnglish ? 'text-left' : 'text-right';
   const hallFeaturesPaddingClass = isEnglish ? 'pl-0 pr-2' : 'pl-2 pr-0';
   const hallFeaturesIconSpacingClass = isEnglish ? 'mr-2' : 'ml-2';
   const hallFeatureIcons = ['📽️', '🖥️', '🎤', '📹', '🧰', '🧾', '✍️', '🎒'] as const;
-
-  const stopAutoplay = useCallback(() => {
-    if (autoplayRef.current !== null) {
-      window.clearInterval(autoplayRef.current);
-      autoplayRef.current = null;
-    }
-  }, []);
-
-  const startAutoplay = useCallback(() => {
-    if (trainingSlides.length <= 1) return;
-    stopAutoplay();
-    autoplayRef.current = window.setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % trainingSlides.length);
-    }, SLIDE_INTERVAL_MS);
-  }, [stopAutoplay]);
-
-  const goToSlide = useCallback((index: number) => {
-    const total = trainingSlides.length;
-    setActiveSlide((index + total) % total);
-    if (!isPaused) {
-      startAutoplay();
-    }
-  }, [isPaused, startAutoplay]);
-
-  useEffect(() => {
-    if (isPaused) {
-      stopAutoplay();
-      return undefined;
-    }
-
-    startAutoplay();
-    return () => stopAutoplay();
-  }, [isPaused, startAutoplay, stopAutoplay]);
 
   useEffect(() => {
     if (!openedHallImage) return;
@@ -206,63 +185,13 @@ function GeneralAdminTrainingPage() {
               </h1>
               <p className={`mt-2 text-sm leading-7 text-slate-600 sm:text-base ${textAlignmentClass}`}>
                 {t({
-                  ar: 'عرض أنواع التدريب المتاحة والقاعات المجهزة لعقد البرامج التدريبية.',
-                  en: 'An overview of available training types and fully equipped halls for delivering training programs.',
+                  ar: 'عرض أنواع البرامج التدريبية المتاحة بالشركة.',
+                  en: 'An overview of the training program types available at the company.',
                 })}
               </p>
             </div>
 
             <div className="space-y-6 px-6 py-6 sm:px-8">
-              <section
-                className="relative h-[260px] overflow-hidden rounded-3xl border border-slate-200 bg-slate-900 sm:h-[360px] lg:h-[460px]"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-              >
-                <div
-                  role="img"
-                  aria-label={activeSlideItem ? t(activeSlideItem.alt) : t({ ar: 'قاعة التدريب', en: 'Training hall' })}
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                  style={{ backgroundImage: activeSlideItem?.src ? `url(${activeSlideItem.src})` : undefined }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-slate-950/10 to-transparent" />
-
-                <button
-                  type="button"
-                  onClick={() => goToSlide(activeSlide - 1)}
-                  aria-label={t({ ar: 'الصورة السابقة', en: 'Previous image' })}
-                  className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/30 bg-white/15 p-3 text-xl font-black text-white backdrop-blur transition hover:bg-white/30 sm:inline-flex"
-                >
-                  {isEnglish ? '‹' : '›'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => goToSlide(activeSlide + 1)}
-                  aria-label={t({ ar: 'الصورة التالية', en: 'Next image' })}
-                  className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/30 bg-white/15 p-3 text-xl font-black text-white backdrop-blur transition hover:bg-white/30 sm:inline-flex"
-                >
-                  {isEnglish ? '›' : '‹'}
-                </button>
-
-                <div className={`absolute bottom-4 z-10 flex items-center gap-2 ${isEnglish ? 'left-4' : 'right-4'}`}>
-                  {trainingSlides.map((slide, index) => (
-                    <button
-                      key={slide.src}
-                      type="button"
-                      onClick={() => goToSlide(index)}
-                      aria-label={t({
-                        ar: `عرض الصورة رقم ${index + 1}`,
-                        en: `View image ${index + 1}`,
-                      })}
-                      className={`inline-flex h-3 w-3 shrink-0 rounded-full transition-all sm:h-2.5 sm:w-2.5 ${
-                        index === activeSlide
-                          ? 'bg-[#d7b05a] shadow-[0_0_10px_rgba(215,176,90,0.7)] ring-2 ring-white/70'
-                          : 'bg-white/70 hover:bg-white'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </section>
-
               <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
                 <div className="flex flex-wrap gap-3">
                   {trainingTabs.map((tab) => {
@@ -272,11 +201,10 @@ function GeneralAdminTrainingPage() {
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`rounded-full px-4 py-2 text-sm font-bold transition sm:text-base ${
-                          isActive
-                            ? 'bg-gradient-to-l from-[#0a3555] to-[#1170b0] text-white shadow-[0_10px_24px_rgba(10,53,85,0.3)]'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                        }`}
+                        className={`rounded-full px-4 py-2 text-sm font-bold transition sm:text-base ${isActive
+                          ? 'bg-gradient-to-l from-[#0a3555] to-[#1170b0] text-white shadow-[0_10px_24px_rgba(10,53,85,0.3)]'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+                          }`}
                       >
                         <span className="inline-flex items-center gap-2">
                           {renderTrainingTabIcon(tab.id)}
@@ -340,7 +268,7 @@ function GeneralAdminTrainingPage() {
                 </div>
               </section>
 
-              <section className={`rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 ${textAlignmentClass}`}>
+              <section className={`hidden rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 ${textAlignmentClass}`}>
                 <h2 className="text-3xl font-black leading-tight text-[#0a3555] sm:text-4xl text-[#0a3555]">{t(hallsSectionTitle)}</h2>
                 <div className="mt-2 text-sm leading-7 text-slate-700">
                   <p className="text-base font-semibold leading-7">{t(hallsSectionDescription)}</p>
@@ -383,7 +311,7 @@ function GeneralAdminTrainingPage() {
               </section>
 
               {trainingHalls.map((hall, hallIndex) => (
-                <section key={hall.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                <section key={hall.id} className="hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_1.1fr] lg:items-stretch">
                     <button
                       type="button"

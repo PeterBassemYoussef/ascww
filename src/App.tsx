@@ -38,6 +38,7 @@ const CustomerCharterPage = lazy(() => import('./pages/ServicesCustomerCharter')
 const Tenders = lazy(() => import('./pages/Tenders'));
 const TenderDetails = lazy(() => import('./pages/TenderDetails'));
 const GeneralAdminTrainingPage = lazy(() => import('./pages/TrainingAdministrative'));
+const TrainingHallsBookingPage = lazy(() => import('./pages/TrainingHallsBooking'));
 const CallCenterPage = lazy(() => import('./pages/ServicesCustomerCare'));
 const ProvideRequestPage = lazy(() => import('./pages/ServicesInquiries'));
 const ProvideComplainePage = lazy(() => import('./pages/ServicesComplaints'));
@@ -107,6 +108,7 @@ function App() {
           <Route path={ROUTES.tendersArchive} element={<Tenders />} />
           <Route path={ROUTES.tenderDetails} element={<TenderDetails />} />
           <Route path={ROUTES.generalAdminTraining} element={<GeneralAdminTrainingPage />} />
+          <Route path={ROUTES.trainingHallsBooking} element={<TrainingHallsBookingPage />} />
           <Route path={ROUTES.callCenter} element={<CallCenterPage />} />
           <Route path={ROUTES.provideRequest} element={<ProvideRequestPage />} />
           <Route path={ROUTES.provideComplaine} element={<ProvideComplainePage />} />
