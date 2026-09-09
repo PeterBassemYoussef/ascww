@@ -171,7 +171,8 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
       ...(bookingData.invoice === 'نعم' ? [`الرقم الضريبي: ${bookingData.taxNumber}`] : []),
     ].join('\n');
 
-    window.open(`https://wa.me/201067006714?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=201067006714&text=${encodeURIComponent(message)}`;
+    window.location.assign(whatsappUrl);
   };
 
   useEffect(() => {
