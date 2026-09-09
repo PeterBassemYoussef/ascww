@@ -122,9 +122,12 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
   };
 
   const getBookingInputClassName = (field: keyof BookingFormData) => {
-    const hasError = showBookingValidation && field !== 'commercialRegister' && (isBookingFieldEmpty(field) || Boolean(getBookingFieldError(field)));
+    const hasError = showBookingValidation && field !== 'commercialRegister' && (isBookingFieldEmpty(field) || Boolean(getBookingFieldError(field)) || (field === 'date' && bookingData.date < today));
     return `mt-2 w-full rounded-xl border bg-white px-4 py-3 font-normal outline-none transition focus:ring-2 focus:ring-[#1170b0]/15 ${hasError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-[#1170b0]'}`;
   };
+
+  const currentDate = new Date();
+  const today = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
 
   const handleBookingSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -144,6 +147,10 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
 
     const emptyField = requiredFields.find((field) => !field.value);
     if (emptyField) {
+      return;
+    }
+
+    if (bookingData.date < today) {
       return;
     }
 
@@ -248,8 +255,9 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
           ))}
           <label className="block text-sm font-bold text-slate-700">
             {t({ ar: 'التاريخ', en: 'Date' })} <span className="text-red-600" aria-hidden="true">*</span>
-            <input required type="date" value={bookingData.date} onChange={(event) => updateBookingData('date', event.target.value)} className={getBookingInputClassName('date')} />
+            <input required min={today} type="date" value={bookingData.date} onChange={(event) => updateBookingData('date', event.target.value)} className={getBookingInputClassName('date')} />
             {showBookingValidation && isBookingFieldEmpty('date') ? <span className="mt-1 block text-xs font-bold text-red-600">برجاء إدخال التاريخ</span> : null}
+            {showBookingValidation && bookingData.date && bookingData.date < today ? <span className="mt-1 block text-xs font-bold text-red-600">لا يمكن اختيار تاريخ سابق لليوم</span> : null}
           </label>
           <div>
             <label className="block text-sm font-bold text-slate-700">
