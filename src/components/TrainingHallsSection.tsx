@@ -11,7 +11,6 @@ type BookingFormData = {
   contactName: string;
   date: string;
   time: string;
-  period: 'صباحًا' | 'مساءً';
   hallType: string;
   invoice: 'نعم' | 'لا';
   taxNumber: string;
@@ -79,7 +78,6 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
     contactName: '',
     date: '',
     time: '',
-    period: 'صباحًا',
     hallType: '',
     invoice: 'لا',
     taxNumber: '',
@@ -97,6 +95,35 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
   const isBookingFieldEmpty = (field: keyof BookingFormData) => {
     const value = bookingData[field];
     return typeof value === 'string' && !value.trim();
+  };
+
+  const getBookingFieldError = (field: keyof BookingFormData) => {
+    const value = bookingData[field];
+    if (typeof value !== 'string') return '';
+    if (field === 'companyName' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
+      return 'اسم الشركة يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 حرفًا';
+    }
+    if (field === 'activityType' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
+      return 'نوع النشاط يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 حرفًا';
+    }
+    if (field === 'phone' && value && !/^\d{11}$/.test(value)) {
+      return 'رقم الهاتف يجب أن يتكون من 11 رقمًا فقط';
+    }
+    if (field === 'commercialRegister' && value && (!/^\p{L}[\p{L}\p{N} ]*$/u.test(value) || value.length > 30)) {
+      return 'السجل التجاري يجب أن يتكون من حروف أو أرقام وبحد أقصى 30 حرفًا';
+    }
+    if (field === 'contactName' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
+      return 'اسم مسؤول التواصل يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 خانة';
+    }
+    if (field === 'taxNumber' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
+      return 'الرقم الضريبي يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 خانة';
+    }
+    return '';
+  };
+
+  const getBookingInputClassName = (field: keyof BookingFormData) => {
+    const hasError = showBookingValidation && field !== 'commercialRegister' && (isBookingFieldEmpty(field) || Boolean(getBookingFieldError(field)));
+    return `mt-2 w-full rounded-xl border bg-white px-4 py-3 font-normal outline-none transition focus:ring-2 focus:ring-[#1170b0]/15 ${hasError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-[#1170b0]'}`;
   };
 
   const handleBookingSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -120,6 +147,11 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
       return;
     }
 
+    const invalidField = (['companyName', 'activityType', 'phone', 'commercialRegister', 'contactName', 'taxNumber'] as const).find((field) => getBookingFieldError(field));
+    if (invalidField) {
+      return;
+    }
+
     if (!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(bookingData.time)) {
       return;
     }
@@ -133,7 +165,7 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
       ...(bookingData.commercialRegister.trim() ? [`السجل التجاري: ${bookingData.commercialRegister}`] : []),
       `اسم مسؤول التواصل: ${bookingData.contactName}`,
       `التاريخ: ${bookingData.date}`,
-      `الساعة: ${timeWithoutSeconds} ${bookingData.period}`,
+      `الساعة: ${timeWithoutSeconds}`,
       `نوع القاعة: ${bookingData.hallType}`,
       `فاتورة إلكترونية: ${bookingData.invoice}`,
       ...(bookingData.invoice === 'نعم' ? [`الرقم الضريبي: ${bookingData.taxNumber}`] : []),
@@ -178,7 +210,7 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
         </section>
       ))}
 
-      <section className={`rounded-3xl border border-[#1170b0]/20 bg-white p-5 shadow-sm sm:p-6 ${textAlignmentClass}`}>
+      <section id="booking-form" className={`rounded-3xl border border-[#1170b0]/20 bg-white p-5 shadow-sm sm:p-6 ${textAlignmentClass}`}>
         <div className="mb-5 border-b border-slate-200 pb-4">
           <h2 className="text-2xl font-black text-[#0a3555] sm:text-3xl">{t({ ar: 'طلب حجز قاعة تدريب', en: 'Training Hall Booking Request' })}</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600">{t({ ar: 'املأ البيانات التالية وسيتم إرسال الطلب مباشرة إلى واتساب إدارة الحجز.', en: 'Fill in the details below and the request will be sent directly to the booking administration WhatsApp.' })}</p>
@@ -196,11 +228,18 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
               <input
                 required={field !== 'commercialRegister'}
                 type={field === 'phone' ? 'tel' : 'text'}
+                inputMode={field === 'phone' ? 'numeric' : undefined}
+                pattern={field === 'phone' ? '\\d{11}' : field === 'contactName' ? '[\\p{L}\\p{N} ]+' : field === 'companyName' || field === 'activityType' || field === 'commercialRegister' ? '[\\p{L}\\p{N} ]+' : undefined}
+                maxLength={field === 'companyName' || field === 'activityType' || field === 'contactName' ? 50 : field === 'commercialRegister' ? 30 : field === 'phone' ? 11 : undefined}
                 value={bookingData[field as keyof BookingFormData] as string}
-                onChange={(event) => updateBookingData(field as keyof BookingFormData, event.target.value as never)}
-                className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-normal outline-none transition focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15"
+                onChange={(event) => {
+                  const value = field === 'phone' ? event.target.value.replace(/\D/g, '').slice(0, 11) : event.target.value;
+                  updateBookingData(field as keyof BookingFormData, value as never);
+                }}
+                className={getBookingInputClassName(field as keyof BookingFormData)}
               />
               {showBookingValidation && field !== 'commercialRegister' && isBookingFieldEmpty(field as keyof BookingFormData) ? <span className="mt-1 block text-xs font-bold text-red-600">{`برجاء إدخال ${label}`}</span> : null}
+              {showBookingValidation && getBookingFieldError(field as keyof BookingFormData) ? <span className="mt-1 block text-xs font-bold text-red-600">{getBookingFieldError(field as keyof BookingFormData)}</span> : null}
               {field === 'commercialRegister' && !bookingData.commercialRegister.trim() ? (
                 <span className="mt-1 block text-xs font-semibold text-slate-500">{t({ ar: 'يمكن ترك هذا الحقل فارغًا وإرسال الطلب.', en: 'This field is optional and can be left empty.' })}</span>
               ) : null}
@@ -208,49 +247,29 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
           ))}
           <label className="block text-sm font-bold text-slate-700">
             {t({ ar: 'التاريخ', en: 'Date' })} <span className="text-red-600" aria-hidden="true">*</span>
-            <input required type="date" value={bookingData.date} onChange={(event) => updateBookingData('date', event.target.value)} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-normal outline-none focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15" />
+            <input required type="date" value={bookingData.date} onChange={(event) => updateBookingData('date', event.target.value)} className={getBookingInputClassName('date')} />
             {showBookingValidation && isBookingFieldEmpty('date') ? <span className="mt-1 block text-xs font-bold text-red-600">برجاء إدخال التاريخ</span> : null}
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div>
             <label className="block text-sm font-bold text-slate-700">
               {t({ ar: 'الساعة', en: 'Time' })} <span className="text-red-600" aria-hidden="true">*</span>
-              <span className="relative mt-2 block">
-                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#1170b0]" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <input
-                  required
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={5}
-                  pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$"
-                  placeholder="00:00"
-                  value={bookingData.time}
-                  onChange={(event) => {
-                    const digits = event.target.value.replace(/\D/g, '').slice(0, 4);
-                    const formattedTime = digits.length > 2 ? `${digits.slice(0, 2)}:${digits.slice(2)}` : digits;
-                    updateBookingData('time', formattedTime);
-                  }}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pl-10 font-normal outline-none transition focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15"
-                />
-              </span>
+              <input
+                required
+                type="time"
+                inputMode="numeric"
+                step={60}
+                pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$"
+                value={bookingData.time}
+                onChange={(event) => updateBookingData('time', event.target.value)}
+                className={getBookingInputClassName('time')}
+              />
               {showBookingValidation && isBookingFieldEmpty('time') ? <span className="mt-1 block text-xs font-bold text-red-600">برجاء إدخال الساعة</span> : null}
               {showBookingValidation && bookingData.time && !/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(bookingData.time) ? <span className="mt-1 block text-xs font-bold text-red-600">برجاء إدخال الساعة بصيغة HH:MM</span> : null}
-            </label>
-            <label className="block text-sm font-bold text-slate-700">
-              {t({ ar: 'الفترة', en: 'Period' })} <span className="text-red-600" aria-hidden="true">*</span>
-              <select value={bookingData.period} onChange={(event) => updateBookingData('period', event.target.value as BookingFormData['period'])} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-normal outline-none focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15">
-                <option value="صباحًا">{t({ ar: 'صباحًا', en: 'Morning' })}</option>
-                <option value="مساءً">{t({ ar: 'مساءً', en: 'Evening' })}</option>
-              </select>
             </label>
           </div>
           <label className="block text-sm font-bold text-slate-700">
             {t({ ar: 'نوع القاعة', en: 'Hall type' })} <span className="text-red-600" aria-hidden="true">*</span>
-            <select required value={bookingData.hallType} onChange={(event) => updateBookingData('hallType', event.target.value)} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-normal outline-none focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15">
+            <select required value={bookingData.hallType} onChange={(event) => updateBookingData('hallType', event.target.value)} className={getBookingInputClassName('hallType')}>
               <option value="">{t({ ar: 'اختر القاعة', en: 'Select a hall' })}</option>
               {trainingHalls.map((hall) => <option key={hall.id} value={t(hall.title)}>{t(hall.title)}</option>)}
             </select>
@@ -267,8 +286,9 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
           {bookingData.invoice === 'نعم' ? (
             <label className="block text-sm font-bold text-slate-700">
               {t({ ar: 'الرقم الضريبي', en: 'Tax number' })} <span className="text-red-600" aria-hidden="true">*</span>
-              <input required value={bookingData.taxNumber} onChange={(event) => updateBookingData('taxNumber', event.target.value)} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-normal outline-none focus:border-[#1170b0] focus:ring-2 focus:ring-[#1170b0]/15" />
+              <input required maxLength={50} pattern="[\p{L}\p{N} ]+" value={bookingData.taxNumber} onChange={(event) => updateBookingData('taxNumber', event.target.value)} className={getBookingInputClassName('taxNumber')} />
               {showBookingValidation && isBookingFieldEmpty('taxNumber') ? <span className="mt-1 block text-xs font-bold text-red-600">برجاء إدخال الرقم الضريبي</span> : null}
+              {showBookingValidation && getBookingFieldError('taxNumber') ? <span className="mt-1 block text-xs font-bold text-red-600">{getBookingFieldError('taxNumber')}</span> : null}
             </label>
           ) : null}
           <div className="md:col-span-2 flex justify-start">

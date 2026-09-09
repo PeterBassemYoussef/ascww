@@ -19,7 +19,7 @@ function MainContent() {
                     <div className="mb-10 text-center animate-on-scroll sm:mb-16">
                         <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">{t('خدماتنا الإلكترونية', 'Our E-Services')}</h2>
                     </div>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
                         <div className="animate-on-scroll h-full" data-delay="50">
                             <a href="http://bills.ascww.com.eg/Inqeury.aspx" target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
@@ -92,6 +92,25 @@ function MainContent() {
                                     </div>
                                     <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
                                         <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{t('تطبيق قراءتي', 'My Reading app')}</h3>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                        <div className="animate-on-scroll h-full" data-delay="250">
+                            <Link to={`${ROUTES.trainingHallsBooking}#booking-form`} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
+                                <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
+                                    <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                                        <img
+                                            src={serviceImage('/images/services/training-hall.webp', '/images/services/training-hallEN.webp')}
+                                            alt={t('حجز القاعات', 'Training hall booking')}
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            loading="lazy"
+                                            decoding="async"
+                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                        />
+                                    </div>
+                                    <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
+                                        <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{t('حجز القاعات', 'Training hall booking')}</h3>
                                     </div>
                                 </div>
                             </Link>

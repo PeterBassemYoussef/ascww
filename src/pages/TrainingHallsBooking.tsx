@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import TrainingSlider from '../components/TrainingSlider';
@@ -7,6 +8,16 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 function TrainingHallsBookingPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
+
+  useEffect(() => {
+    if (window.location.hash !== '#booking-form') return undefined;
+
+    const scrollToBookingForm = window.setTimeout(() => {
+      document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
+
+    return () => window.clearTimeout(scrollToBookingForm);
+  }, []);
 
   return (
     <>
