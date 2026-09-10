@@ -112,8 +112,8 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
     if (field === 'commercialRegister' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 30)) {
       return 'السجل التجاري يجب أن يتكون من حروف أو أرقام وبحد أقصى 30 حرفًا';
     }
-    if (field === 'contactName' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
-      return 'اسم مسؤول التواصل يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 خانة';
+    if (field === 'contactName' && value && (!/^[\p{L}]+(?: [\p{L}]+)*$/u.test(value) || value.length > 30)) {
+      return 'اسم مسؤول التواصل يجب أن يتكون من حروف فقط وبحد أقصى 30 حرفًا';
     }
     if (field === 'taxNumber' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
       return 'الرقم الضريبي يجب أن يتكون من حروف أو أرقام وبحد أقصى 50 خانة';
@@ -237,11 +237,15 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
                 required={field !== 'commercialRegister'}
                 type={field === 'phone' ? 'tel' : 'text'}
                 inputMode={field === 'phone' ? 'numeric' : undefined}
-                pattern={field === 'phone' ? '\\d{11}' : field === 'contactName' ? '[\\p{L}\\p{N} ]+' : field === 'companyName' || field === 'activityType' || field === 'commercialRegister' ? '[\\p{L}\\p{N} ]+' : undefined}
-                maxLength={field === 'companyName' || field === 'activityType' || field === 'contactName' ? 50 : field === 'commercialRegister' ? 30 : field === 'phone' ? 11 : undefined}
+                pattern={field === 'phone' ? '\\d{11}' : field === 'contactName' ? '[\\p{L}]+(?: [\\p{L}]+)*' : field === 'companyName' || field === 'activityType' || field === 'commercialRegister' ? '[\\p{L}\\p{N} ]+' : undefined}
+                maxLength={field === 'companyName' || field === 'activityType' ? 50 : field === 'contactName' || field === 'commercialRegister' ? 30 : field === 'phone' ? 11 : undefined}
                 value={bookingData[field as keyof BookingFormData] as string}
                 onChange={(event) => {
-                  const value = field === 'phone' ? event.target.value.replace(/\D/g, '').slice(0, 11) : event.target.value;
+                  const value = field === 'phone'
+                    ? event.target.value.replace(/\D/g, '').slice(0, 11)
+                    : field === 'contactName'
+                      ? event.target.value.replace(/[^\p{L} ]/gu, '').slice(0, 30)
+                      : event.target.value;
                   updateBookingData(field as keyof BookingFormData, value as never);
                 }}
                 className={getBookingInputClassName(field as keyof BookingFormData)}
