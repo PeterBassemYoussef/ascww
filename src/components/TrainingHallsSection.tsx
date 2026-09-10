@@ -109,7 +109,7 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
     if (field === 'phone' && value && !/^\d{11}$/.test(value)) {
       return 'رقم الهاتف يجب أن يتكون من 11 رقمًا فقط';
     }
-    if (field === 'commercialRegister' && value && (!/^\p{L}[\p{L}\p{N} ]*$/u.test(value) || value.length > 30)) {
+    if (field === 'commercialRegister' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 30)) {
       return 'السجل التجاري يجب أن يتكون من حروف أو أرقام وبحد أقصى 30 حرفًا';
     }
     if (field === 'contactName' && value && (!/^[\p{L}\p{N}][\p{L}\p{N} ]*$/u.test(value) || value.length > 50)) {
