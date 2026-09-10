@@ -54,7 +54,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.wasteOfCompany]: 'محطات الصرف',
   [ROUTES.trainingOfCompany]: 'مركز التدريب',
   [ROUTES.informationTechnologyOfCompany]: 'إدارة تكنولوجيا المعلومات',
-  [ROUTES.schoolSubmissionData]: 'المدرسة الفنية',
+  [ROUTES.schoolRegistration]: 'المدرسة الفنية',
   [ROUTES.schoolGallery]: 'المدرسه الفنيه',
   [ROUTES.sportOfCompany]: 'النشاط الرياضي',
   '/enter-reading': 'إدخل قراءه عدادك',
@@ -172,7 +172,7 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
     return isEnglish ? 'Competition Results' : 'نتائج المسابقات';
   }
 
-  if (pathname === ROUTES.schoolSubmissionData) {
+  if (pathname === ROUTES.schoolRegistration) {
     return isEnglish ? 'Technical School' : 'المدرسة الفنية';
   }
 

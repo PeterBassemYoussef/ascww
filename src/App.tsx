@@ -26,7 +26,7 @@ const LabOfCompanyPage = lazy(() => import('./pages/LabOfCompany'));
 const WasteOfCompanyPage = lazy(() => import('./pages/WasteOfCompany'));
 const TrainingOfCompanyPage = lazy(() => import('./pages/TrainingOfCompany'));
 const InformationTechnologyOfCompanyPage = lazy(() => import('./pages/ItManagement'));
-const SchoolSubmissionDataPage = lazy(() => import('./pages/SchoolSubmissionData'));
+const SchoolRegistrationPage = lazy(() => import('./pages/SchoolRegistration'));
 const SchoolOfCompanyPage = lazy(() => import('./pages/SchoolOfCompany'));
 const SportOfCompanyPage = lazy(() => import('./pages/SportOfCompany'));
 const SewageTreatmentPage = lazy(() => import('./pages/SanitationTreatment'));
@@ -91,7 +91,7 @@ function App() {
             path={ROUTES.informationTechnologyOfCompany}
             element={<InformationTechnologyOfCompanyPage />}
           />
-          <Route path={ROUTES.schoolSubmissionData} element={<SchoolSubmissionDataPage />} />
+          <Route path={ROUTES.schoolRegistration} element={<SchoolRegistrationPage />} />
           <Route path={ROUTES.schoolGallery} element={<SchoolOfCompanyPage />} />
           <Route path={ROUTES.sportOfCompany} element={<SportOfCompanyPage />} />
           <Route path={ROUTES.sanitation} element={<SewageTreatmentPage />} />

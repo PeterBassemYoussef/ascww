@@ -23,7 +23,7 @@ type SchoolSubmissionApiPayload = {
   graduation_years?: string;
 };
 
-type SchoolSubmissionData = {
+type SchoolRegistrationData = {
   showSubmissionForm: boolean;
   closeMessage: string;
   introductionMessage: string;
@@ -304,7 +304,7 @@ const extractSubmissionSuccessState = (
   };
 };
 
-const normalizePayload = (payload: unknown): SchoolSubmissionData => {
+const normalizePayload = (payload: unknown): SchoolRegistrationData => {
   const payloadObject = isRecord(payload) ? payload : {};
   const nestedData = isRecord(payloadObject.data) ? payloadObject.data : {};
   const base: SchoolSubmissionApiPayload = Object.keys(nestedData).length
@@ -320,7 +320,7 @@ const normalizePayload = (payload: unknown): SchoolSubmissionData => {
   };
 };
 
-const fetchSchoolSubmissionData = async (signal: AbortSignal) => {
+const fetchSchoolRegistrationData = async (signal: AbortSignal) => {
   let response: Response | null = null;
 
   try {
@@ -342,11 +342,11 @@ const fetchSchoolSubmissionData = async (signal: AbortSignal) => {
   return normalizePayload(payload);
 };
 
-function SchoolSubmissionDataPage() {
+function SchoolRegistrationPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
-  const [data, setData] = useState<SchoolSubmissionData | null>(null);
+  const [data, setData] = useState<SchoolRegistrationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [fileError, setFileError] = useState('');
@@ -368,7 +368,7 @@ function SchoolSubmissionDataPage() {
       setError('');
 
       try {
-        const apiData = await fetchSchoolSubmissionData(controller.signal);
+        const apiData = await fetchSchoolRegistrationData(controller.signal);
         if (!active) return;
         setData(apiData);
       } catch {
@@ -697,7 +697,7 @@ function SchoolSubmissionDataPage() {
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
             <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555]`}>
               <h1
-                className={`text-lg font-semibold sm:text-xl ${isEnglish ? 'text-left' : 'text-right'}`}
+                className={`text-2xl font-bold sm:text-3xl ${isEnglish ? 'text-left' : 'text-right'}`}
                 dir={isEnglish ? 'ltr' : 'rtl'}
               >
                 {isEnglish ? 'Technical School' : 'المدرسة الفنية'}
@@ -705,6 +705,69 @@ function SchoolSubmissionDataPage() {
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">
+              <section dir="rtl" className="mb-8 overflow-hidden rounded-[24px] border border-[#d8e5f0] bg-[#f7fbfe] shadow-[0_18px_45px_rgba(10,53,85,0.08)]">
+                <div className="border-b border-[#d8e5f0] bg-white px-5 py-6 text-right sm:px-8">
+                  <h2 className="text-xl font-black leading-8 text-[#0a3555] sm:text-2xl">
+                    تعرف على مدرسة مياه الشرب والصرف الصحي بأسيوط
+                  </h2>
+                  <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+                    معلومات مهمة تساعد الطالب وولي الأمر على التعرف على المدرسة ونظام الدراسة قبل التقديم.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 bg-[#edf6fb] p-4 sm:grid-cols-3 sm:p-6">
+                  {[1, 2, 3].map((imageNumber) => (
+                    <img
+                      key={imageNumber}
+                      src={`/images/school/${imageNumber}.webp`}
+                      alt={`مدرسة مياه الشرب والصرف الصحي بأسيوط - صورة ${imageNumber}`}
+                      className="aspect-[4/3] w-full rounded-2xl object-cover shadow-[0_10px_25px_rgba(10,53,85,0.12)]"
+                    />
+                  ))}
+                </div>
+
+                <div className="space-y-5 px-5 py-6 text-right text-sm leading-8 text-slate-700 sm:px-8 sm:py-8 sm:text-base">
+                  <ul className="list-disc space-y-2 pr-5 marker:text-[#1170b0]">
+                    <li>تقبل المدرسة طلاب الشهادة الإعدادية العامة والإعدادية الأزهرية بنسبة ٥٪ من محافظات أسيوط والوادي الجديد وسوهاج وقنا والأقصر وأسوان.</li>
+                    <li>المدرسة الثانوية الفنية لمياه الشرب والصرف الصحي للبنين فقط، ويرتدي طلابها الزي الموحد.</li>
+                    <li>هي مدرسة ثانوية فنية نظام ثلاث سنوات، وبعدها يمنح الخريج شهادة دبلوم فني مياه شرب وصرف صحي.</li>
+                  </ul>
+
+                  <p>
+                    الدراسة على أعلى مستوى من التعليم. يتم قبول الطلاب الحاصلين على الشهادة الإعدادية العامة بما يعادل ٩٣٪، ويكون مجموع درجات الحد الأدنى للتقديم ٢٦٠ درجة فأعلى، مع أولوية القبول للمجموع الأعلى.
+                  </p>
+
+                  <p>
+                    يكون التقديم إلكترونيًا عن طريق الإنترنت، من خلال تقديم صورة استمارة النجاح للشهادة الإعدادية وصورة شهادة الميلاد وصورة شخصية. بعد ذلك يخضع الطلاب لاختبارات تحريرية واختبارات كمبيوتر، ثم تتم المقابلة الشخصية، ويُعلن عن الطلاب الناجحين. ويكون القبول بناءً على درجة الشهادة الإعدادية، بالإضافة إلى مجموع الاختبارات الإلكترونية والتحريرية ودرجة المقابلة الشخصية.
+                  </p>
+
+                  <div>
+                    <h3 className="mb-2 text-lg font-black text-[#0a3555]">نظام الدراسة والتخصص</h3>
+                    <p>
+                      تم اختيار طاقم التدريس بعناية وعلى أعلى مستوى. يدرس الطالب مواد المدارس الفنية، ويقوم بتدريسها معلمو التربية والتعليم، بالإضافة إلى مواد تخصصية في مجال مياه الشرب والصرف الصحي، يقوم بتدريسها مهندسون وكيميائيون على أعلى مستوى من شركة مياه الشرب والصرف الصحي بأسيوط.
+                    </p>
+                    <p className="mt-3">يتم التخصص في الصف الثالث في أحد التخصصات الثلاثة:</p>
+                    <ul className="mt-2 list-disc space-y-1 pr-6 marker:text-[#1170b0]">
+                      <li>معالجة وضبط جودة مياه الشرب.</li>
+                      <li>تشغيل وصيانة شبكات مياه الشرب والصرف الصحي.</li>
+                      <li>تشغيل وصيانة محطات مياه الشرب والصرف الصحي.</li>
+                    </ul>
+                  </div>
+
+                  <p>
+                    يتم تدريب الطلاب خلال الإجازة الصيفية لمدة ٦ أسابيع في المحطات والشبكات والمعامل التابعة لشركة مياه الشرب والصرف الصحي بأسيوط. وإذا حصل الطالب على تقدير عالٍ، فمن الممكن أن يدرس مواد المعادلة ويلتحق بكلية الهندسة إذا اجتاز المعادلة.
+                  </p>
+
+                  <p>
+                    يتخرج الطالب بدرجة عالية من الاحترافية الفنية، بعد التدريب في شركة مياه الشرب والصرف الصحي بأسيوط على يد أفضل المهندسين والكيميائيين والفنيين. المدرسة تابعة للإدارة العامة للتعليم الفني بأسيوط.
+                  </p>
+
+                  <p className="rounded-2xl border border-[#d7b05a]/45 bg-[#fffaf0] px-4 py-3 font-bold text-[#0a3555]">
+                    عنوان المدرسة: أسيوط الجديدة، الحي الثاني، بجوار مدرسة اللغات (التجريبي).
+                  </p>
+                </div>
+              </section>
+
               {isLoading ? (
                 <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-center text-sm font-semibold text-slate-600">
                   جاري تحميل البيانات...
@@ -719,6 +782,9 @@ function SchoolSubmissionDataPage() {
 
               {!isLoading && !error && data ? (
                 <div className="space-y-6">
+                  <h2 className="border-b border-[#d7b05a]/45 pb-3 text-right text-xl font-black text-[#0a3555] sm:text-2xl">
+                    التقديم في المدرسة الفنية
+                  </h2>
 
                   {!showSubmissionForm && closeMessageHtml ? (
                     <section className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-slate-700 [&_ul]:list-disc [&_ul]:pr-5 [&_li]:mb-2">
@@ -1103,7 +1169,7 @@ function SchoolSubmissionDataPage() {
   );
 }
 
-export default SchoolSubmissionDataPage;
+export default SchoolRegistrationPage;
 
 
 

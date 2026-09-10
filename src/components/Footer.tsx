@@ -67,7 +67,7 @@ function Footer() {
                             <Link className="block transition hover:text-white" to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link>
                             <Link className="block transition hover:text-white" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                             <Link className="block transition hover:text-white" to={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</Link>
-                            <Link className="block transition hover:text-white" to={ROUTES.schoolSubmissionData}>{t('المدرسة الفنية', 'Technical school')}</Link>
+                            <Link className="block transition hover:text-white" to={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</Link>
                         </div>
                     </div>
                 </div>
