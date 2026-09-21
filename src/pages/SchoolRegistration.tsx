@@ -345,7 +345,10 @@ const fetchSchoolRegistrationData = async (signal: AbortSignal) => {
 function SchoolRegistrationPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
+  const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
   const headerGradientClass = isEnglish ? 'bg-gradient-to-r from-[#0a3555] to-[#1170b0]' : 'bg-gradient-to-l from-[#0a3555] to-[#1170b0]';
+  const textDir = isEnglish ? 'ltr' : 'rtl';
+  const alignClass = isEnglish ? 'text-left' : 'text-right';
   const [data, setData] = useState<SchoolRegistrationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -607,18 +610,18 @@ function SchoolRegistrationPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50" dir="rtl">
+      <main className="min-h-screen bg-slate-50" dir={textDir}>
         {showFailureModal ? (
           <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0f172a]/30 px-4 backdrop-blur-[1.5px]">
             <div
               role="dialog"
               aria-modal="true"
-              aria-label="رسالة فشل التسجيل"
+              aria-label={t('رسالة فشل التسجيل', 'Registration failure message')}
               className="relative w-full max-w-[320px] rounded-md border border-rose-100 bg-white px-5 py-4 text-center shadow-[0_18px_48px_rgba(15,23,42,0.24)]"
             >
               <button
                 type="button"
-                aria-label="إغلاق"
+                aria-label={t('إغلاق', 'Close')}
                 onClick={() => setShowFailureModal(false)}
                 className="absolute left-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"
               >
@@ -626,18 +629,18 @@ function SchoolRegistrationPage() {
               </button>
               <img
                 src="/images/ascww-logo.png"
-                alt="شعار الشركة"
+                alt={t('شعار الشركة', 'Company logo')}
                 className="mx-auto mb-3 h-10 w-auto"
               />
               <p className="text-[15px] font-bold leading-7 text-rose-700">
-                تسجيل غير ناجح برجاء مراجعة البيانات
+                {t('تسجيل غير ناجح برجاء مراجعة البيانات', 'Registration failed, please review the data')}
               </p>
               <button
                 type="button"
                 onClick={() => setShowFailureModal(false)}
                 className="mt-4 block w-full rounded-md bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-100"
               >
-                غلق
+                {t('غلق', 'Close')}
               </button>
             </div>
           </div>
@@ -647,12 +650,12 @@ function SchoolRegistrationPage() {
             <div
               role="dialog"
               aria-modal="true"
-              aria-label="رسالة نجاح التسجيل"
+              aria-label={t('رسالة نجاح التسجيل', 'Successful registration message')}
               className="relative w-full max-w-[300px] rounded-md border border-slate-200 bg-white px-5 py-4 text-center shadow-[0_18px_48px_rgba(15,23,42,0.24)]"
             >
               <button
                 type="button"
-                aria-label="إغلاق"
+                aria-label={t('إغلاق', 'Close')}
                 onClick={() => setSuccessModal(null)}
                 className="absolute left-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"
               >
@@ -660,27 +663,27 @@ function SchoolRegistrationPage() {
               </button>
               <img
                 src="/images/ascww-logo.png"
-                alt="شعار الشركة"
+                alt={t('شعار الشركة', 'Company logo')}
                 className="mx-auto mb-2 h-10 w-auto"
               />
               <p className="text-[13px] font-medium leading-6 text-slate-600">
-                تم التسجيل بنجاح {successModal.registrationLabel}
+                {t('تم التسجيل بنجاح ', 'Registration successful ')}{successModal.registrationLabel}
               </p>
               <p className="mt-1 text-[13px] leading-6 text-slate-500">
-                لتحميل استمارة الالتحاق بالمدرسة اضغط{' '}
+                {t('لتحميل استمارة الالتحاق بالمدرسة اضغط', 'To download the school enrollment form, click')}{' '}
                 <a
                   href={successModal.downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-[#2f80c0] underline underline-offset-2 transition hover:text-[#0a3555]"
                 >
-                  هنا
+                  {t('هنا', 'here')}
                 </a>
                 <span
                   aria-hidden="true"
                   className="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-sm bg-[#39a852] text-[9px] font-black leading-none text-white"
                 >
-                  ملف
+                  {t('ملف', 'File')}
                 </span>
               </p>
               <button
@@ -688,7 +691,7 @@ function SchoolRegistrationPage() {
                 onClick={() => setSuccessModal(null)}
                 className="mt-4 block w-full rounded-md bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
               >
-                غلق
+                {t('غلق', 'Close')}
               </button>
             </div>
           </div>
@@ -697,21 +700,21 @@ function SchoolRegistrationPage() {
           <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
             <div className={`border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555]`}>
               <h1
-                className={`text-2xl font-bold sm:text-3xl ${isEnglish ? 'text-left' : 'text-right'}`}
-                dir={isEnglish ? 'ltr' : 'rtl'}
+                className={`text-2xl font-bold sm:text-3xl ${alignClass}`}
+                dir={textDir}
               >
-                {isEnglish ? 'Technical School' : 'المدرسة الفنية'}
+                {t('المدرسة الفنية', 'Technical School')}
               </h1>
             </div>
 
             <div className="px-4 py-6 sm:px-8 sm:py-8">
-              <section dir="rtl" className="mb-8 overflow-hidden rounded-[24px] border border-[#d8e5f0] bg-[#f7fbfe] shadow-[0_18px_45px_rgba(10,53,85,0.08)]">
-                <div className="border-b border-[#d8e5f0] bg-white px-5 py-6 text-right sm:px-8">
+              <section dir={textDir} className="mb-8 overflow-hidden rounded-[24px] border border-[#d8e5f0] bg-[#f7fbfe] shadow-[0_18px_45px_rgba(10,53,85,0.08)]">
+                <div className={`border-b border-[#d8e5f0] bg-white px-5 py-6 sm:px-8 ${alignClass}`}>
                   <h2 className="text-xl font-black leading-8 text-[#0a3555] sm:text-2xl">
-                    تعرف على مدرسة مياه الشرب والصرف الصحي بأسيوط
+                    {t('تعرف على مدرسة مياه الشرب والصرف الصحي بأسيوط', 'Learn about the Asyut Water and Wastewater School')}
                   </h2>
                   <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                    معلومات مهمة تساعد الطالب وولي الأمر على التعرف على المدرسة ونظام الدراسة قبل التقديم.
+                    {t('معلومات مهمة تساعد الطالب وولي الأمر على التعرف على المدرسة ونظام الدراسة قبل التقديم.', 'Important information to help the student and guardian understand the school and the study system before applying.')}
                   </p>
                 </div>
 
@@ -720,57 +723,57 @@ function SchoolRegistrationPage() {
                     <img
                       key={imageNumber}
                       src={`/images/school/${imageNumber}.webp`}
-                      alt={`مدرسة مياه الشرب والصرف الصحي بأسيوط - صورة ${imageNumber}`}
+                      alt={t(`مدرسة مياه الشرب والصرف الصحي بأسيوط - صورة ${imageNumber}`, `Asyut Water and Wastewater School - image ${imageNumber}`)}
                       className="aspect-[4/3] w-full rounded-2xl object-cover shadow-[0_10px_25px_rgba(10,53,85,0.12)]"
                     />
                   ))}
                 </div>
 
-                <div className="space-y-5 px-5 py-6 text-right text-sm leading-8 text-slate-700 sm:px-8 sm:py-8 sm:text-base">
-                  <ul className="list-disc space-y-2 pr-5 marker:text-[#1170b0]">
-                    <li>تقبل المدرسة طلاب الشهادة الإعدادية العامة والإعدادية الأزهرية بنسبة ٥٪ من محافظات أسيوط والوادي الجديد وسوهاج وقنا والأقصر وأسوان.</li>
-                    <li>المدرسة الثانوية الفنية لمياه الشرب والصرف الصحي للبنين فقط، ويرتدي طلابها الزي الموحد.</li>
-                    <li>هي مدرسة ثانوية فنية نظام ثلاث سنوات، وبعدها يمنح الخريج شهادة دبلوم فني مياه شرب وصرف صحي.</li>
+                <div className={`space-y-5 px-5 py-6 text-sm leading-8 text-slate-700 sm:px-8 sm:py-8 sm:text-base ${alignClass}`}>
+                  <ul className={`list-disc space-y-2 marker:text-[#1170b0] ${isEnglish ? 'pl-5' : 'pr-5'}`}>
+                    <li>{t('تقبل المدرسة طلاب الشهادة الإعدادية العامة والإعدادية الأزهرية بنسبة ٥٪ من محافظات أسيوط والوادي الجديد وسوهاج وقنا والأقصر وأسوان.', 'The school accepts students from the general preparatory certificate and the Azhar preparatory certificate at a rate of 5% from Asyut, New Valley, Sohag, Qena, Luxor, and Aswan governorates.')}</li>
+                    <li>{t('المدرسة الثانوية الفنية لمياه الشرب والصرف الصحي للبنين فقط، ويرتدي طلابها الزي الموحد.', 'The technical secondary school for water and wastewater is for boys only, and its students wear a uniform.')}</li>
+                    <li>{t('هي مدرسة ثانوية فنية نظام ثلاث سنوات، وبعدها يمنح الخريج شهادة دبلوم فني مياه شرب وصرف صحي.', 'It is a three-year technical secondary school, after which the graduate is awarded a diploma in drinking water and wastewater technology.')}</li>
                   </ul>
 
                   <p>
-                    الدراسة على أعلى مستوى من التعليم. يتم قبول الطلاب الحاصلين على الشهادة الإعدادية العامة بما يعادل ٩٣٪، ويكون مجموع درجات الحد الأدنى للتقديم ٢٦٠ درجة فأعلى، مع أولوية القبول للمجموع الأعلى.
+                    {t('الدراسة على أعلى مستوى من التعليم. يتم قبول الطلاب الحاصلين على الشهادة الإعدادية العامة بما يعادل ٩٣٪، ويكون مجموع درجات الحد الأدنى للتقديم ٢٦٠ درجة فأعلى، مع أولوية القبول للمجموع الأعلى.', 'Study is carried out at the highest level. Students who hold the general preparatory certificate are admitted at a rate equivalent to 93%, with a minimum required total of 260 marks or higher, with priority given to the highest score.')}
                   </p>
 
                   <p>
-                    يكون التقديم إلكترونيًا عن طريق الإنترنت، من خلال تقديم صورة استمارة النجاح للشهادة الإعدادية وصورة شهادة الميلاد وصورة شخصية. بعد ذلك يخضع الطلاب لاختبارات تحريرية واختبارات كمبيوتر، ثم تتم المقابلة الشخصية، ويُعلن عن الطلاب الناجحين. ويكون القبول بناءً على درجة الشهادة الإعدادية، بالإضافة إلى مجموع الاختبارات الإلكترونية والتحريرية ودرجة المقابلة الشخصية.
+                    {t('يكون التقديم إلكترونيًا عن طريق الإنترنت، من خلال تقديم صورة استمارة النجاح للشهادة الإعدادية وصورة شهادة الميلاد وصورة شخصية. بعد ذلك يخضع الطلاب لاختبارات تحريرية واختبارات كمبيوتر، ثم تتم المقابلة الشخصية، ويُعلن عن الطلاب الناجحين. ويكون القبول بناءً على درجة الشهادة الإعدادية، بالإضافة إلى مجموع الاختبارات الإلكترونية والتحريرية ودرجة المقابلة الشخصية.', 'Applications are submitted online by uploading a copy of the preparatory certificate success form, a birth certificate, and a personal photo. Students then take written and computer tests, followed by a personal interview. Successful students are announced, and admission is based on the preparatory certificate grade, the total of the electronic and written tests, and the interview score.')}
                   </p>
 
                   <div>
-                    <h3 className="mb-2 text-lg font-black text-[#0a3555]">نظام الدراسة والتخصص</h3>
+                    <h3 className="mb-2 text-lg font-black text-[#0a3555]">{t('نظام الدراسة والتخصص', 'Study system and specialization')}</h3>
                     <p>
-                      تم اختيار طاقم التدريس بعناية وعلى أعلى مستوى. يدرس الطالب مواد المدارس الفنية، ويقوم بتدريسها معلمو التربية والتعليم، بالإضافة إلى مواد تخصصية في مجال مياه الشرب والصرف الصحي، يقوم بتدريسها مهندسون وكيميائيون على أعلى مستوى من شركة مياه الشرب والصرف الصحي بأسيوط.
+                      {t('تم اختيار طاقم التدريس بعناية وعلى أعلى مستوى. يدرس الطالب مواد المدارس الفنية، ويقوم بتدريسها معلمو التربية والتعليم، بالإضافة إلى مواد تخصصية في مجال مياه الشرب والصرف الصحي، يقوم بتدريسها مهندسون وكيميائيون على أعلى مستوى من شركة مياه الشرب والصرف الصحي بأسيوط.', 'The teaching staff was carefully selected at the highest level. Students study technical school subjects taught by education teachers, alongside specialized subjects in drinking water and wastewater, taught by highly qualified engineers and chemists from Asyut Water and Wastewater Company.')}
                     </p>
-                    <p className="mt-3">يتم التخصص في الصف الثالث في أحد التخصصات الثلاثة:</p>
-                    <ul className="mt-2 list-disc space-y-1 pr-6 marker:text-[#1170b0]">
-                      <li>معالجة وضبط جودة مياه الشرب.</li>
-                      <li>تشغيل وصيانة شبكات مياه الشرب والصرف الصحي.</li>
-                      <li>تشغيل وصيانة محطات مياه الشرب والصرف الصحي.</li>
+                    <p className="mt-3">{t('يتم التخصص في الصف الثالث في أحد التخصصات الثلاثة:', 'Specialization in the third year is in one of three tracks:')}</p>
+                    <ul className={`mt-2 list-disc space-y-1 marker:text-[#1170b0] ${isEnglish ? 'pl-6' : 'pr-6'}`}>
+                      <li>{t('معالجة وضبط جودة مياه الشرب.', 'Drinking water treatment and quality control.')}</li>
+                      <li>{t('تشغيل وصيانة شبكات مياه الشرب والصرف الصحي.', 'Operation and maintenance of drinking water and wastewater networks.')}</li>
+                      <li>{t('تشغيل وصيانة محطات مياه الشرب والصرف الصحي.', 'Operation and maintenance of drinking water and wastewater stations.')}</li>
                     </ul>
                   </div>
 
                   <p>
-                    يتم تدريب الطلاب خلال الإجازة الصيفية لمدة ٦ أسابيع في المحطات والشبكات والمعامل التابعة لشركة مياه الشرب والصرف الصحي بأسيوط. وإذا حصل الطالب على تقدير عالٍ، فمن الممكن أن يدرس مواد المعادلة ويلتحق بكلية الهندسة إذا اجتاز المعادلة.
+                    {t('يتم تدريب الطلاب خلال الإجازة الصيفية لمدة ٦ أسابيع في المحطات والشبكات والمعامل التابعة لشركة مياه الشرب والصرف الصحي بأسيوط. وإذا حصل الطالب على تقدير عالٍ، فمن الممكن أن يدرس مواد المعادلة ويلتحق بكلية الهندسة إذا اجتاز المعادلة.', 'Students are trained during the summer vacation for 6 weeks in the stations, networks, and laboratories of Asyut Water and Wastewater Company. If the student achieves a high grade, they may study equivalent subjects and join the engineering college after passing the equivalency exam.')}
                   </p>
 
                   <p>
-                    يتخرج الطالب بدرجة عالية من الاحترافية الفنية، بعد التدريب في شركة مياه الشرب والصرف الصحي بأسيوط على يد أفضل المهندسين والكيميائيين والفنيين. المدرسة تابعة للإدارة العامة للتعليم الفني بأسيوط.
+                    {t('يتخرج الطالب بدرجة عالية من الاحترافية الفنية، بعد التدريب في شركة مياه الشرب والصرف الصحي بأسيوط على يد أفضل المهندسين والكيميائيين والفنيين. المدرسة تابعة للإدارة العامة للتعليم الفني بأسيوط.', 'The student graduates with a high level of technical professionalism after training at Asyut Water and Wastewater Company under the supervision of the best engineers, chemists, and technicians. The school is affiliated with the General Administration of Technical Education in Asyut.')}
                   </p>
 
                   <p className="rounded-2xl border border-[#d7b05a]/45 bg-[#fffaf0] px-4 py-3 font-bold text-[#0a3555]">
-                    عنوان المدرسة: أسيوط الجديدة، الحي الثاني، بجوار مدرسة اللغات (التجريبي).
+                    {t('عنوان المدرسة: أسيوط الجديدة، الحي الثاني، بجوار مدرسة اللغات (التجريبي).', 'School address: New Asyut, second district, next to the Languages School (Experimental).')}
                   </p>
                 </div>
               </section>
 
               {isLoading ? (
                 <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-center text-sm font-semibold text-slate-600">
-                  جاري تحميل البيانات...
+                  {t('جارٍ تحميل البيانات...', 'Loading data...')}
                 </div>
               ) : null}
 
@@ -782,8 +785,8 @@ function SchoolRegistrationPage() {
 
               {!isLoading && !error && data ? (
                 <div className="space-y-6">
-                  <h2 className="border-b border-[#d7b05a]/45 pb-3 text-right text-xl font-black text-[#0a3555] sm:text-2xl">
-                    التقديم في المدرسة الفنية
+                  <h2 className={`border-b border-[#d7b05a]/45 pb-3 text-xl font-black text-[#0a3555] sm:text-2xl ${alignClass}`}>
+                    {t('التقديم في المدرسة الفنية', 'Application to the Technical School')}
                   </h2>
 
                   {!showSubmissionForm && closeMessageHtml ? (
@@ -818,12 +821,12 @@ function SchoolRegistrationPage() {
 
                         <div className="mb-2">
                           <span className="inline-flex rounded-full bg-[#0a3555]/8 px-5 py-2 text-sm font-extrabold text-[#0a3555] sm:text-base">
-                            نموذج التقديم
+                            {t('نموذج التقديم', 'Application form')}
                           </span>
                         </div>
 
                         <form
-                          dir="rtl"
+                          dir={textDir}
                           className="grid gap-6 xl:grid-cols-2"
                           onSubmit={handleSubmit}
                           onReset={() => {
@@ -840,9 +843,9 @@ function SchoolRegistrationPage() {
                           }}
                         >
                           <div className={FORM_PANEL_CLASS}>
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                الاسم
+                                {t('الاسم', 'Name')}
                                 {fieldErrors.studentName ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -851,19 +854,19 @@ function SchoolRegistrationPage() {
                                 inputMode="text"
                                 maxLength={30}
                                 pattern="^[A-Za-z\u0600-\u06FF\s]{1,30}$"
-                                title="الاسم يجب أن يكون حروف فقط وبحد أقصى 30 حرفًا"
-                                placeholder="ادخل الاسم بالكامل"
+                                title={t('الاسم يجب أن يكون حروف فقط وبحد أقصى 30 حرفًا', 'The name must contain letters only and a maximum of 30 characters')}
+                                placeholder={t('ادخل الاسم بالكامل', 'Enter full name')}
                                 onChange={() => clearFieldError('studentName')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[0-9٠-٩]/g, '').slice(0, 30); }}
                                 className={getFormFieldClassName(Boolean(fieldErrors.studentName))}
                               />
                               {fieldErrors.studentName ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentName}</span> : null}
-                              <span className={FORM_HINT_CLASS}>حروف فقط وبحد أقصى 30 حرفًا.</span>
+                              <span className={FORM_HINT_CLASS}>{t('حروف فقط وبحد أقصى 30 حرفًا.', 'Letters only, up to 30 characters.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                تاريخ الميلاد
+                                {t('تاريخ الميلاد', 'Date of birth')}
                                 {fieldErrors.birthDate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -875,9 +878,9 @@ function SchoolRegistrationPage() {
                               {fieldErrors.birthDate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.birthDate}</span> : null}
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                رقم تليفون الطالب
+                                {t('رقم تليفون الطالب', 'Student phone number')}
                                 {fieldErrors.studentPhone ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -887,19 +890,19 @@ function SchoolRegistrationPage() {
                                 minLength={11}
                                 maxLength={11}
                                 pattern="^[0-9]{11}$"
-                                title="رقم الهاتف يجب أن يكون 11 رقمًا"
+                                title={t('رقم الهاتف يجب أن يكون 11 رقمًا', 'Phone number must be 11 digits')}
                                 placeholder="01xxxxxxxxx"
                                 onChange={() => clearFieldError('studentPhone')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
                                 className={getFormFieldClassName(Boolean(fieldErrors.studentPhone))}
                               />
                               {fieldErrors.studentPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.studentPhone}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا باللغة الإنجليزية.</span>
+                              <span className={FORM_HINT_CLASS}>{t('يجب إدخال 11 رقمًا باللغة الإنجليزية.', '11 digits in English must be entered.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                الرقم القومي للطالب
+                                {t('الرقم القومي للطالب', 'Student national ID')}
                                 {fieldErrors.nationalId ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -909,19 +912,19 @@ function SchoolRegistrationPage() {
                                 minLength={14}
                                 maxLength={14}
                                 pattern="^[0-9]{14}$"
-                                title="الرقم القومي يجب أن يكون 14 رقمًا"
-                                placeholder="14 رقمًا"
+                                title={t('الرقم القومي يجب أن يكون 14 رقمًا', 'National ID must be 14 digits')}
+                                placeholder={t('14 رقمًا', '14 digits')}
                                 onChange={() => clearFieldError('nationalId')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 14); }}
                                 className={getFormFieldClassName(Boolean(fieldErrors.nationalId))}
                               />
                               {fieldErrors.nationalId ? <span className={FORM_ERROR_CLASS}>{fieldErrors.nationalId}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يجب إدخال 14 رقمًا بدون فواصل أو مسافات.</span>
+                              <span className={FORM_HINT_CLASS}>{t('يجب إدخال 14 رقمًا بدون فواصل أو مسافات.', 'Enter 14 digits without commas or spaces.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                العنوان
+                                {t('العنوان', 'Address')}
                                 {fieldErrors.address ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -930,19 +933,19 @@ function SchoolRegistrationPage() {
                                 inputMode="text"
                                 maxLength={50}
                                 pattern="^[A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]{1,50}$"
-                                title="العنوان يجب أن يكون حروفًا وأرقامًا فقط وبحد أقصى 50 حرفًا"
-                                placeholder="المدينة - المركز - القرية"
+                                title={t('العنوان يجب أن يكون حروفًا وأرقامًا فقط وبحد أقصى 50 حرفًا', 'Address must contain letters and numbers only, up to 50 characters')}
+                                placeholder={t('المدينة - المركز - القرية', 'City - district - village')}
                                 onChange={() => clearFieldError('address')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^A-Za-z0-9\u0660-\u0669\u0621-\u064A\s]/g, '').slice(0, 50); }}
                                 className={getFormFieldClassName(Boolean(fieldErrors.address))}
                               />
                               {fieldErrors.address ? <span className={FORM_ERROR_CLASS}>{fieldErrors.address}</span> : null}
-                              <span className={FORM_HINT_CLASS}>بحد أقصى 50 حرفًا.</span>
+                              <span className={FORM_HINT_CLASS}>{t('بحد أقصى 50 حرفًا.', 'Maximum 50 characters.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                المحافظة
+                                {t('المحافظة', 'Governorate')}
                                 {fieldErrors.governorate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <select
@@ -951,20 +954,20 @@ function SchoolRegistrationPage() {
                                 onChange={() => clearFieldError('governorate')}
                                 className={getFormFieldClassName(Boolean(fieldErrors.governorate))}
                               >
-                                <option value="" disabled>اختر المحافظة</option>
-                                <option value="سوهاج">سوهاج</option>
-                                <option value="قنا">قنا</option>
-                                <option value="اسيوط">اسيوط</option>
-                                <option value="الوادي الجديد">الوادي الجديد</option>
-                                <option value="الاقصر">الاقصر</option>
-                                <option value="اسوان">اسوان</option>
+                                <option value="" disabled>{t('اختر المحافظة', 'Select governorate')}</option>
+                                <option value="سوهاج">{t('سوهاج', 'Sohag')}</option>
+                                <option value="قنا">{t('قنا', 'Qena')}</option>
+                                <option value="اسيوط">{t('اسيوط', 'Asyut')}</option>
+                                <option value="الوادي الجديد">{t('الوادي الجديد', 'New Valley')}</option>
+                                <option value="الاقصر">{t('الاقصر', 'Luxor')}</option>
+                                <option value="اسوان">{t('اسوان', 'Aswan')}</option>
                               </select>
                               {fieldErrors.governorate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.governorate}</span> : null}
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                رقم تليفون ولي الأمر
+                                {t('رقم تليفون ولي الأمر', 'Guardian phone number')}
                                 {fieldErrors.guardianPhone ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <input
@@ -974,19 +977,19 @@ function SchoolRegistrationPage() {
                                 minLength={11}
                                 maxLength={11}
                                 pattern="^[0-9]{11}$"
-                                title="رقم الهاتف يجب أن يكون 11 رقمًا"
+                                title={t('رقم الهاتف يجب أن يكون 11 رقمًا', 'Phone number must be 11 digits')}
                                 placeholder="01xxxxxxxxx"
                                 onChange={() => clearFieldError('guardianPhone')}
                                 onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 11); }}
                                 className={getFormFieldClassName(Boolean(fieldErrors.guardianPhone))}
                               />
                               {fieldErrors.guardianPhone ? <span className={FORM_ERROR_CLASS}>{fieldErrors.guardianPhone}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يجب إدخال 11 رقمًا للتواصل عند الحاجة.</span>
+                              <span className={FORM_HINT_CLASS}>{t('يجب إدخال 11 رقمًا للتواصل عند الحاجة.', 'Enter 11 digits for contact when needed.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                سنة الحصول على الشهادة الإعدادية
+                                {t('سنة الحصول على الشهادة الإعدادية', 'Year of obtaining the preparatory certificate')}
                                 {fieldErrors.graduationYear ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <select
@@ -995,7 +998,7 @@ function SchoolRegistrationPage() {
                                 onChange={() => clearFieldError('graduationYear')}
                                 className={getFormFieldClassName(Boolean(fieldErrors.graduationYear))}
                               >
-                                <option value="" disabled>اختر السنة</option>
+                                <option value="" disabled>{t('اختر السنة', 'Select year')}</option>
                                 {graduationYearOptions.map((year) => (
                                   <option key={year} value={year}>{year}</option>
                                 ))}
@@ -1006,9 +1009,9 @@ function SchoolRegistrationPage() {
                           </div>
 
                           <div className={FORM_PANEL_CLASS}>
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                الشهادة
+                                {t('الشهادة', 'Certificate')}
                                 {fieldErrors.certificate ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <select
@@ -1017,16 +1020,16 @@ function SchoolRegistrationPage() {
                                 onChange={() => clearFieldError('certificate')}
                                 className={getFormFieldClassName(Boolean(fieldErrors.certificate))}
                               >
-                                <option value="" disabled>اختر نوع الشهادة</option>
-                                <option value="الاعدادية العامة">الإعدادية العامة</option>
-                                <option value="الاعدادية الأزهرية">الإعدادية الأزهرية</option>
+                                <option value="" disabled>{t('اختر نوع الشهادة', 'Select certificate type')}</option>
+                                <option value="الاعدادية العامة">{t('الإعدادية العامة', 'General preparatory')}</option>
+                                <option value="الاعدادية الأزهرية">{t('الإعدادية الأزهرية', 'Azhar preparatory')}</option>
                               </select>
                               {fieldErrors.certificate ? <span className={FORM_ERROR_CLASS}>{fieldErrors.certificate}</span> : null}
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                السن أول أكتوبر
+                                {t('السن أول أكتوبر', 'Age on 1 October')}
                                 {fieldErrors.ageOctober ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <div className="grid grid-cols-2 gap-3">
@@ -1037,8 +1040,8 @@ function SchoolRegistrationPage() {
                                   minLength={1}
                                   maxLength={2}
                                   pattern="^[0-9]{1,2}$"
-                                  title="عدد السنوات يجب أن يكون أرقامًا فقط"
-                                  placeholder="السنوات"
+                                  title={t('عدد السنوات يجب أن يكون أرقامًا فقط', 'Years must be numeric only')}
+                                  placeholder={t('السنوات', 'Years')}
                                   onChange={() => clearFieldError('ageOctober')}
                                   onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2); }}
                                   className={getFormFieldClassName(Boolean(fieldErrors.ageOctober))}
@@ -1050,8 +1053,8 @@ function SchoolRegistrationPage() {
                                   minLength={1}
                                   maxLength={2}
                                   pattern="^(0?[0-9]|1[01])$"
-                                  title="عدد الشهور يجب أن يكون من 0 إلى 11"
-                                  placeholder="الشهور"
+                                  title={t('عدد الشهور يجب أن يكون من 0 إلى 11', 'Months must be from 0 to 11')}
+                                  placeholder={t('الشهور', 'Months')}
                                   onChange={() => clearFieldError('ageOctober')}
                                   onInput={(event) => {
                                     const nextValue = event.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 2);
@@ -1061,12 +1064,12 @@ function SchoolRegistrationPage() {
                                 />
                               </div>
                               {fieldErrors.ageOctober ? <span className={FORM_ERROR_CLASS}>{fieldErrors.ageOctober}</span> : null}
-                              <span className={FORM_HINT_CLASS}>مثال: 15 سنة و7 أشهر، واكتب الشهور من 0 إلى 11.</span>
+                              <span className={FORM_HINT_CLASS}>{t('مثال: 15 سنة و7 أشهر، واكتب الشهور من 0 إلى 11.', 'Example: 15 years and 7 months; enter months from 0 to 11.')}</span>
                             </label>
 
-                            <label className="block text-right">
+                            <label className={`block ${alignClass}`}>
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                مجموع درجات الطالب في الشهادة الإعدادية
+                                {t('مجموع درجات الطالب في الشهادة الإعدادية', 'Student total score in the preparatory certificate')}
                                 {fieldErrors.score ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <div className="relative">
@@ -1076,42 +1079,41 @@ function SchoolRegistrationPage() {
                                   inputMode="decimal"
                                   maxLength={6}
                                   pattern="^[0-9]{1,3}([.,٫][0-9]{1,2})?$"
-                                  title="مجموع الدرجات يمكن أن يكون رقمًا صحيحًا أو عشريًا مثل 474.5"
-                                  placeholder="مثال: 474.5"
+                                  title={t('مجموع الدرجات يمكن أن يكون رقمًا صحيحًا أو عشريًا مثل 474.5', 'The total score may be a whole or decimal number such as 474.5')}
+                                  placeholder={t('مثال: 474.5', 'Example: 474.5')}
                                   onChange={() => clearFieldError('score')}
                                   onInput={(event) => { event.currentTarget.value = normalizeDecimalNumberInput(event.currentTarget.value); }}
                                   className={`${getFormFieldClassName(Boolean(fieldErrors.score))} pl-16`}
                                 />
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-                                  درجة
+                                  {t('درجة', 'Score')}
                                 </span>
                               </div>
                               {fieldErrors.score ? <span className={FORM_ERROR_CLASS}>{fieldErrors.score}</span> : null}
-                              <span className={FORM_HINT_CLASS}>يمكن كتابة المجموع كرقم صحيح أو عشري، مثل 260 أو 474.5 درجة.</span>
+                              <span className={FORM_HINT_CLASS}>{t('يمكن كتابة المجموع كرقم صحيح أو عشري، مثل 260 أو 474.5 درجة.', 'The total can be written as a whole or decimal number, such as 260 or 474.5.')}</span>
                             </label>
 
                             <div className="rounded-[24px] border border-dashed border-[#8bb9d6] bg-white/95 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-6">
                               <span className={FORM_FIELD_LABEL_CLASS}>
-                                رفع الملف
+                                {t('رفع الملف', 'Upload file')}
                                 {(fieldErrors.attachment || fileError) ? <span className={FORM_REQUIRED_MARK_CLASS}>*</span> : null}
                               </span>
                               <p className="mt-2 text-sm leading-7 text-slate-600">
-                                ارفع ملفًا واحدًا يجمع كل المستندات المطلوبة بصيغة PDF أو Word.
+                                {t('ارفع ملفًا واحدًا يجمع كل المستندات المطلوبة بصيغة PDF أو Word.', 'Upload a single file containing all required documents in PDF or Word format.')}
                               </p>
                               <input
                                 name="attachment"
                                 type="file"
                                 accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                 onChange={handleFileChange}
-                                className={`mt-4 block w-full rounded-2xl border border-dashed bg-[#f8fbff] px-4 py-4 text-sm text-slate-700 transition file:ml-3 file:rounded-xl file:border-0 file:bg-[#0a3555] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white file:hover:bg-[#1170b0] ${
-                                  fieldErrors.attachment || fileError
+                                className={`mt-4 block w-full rounded-2xl border border-dashed bg-[#f8fbff] px-4 py-4 text-sm text-slate-700 transition file:ml-3 file:rounded-xl file:border-0 file:bg-[#0a3555] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white file:hover:bg-[#1170b0] ${fieldErrors.attachment || fileError
                                     ? 'border-rose-500 shadow-[0_0_0_3px_rgba(244,63,94,0.12),0_10px_20px_rgba(244,63,94,0.10)] hover:border-rose-600 focus:border-rose-600 focus:outline-none focus:ring-4 focus:ring-rose-500/15'
                                     : 'border-[#b8d3e6] hover:border-[#1170b0]'
-                                }`}
+                                  }`}
                               />
                               {selectedFileName ? (
                                 <p className="mt-3 rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
-                                  الملف المختار: {selectedFileName}
+                                  {t('الملف المختار:', 'Selected file:')} {selectedFileName}
                                 </p>
                               ) : null}
                               {fileError ? (
@@ -1120,30 +1122,30 @@ function SchoolRegistrationPage() {
                               {!fileError && fieldErrors.attachment ? (
                                 <p className={FORM_ERROR_CLASS}>{fieldErrors.attachment}</p>
                               ) : null}
-                              <span className={FORM_HINT_CLASS}>الحد الأقصى لحجم الملف هو 3 ميجابايت.</span>
+                              <span className={FORM_HINT_CLASS}>{t('الحد الأقصى لحجم الملف هو 3 ميجابايت.', 'Maximum file size is 3 MB.')}</span>
                             </div>
 
                             <div className="rounded-[24px] border border-[#d7e6f1] bg-white/85 p-5 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-6">
                               <h3 className="text-base font-extrabold text-[#0a3555]">
-                                المستندات المطلوبة
+                                {t('المستندات المطلوبة', 'Required documents')}
                               </h3>
-                              <ul className="mt-4 list-disc space-y-2 pr-5 text-sm leading-7 text-slate-700 marker:text-[#1170b0]">
-                                <li>استمارة النجاح للشهادة الإعدادية معتمدة.</li>
-                                <li>بيان نجاح الطالب للصف الأول والثاني الإعدادي معتمد من نفس المحافظة الحاصل منها على الشهادة الإعدادية.</li>
-                                <li>شهادة الميلاد.</li>
-                                <li>صورة بطاقة الرقم القومي للطالب وولي الأمر.</li>
-                                <li>صورة شخصية 4x6.</li>
-                                <li>يجب أن يكون امتداد الملف المرفق (pdf - word).</li>
-                                <li>حجم الملف لا يتعدى 3 ميجابايت.</li>
-                                <li>يفضل أن يكون اسم الملف المرفق بنفس اسم الطالب.</li>
-                                <li>يجب طباعة الرسالة بعد التسجيل لإرفاقها مع الأوراق المطلوبة يوم المقابلة الشخصية.</li>
+                              <ul className={`mt-4 list-disc space-y-2 text-sm leading-7 text-slate-700 marker:text-[#1170b0] ${isEnglish ? 'pl-5' : 'pr-5'}`}>
+                                <li>{t('استمارة النجاح للشهادة الإعدادية معتمدة.', 'Certified preparatory certificate success form.')}</li>
+                                <li>{t('بيان نجاح الطالب للصف الأول والثاني الإعدادي معتمد من نفس المحافظة الحاصل منها على الشهادة الإعدادية.', 'Statement of the student’s success in the first and second preparatory grades, certified by the same governorate from which they obtained the preparatory certificate.')}</li>
+                                <li>{t('شهادة الميلاد.', 'Birth certificate.')}</li>
+                                <li>{t('صورة بطاقة الرقم القومي للطالب وولي الأمر.', 'Copy of the student and guardian national ID cards.')}</li>
+                                <li>{t('صورة شخصية 4x6.', '4x6 personal photo.')}</li>
+                                <li>{t('يجب أن يكون امتداد الملف المرفق (pdf - word).', 'The uploaded file must be in PDF or Word format.')}</li>
+                                <li>{t('حجم الملف لا يتعدى 3 ميجابايت.', 'File size must not exceed 3 MB.')}</li>
+                                <li>{t('يفضل أن يكون اسم الملف المرفق بنفس اسم الطالب.', 'It is preferred that the uploaded file name matches the student’s name.')}</li>
+                                <li>{t('يجب طباعة الرسالة بعد التسجيل لإرفاقها مع الأوراق المطلوبة يوم المقابلة الشخصية.', 'You must print the message after registration and attach it with the required papers on the personal interview day.')}</li>
                               </ul>
                             </div>
                           </div>
 
-                          <div dir="ltr" className="mt-1 flex flex-wrap justify-start gap-3 xl:col-span-2">
+                          <div dir={textDir} className="mt-1 flex flex-wrap justify-start gap-3 xl:col-span-2">
                             <button type="submit" disabled={isSubmitting} className={PRIMARY_ACTION_BUTTON_CLASS}>
-                              {isSubmitting ? 'جارٍ التسجيل...' : 'تسجيل'}
+                              {isSubmitting ? t('جارٍ التسجيل...', 'Registering...') : t('تسجيل', 'Register')}
                             </button>
                             <button
                               type="reset"
@@ -1151,7 +1153,7 @@ function SchoolRegistrationPage() {
                               onClick={() => setIsManualReset(true)}
                               className={SECONDARY_ACTION_BUTTON_CLASS}
                             >
-                              مسح البيانات
+                              {t('مسح البيانات', 'Clear form')}
                             </button>
                           </div>
                         </form>
