@@ -13,7 +13,11 @@ function TrainingHallsBookingPage() {
     if (window.location.hash !== '#booking-form') return undefined;
 
     const scrollToBookingForm = window.setTimeout(() => {
-      document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const formElement = document.getElementById('booking-form');
+      if (!formElement) return;
+
+      const topOffset = formElement.getBoundingClientRect().top + window.scrollY - 96 - 40;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
     }, 0);
 
     return () => window.clearTimeout(scrollToBookingForm);

@@ -218,7 +218,7 @@ function TrainingHallsSection({ showIntro = true }: { showIntro?: boolean }) {
         </section>
       ))}
 
-      <section id="booking-form" className={`rounded-3xl border border-[#1170b0]/20 bg-white p-5 shadow-sm sm:p-6 ${textAlignmentClass}`}>
+      <section id="booking-form" className={`scroll-mt-24 rounded-3xl border border-[#1170b0]/20 bg-white p-5 shadow-sm sm:p-6 ${textAlignmentClass}`}>
         <div className="mb-5 border-b border-slate-200 pb-4">
           <h2 className="text-2xl font-black text-[#0a3555] sm:text-3xl">{t({ ar: 'طلب حجز قاعة تدريب', en: 'Training Hall Booking Request' })}</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600">{t({ ar: 'املأ البيانات التالية وسيتم إرسال الطلب مباشرة إلى واتساب إدارة الحجز.', en: 'Fill in the details below and the request will be sent directly to the booking administration WhatsApp.' })}</p>
