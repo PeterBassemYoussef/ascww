@@ -59,7 +59,11 @@ function Header() {
         ROUTES.forKidsAndWomen,
     );
     const isTendersActive = matchesRoute(ROUTES.tendersArchive) || matchesPrefix('/tenders/');
-    const isTrainingActive = matchesRoute(ROUTES.generalAdminTraining, ROUTES.schoolRegistration);
+    const isTrainingActive = matchesRoute(
+        ROUTES.generalAdminTraining,
+        ROUTES.trainingHallsBooking,
+        ROUTES.schoolRegistration,
+    );
     const isJobsActive = matchesRoute(ROUTES.jobsAndCompetition, ROUTES.resultOfWorker);
     const isServicesActive = matchesRoute(
         ROUTES.callCenter,
