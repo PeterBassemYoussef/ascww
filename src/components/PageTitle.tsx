@@ -21,6 +21,8 @@ const routeTitles: Record<string, string> = {
   [ROUTES.adviceAndContact]: 'التوعية والأتصال',
   [ROUTES.cyberSecurityGuidelines]: 'ارشادات الامن السيبرانى',
   [ROUTES.forKidsAndWomen]: 'ركن الأطفال ولكِ سيدتي',
+  [ROUTES.laboratoriesSector]: 'قطاع المعامل',
+  [ROUTES.laboratoriesSectorStructure]: 'هيكل قطاع المعامل',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
   [ROUTES.waterQuality]: 'جودة المياه',
@@ -102,6 +104,10 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.forKidsAndWomen || pathname === '/forKids' || pathname === '/toWomen') {
     return isEnglish ? 'Kids and Women Corner' : 'ركن الأطفال ولكِ سيدتي';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorStructure) {
+    return isEnglish ? 'Laboratory Sector Structure' : 'هيكل قطاع المعامل';
   }
 
   if (pathname === ROUTES.tendersArchive) {
@@ -228,6 +234,12 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 };
 
 const resolveDescription = (pathname: string, pageTitle: string, isEnglish: boolean) => {
+  if (pathname === ROUTES.laboratoriesSectorStructure) {
+    return isEnglish
+      ? 'Interactive organizational chart of the Laboratory and Quality Control Sector, including its departments and laboratories.'
+      : 'الهيكل التنظيمي التفاعلي لقطاع المعامل وضبط الجودة، ويشمل الإدارات والمعامل التابعة له.';
+  }
+
   if (pathname === ROUTES.adviceAndContact) {
     return isEnglish
       ? 'Awareness and communication content about water conservation and responsible use.'

@@ -58,6 +58,7 @@ function Header() {
         ROUTES.cyberSecurityGuidelines,
         ROUTES.forKidsAndWomen,
     );
+    const isLaboratoriesSectorActive = matchesRoute(ROUTES.laboratoriesSector);
     const isTendersActive = matchesRoute(ROUTES.tendersArchive) || matchesPrefix('/tenders/');
     const isTrainingActive = matchesRoute(
         ROUTES.generalAdminTraining,
@@ -800,6 +801,17 @@ function Header() {
                                     </div>
                                     <Link className="nav-dropdown-item" to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a>
+                                    <div className="nav-submenu">
+                                        <button type="button" className="nav-submenu-trigger">
+                                            {t('دعم النزاهة', 'Integrity support')}
+                                            <span className="nav-submenu-caret" aria-hidden="true">◀</span>
+                                        </button>
+                                        <div className="nav-submenu-menu" role="menu">
+                                            <a className="nav-dropdown-item" href={ROUTES.integritySupportOverview}>{t('إدارة دعم النزاهة', 'Integrity support department')}</a>
+                                            <a className="nav-dropdown-item" href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a>
+                                            <a className="nav-dropdown-item" href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a>
+                                        </div>
+                                    </div>
                                     <Link className="nav-dropdown-item" to={ROUTES.organizationStructure}>{t('الهيكل التنظيمي', 'Organizational structure')}</Link>
                                     <Link className="nav-dropdown-item" to={ROUTES.companyAchievements}>{t('إنجازات الشركة', 'Company achievements')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.contractsRegulation}>{t('اللائحه الموحده للعقود والمشتريات', 'Unified regulations for contracts and procurement')}</a>
@@ -819,6 +831,21 @@ function Header() {
                                     <a className="nav-dropdown-item" href={ROUTES.adviceAndContact}>{t('التوعية والأتصال', 'Awareness and communication')}</a>
                                     <Link className="nav-dropdown-item" to={ROUTES.cyberSecurityGuidelines}>{t('ارشادات الامن السيبرانى', 'Cybersecurity guidelines')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.forKidsAndWomen}>{t('ركن الأطفال ولكِ سيدتي', 'Kids and women corner')}</a>
+                                </div>
+                            </div>
+
+                            <div className="nav-dropdown group">
+                                <button
+                                    type="button"
+                                    className={getDesktopNavTriggerClassName(isLaboratoriesSectorActive)}
+                                    aria-haspopup="true"
+                                    aria-label={t('قائمة قطاع المعامل', 'Laboratories sector menu')}
+                                >
+                                    {t('قطاع المعامل', 'Laboratory sector')}
+                                </button>
+                                <div className="nav-dropdown-menu">
+                                    <a className="nav-dropdown-item" href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a>
+                                    <a className="nav-dropdown-item" href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a>
                                 </div>
                             </div>
 
@@ -872,21 +899,6 @@ function Header() {
                                     <Link className="nav-dropdown-item" to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.provideComplaine}>{t('تقديم شكوي', 'Submit a complaint')}</a>
-                                </div>
-                            </div>
-
-                            <div className="nav-dropdown group">
-                                <button
-                                    type="button"
-                                    className={getDesktopNavTriggerClassName(isIntegrityActive)}
-                                    aria-label={t('قائمة دعم النزاهة', 'Integrity support menu')}
-                                >
-                                    {t('دعم النزاهة', 'Integrity support')}
-                                </button>
-                                <div className="nav-dropdown-menu">
-                                    <a className="nav-dropdown-item" href={ROUTES.integritySupportOverview}>{t('نبذه عن إدارة دعم النزاهة', 'About the integrity support department')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a>
                                 </div>
                             </div>
 
@@ -1067,11 +1079,12 @@ function Header() {
                         </div>
                         <details className="mobile-nav-group"><summary>{t('عن الشركة', 'About')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.aboutCompany}>{t('عن الشركة', 'About the company')}</Link><a href={ROUTES.branches}>{t('فروع الشركه', 'Company branches')}</a><a href={ROUTES.projectsArchive}>{t('مشروعات الشركة', 'Company projects')}</a><Link to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link><div className="mobile-nav-subtitle">{t('جودة المياه', 'Water quality')}</div><a href={ROUTES.waterQuality}>{t('جودة المياه', 'Water quality')}</a><a href={ROUTES.refiningWater}>{t('تنقية مياه الشرب', 'Drinking water purification')}</a><a href={ROUTES.labOfCompanyWater}>{t('المعمل المركزي لمياه الشرب', 'Central drinking water laboratory')}</a><div className="mobile-nav-subtitle">{t('الصرف الصحي', 'Wastewater')}</div><Link to={ROUTES.sewageTreatment}>{t('معالجه الصرف الصحي', 'Wastewater treatment')}</Link><a href={ROUTES.safeSewageDisposal}>{t('أهمية التخلص الآمن من الصرف الصحى ومعالجته', 'Importance of safe wastewater disposal and treatment')}</a><a href={ROUTES.saveSewageNetwork}>{t('أهميه الحفاظ علي شبكه الصرف الصحي', 'Importance of protecting the sewer network')}</a><a href={ROUTES.industrialWaste}>{t('الصرف الصناعي', 'Industrial wastewater')}</a><a href={ROUTES.industrialWasteRole}>{t('دور إدارة الصرف الصناعي', 'Role of the industrial wastewater department')}</a><Link to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link><a href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a><Link to={ROUTES.organizationStructure}>{t('الهيكل التنظيمي', 'Organizational structure')}</Link><Link to={ROUTES.companyAchievements}>{t('إنجازات الشركة', 'Company achievements')}</Link><a href={ROUTES.contractsRegulation}>{t('اللائحه الموحده للعقود والمشتريات', 'Unified regulations for contracts and procurement')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('التوعية والاتصال', 'Awareness and communication')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.adviceAndContact}>{t('التوعية والأتصال', 'Awareness and communication')}</a><Link to={ROUTES.cyberSecurityGuidelines}>{t('ارشادات الامن السيبرانى', 'Cybersecurity guidelines')}</Link><a href={ROUTES.forKidsAndWomen}>{t('ركن الأطفال ولكِ سيدتي', 'Kids and women corner')}</a></div></details>
+                        <details className="mobile-nav-group"><summary>{t('قطاع المعامل', 'Laboratory sector')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a><a href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a></div></details>
                         <Link className="rounded-lg bg-slate-100 px-3 py-2" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                         <details className="mobile-nav-group"><summary>{t('التدريب', 'Training')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</a><a href={ROUTES.trainingHallsBooking}>{t('قاعات التدريب', 'Training Halls')}</a><a href={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('وظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('خدمات', 'Services')}</summary><div className="mobile-nav-submenu"><a href="http://bills.ascww.com.eg/Inqeury.aspx" target="_blank" rel="noopener noreferrer">{t('استعلم عن فاتورتك', 'Check your bill')}</a><a href={ROUTES.callCenter}>{t('خدمه العملاء', 'Customer service')}</a><a href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a><Link to={ROUTES.search}>{t('ابحث فى اخبار الشركة وخدماتها', 'Search company news and services')}</Link><a href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a><a href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a><Link to={ROUTES.servicesEvidance}>{t('دليل المستخدمين', 'User guide')}</Link><Link to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link><a href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a><a href={ROUTES.provideComplaine}>{t('تقديم شكوي', 'Submit a complaint')}</a></div></details>
-                        <details className="mobile-nav-group"><summary>{t('دعم النزاهة', 'Integrity support')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.integritySupportOverview}>{t('نبذه عن إدارة دعم النزاهة', 'About the integrity support department')}</a><a href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a><a href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a></div></details>
+                        <details className="mobile-nav-group"><summary>{t('دعم النزاهة', 'Integrity support')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.integritySupportOverview}>{t('إدارة دعم النزاهة', 'Integrity support department')}</a><a href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a><a href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('معرض الصور', 'Gallery')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.bossTrips}>{t('جولات رئيس مجلس الإدارة', 'Chairman tours')}</a><a href={ROUTES.labOfCompany}>{t('معامل الشركه', 'Company laboratories')}</a><a href={ROUTES.wasteOfCompany}>{t('محطات الصرف', 'Wastewater stations')}</a><a href={ROUTES.trainingOfCompany}>{t('مركز التدريب', 'Training center')}</a><a href={ROUTES.schoolGallery}>{t('المدرسه الفنيه', 'Technical school')}</a><a href={ROUTES.sportOfCompany}>{t('النشاط الرياضي', 'Sports activity')}</a></div></details>
                         <a className="rounded-lg bg-[#0a3555] px-3 py-2 text-center text-white" href="tel:088-2331604">{t('الخط الساخن : 2331604-088', 'Phone: 088-2331604')}</a>
                         <div className="col-span-1 mt-1 flex flex-wrap items-center justify-center gap-3 rounded-lg bg-slate-100 px-3 py-3">

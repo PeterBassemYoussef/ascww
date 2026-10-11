@@ -19,6 +19,8 @@ const CompanyAchievementsPage = lazy(() => import('./pages/AboutAchievements'));
 const AdviceAndContactPage = lazy(() => import('./pages/AwarenessContact'));
 const CyberSecurityGuidelinesPage = lazy(() => import('./pages/AwarenessCyberSecurity'));
 const ForKidsAndWomenPage = lazy(() => import('./pages/AwarenessCommunityOutreach'));
+const LaboratoriesSectorPage = lazy(() => import('./pages/LaboratoriesSector'));
+const LaboratoriesSectorStructurePage = lazy(() => import('./pages/LaboratoriesSectorStructure'));
 const WaterQualityPage = lazy(() => import('./pages/WaterQuality'));
 const RefiningWaterPage = lazy(() => import('./pages/WaterQualityPurification'));
 const LabOfCompanyWaterPage = lazy(() => import('./pages/WaterQualityCentralLab'));
@@ -81,6 +83,8 @@ function App() {
           <Route path={ROUTES.adviceAndContact} element={<AdviceAndContactPage />} />
           <Route path={ROUTES.cyberSecurityGuidelines} element={<CyberSecurityGuidelinesPage />} />
           <Route path={ROUTES.forKidsAndWomen} element={<ForKidsAndWomenPage />} />
+          <Route path={ROUTES.laboratoriesSector} element={<LaboratoriesSectorPage />} />
+          <Route path={ROUTES.laboratoriesSectorStructure} element={<LaboratoriesSectorStructurePage />} />
           <Route path={ROUTES.waterQuality} element={<WaterQualityPage />} />
           <Route path={ROUTES.refiningWater} element={<RefiningWaterPage />} />
           <Route path={ROUTES.labOfCompanyWater} element={<LabOfCompanyWaterPage />} />

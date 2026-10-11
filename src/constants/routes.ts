@@ -11,6 +11,8 @@ export const ROUTES = {
   adviceAndContact: '/awareness/contact',
   cyberSecurityGuidelines: '/awareness/cyber-security',
   forKidsAndWomen: '/awareness/community-outreach',
+  laboratoriesSector: '/laboratories-sector',
+  laboratoriesSectorStructure: '/laboratories-sector/structure',
   waterQuality: '/water-quality',
   refiningWater: '/water-quality/purification',
   labOfCompanyWater: '/water-quality/central-lab',
