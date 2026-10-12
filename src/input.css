@@ -29,6 +29,15 @@
 }
 
 @layer components {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
   .site-header {
     position: relative;
     z-index: 80;
@@ -1199,4 +1208,3 @@
     box-shadow: 0 0 10px rgba(215, 176, 90, 0.7);
   }
 }
-

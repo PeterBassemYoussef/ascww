@@ -1,3 +1,4 @@
+import { useRef, useState, type KeyboardEvent } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
@@ -29,6 +30,64 @@ const TEST_GROUPS = [
     ar: 'تحاليل عينات الصرف الصحي',
     en: 'Wastewater sample analyses',
     rows: [['Fe', 'TSS'], ['MN', 'VS'], ['NH3', 'COD'], ['NO2', 'BOD'], ['NO3', 'Oil & Grase'], ['T.R.Cl', ''], ['PH', ''], ['T.D.S', '']],
+  },
+];
+
+const DEPARTMENT_TABS = [
+  {
+    slide: 9,
+    arTitle: 'إدارة نظم المعلومات والتقارير',
+    arTabTitle: 'إدارة نظم المعلومات',
+    enTitle: 'Information Systems and Reports Department',
+    arDetails: ['تحليل جميع عينات المياه والصرف الصحي.', 'إعداد التقارير اللازمة.'],
+    enDetails: ['Analyze all water and wastewater samples.', 'Prepare the required reports.'],
+  },
+  {
+    slide: 10,
+    arTitle: 'إدارة الاحتياجات',
+    enTitle: 'Requirements Department',
+    arDetails: ['توفير جميع احتياجات قطاع المعامل.'],
+    enDetails: ['Provide all requirements of the Laboratory Sector.'],
+  },
+  {
+    slide: 11,
+    arTitle: 'إدارة التشغيل لصالح الغير',
+    enTitle: 'Third-Party Operations Department',
+    arDetails: [
+      'استقبال العملاء واستلام العينات الخارجية لتحليلها بالمعمل المركزي.',
+      'غسيل وتطهير وتعقيم الخزانات الخارجية المدفوعة بأجر، سواء كانت أهلية أو حكومية.',
+    ],
+    enDetails: [
+      'Receive customers and external samples for analysis at the Central Laboratory.',
+      'Wash, disinfect, and sterilize paid external tanks for residential and government customers.',
+    ],
+  },
+  {
+    slide: 13,
+    arTitle: 'الإدارة العامة للضبط والجودة',
+    enTitle: 'General Department of Quality Control',
+    arDetails: [],
+    enDetails: [],
+  },
+  {
+    slide: 14,
+    arTitle: 'الإدارة العامة للسلامة والمأمونية',
+    enTitle: 'General Department of Safety and Security',
+    arDetails: ['إعداد خطط سلامة ومأمونية المياه لمناطق الإمداد، وخطط مأمونية تداول الصرف الصحي.', 'تقديم ورش عمل وبرامج تدريبية للتعريف بخطط سلامة ومأمونية المياه.'],
+    enDetails: ['Prepare water safety plans for supply areas and wastewater handling safety plans.', 'Provide workshops and training programs on water safety and security plans.'],
+  },
+  {
+    slide: 16,
+    arTitle: 'الإدارة العامة لمعامل مياه الشرب',
+    enTitle: 'General Department of Drinking Water Laboratories',
+    arDetails: [
+      'تضم معامل مياه الشرب الرئيسية والفرعية الموزعة جغرافيًا على محافظتي أسيوط والوادي الجديد، بالإضافة إلى المعامل المتنقلة التابعة لبعض النطاقات الجغرافية.',
+      'كما تضم بعض الإدارات النوعية التي تضمن جودة الأداء المؤسسي وفاعلية دور الإدارة في تحقيق أهداف قطاع المعامل والجودة والشركة.',
+    ],
+    enDetails: [
+      'Includes the main and branch drinking water laboratories distributed across Assiut and New Valley, as well as mobile laboratories serving some geographic areas.',
+      'It also includes specialized departments that support institutional performance and help the Laboratory and Quality Sector achieve the company’s objectives.',
+    ],
   },
 ];
 
@@ -226,6 +285,32 @@ function LaboratoriesSectorPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const [activeSlide, setActiveSlide] = useState(9);
+  const departmentTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const activeDepartment = DEPARTMENT_TABS.find((tab) => tab.slide === activeSlide) ?? DEPARTMENT_TABS[0];
+
+  const handleDepartmentTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const nextKey = isEnglish ? 'ArrowRight' : 'ArrowLeft';
+    const previousKey = isEnglish ? 'ArrowLeft' : 'ArrowRight';
+    let nextIndex: number | undefined;
+
+    if (event.key === nextKey) {
+      nextIndex = (index + 1) % DEPARTMENT_TABS.length;
+    } else if (event.key === previousKey) {
+      nextIndex = (index - 1 + DEPARTMENT_TABS.length) % DEPARTMENT_TABS.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = DEPARTMENT_TABS.length - 1;
+    }
+
+    if (nextIndex !== undefined) {
+      event.preventDefault();
+      const nextTab = DEPARTMENT_TABS[nextIndex];
+      setActiveSlide(nextTab.slide);
+      departmentTabRefs.current[nextIndex]?.focus();
+    }
+  };
 
   const provinceSections = [
     {
@@ -454,6 +539,61 @@ function LaboratoriesSectorPage() {
             </p>
             <div className="hidden lg:block"><LaboratoryRangeTable isEnglish={isEnglish} /></div>
             <div className="lg:hidden"><LaboratoryRangeTable compact isEnglish={isEnglish} /></div>
+          </ContentSection>
+
+          <ContentSection title={t('الإدارات التابعة لقطاع المعامل', 'Laboratory Sector Departments')}>
+            <div
+              aria-label={t('شرائح العرض التقديمي', 'Presentation slides')}
+              className="scrollbar-none flex gap-2 overflow-x-auto border-b border-slate-200 pb-3"
+              role="tablist"
+            >
+              {DEPARTMENT_TABS.map((tab, index) => {
+                const isActive = activeSlide === tab.slide;
+
+                return (
+                  <button
+                    key={tab.slide}
+                    ref={(element) => { departmentTabRefs.current[index] = element; }}
+                    id={`laboratory-slide-tab-${tab.slide}`}
+                    aria-controls="laboratory-slide-panel"
+                    aria-selected={isActive}
+                    className={`shrink-0 rounded-lg px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1687a7] ${
+                      isActive
+                        ? 'bg-[#0a3555] text-white shadow-sm'
+                        : 'bg-[#f2f6fa] text-[#0a3555] hover:bg-[#e5eef5]'
+                    }`}
+                    onClick={() => setActiveSlide(tab.slide)}
+                    onKeyDown={(event) => handleDepartmentTabKeyDown(event, index)}
+                    role="tab"
+                    tabIndex={isActive ? 0 : -1}
+                    type="button"
+                  >
+                    {t(tab.arTabTitle ?? tab.arTitle, tab.enTitle)}
+                  </button>
+                );
+              })}
+            </div>
+            <div
+              id="laboratory-slide-panel"
+              aria-labelledby={`laboratory-slide-tab-${activeDepartment.slide}`}
+              className="mt-5 rounded-lg border border-slate-200 bg-[#f7f9fb] p-5 sm:p-6"
+              role="tabpanel"
+              tabIndex={0}
+            >
+              <h3 className="text-lg font-extrabold leading-8 text-[#0a3555] sm:text-xl">
+                {t(activeDepartment.arTitle, activeDepartment.enTitle)}
+              </h3>
+              {activeDepartment.arDetails.length > 0 && (
+                <ul className="mt-4 grid gap-3 text-base leading-8 text-slate-700">
+                  {(isEnglish ? activeDepartment.enDetails : activeDepartment.arDetails).map((detail) => (
+                    <li key={detail} className="flex gap-3">
+                      <span className="mt-3 h-2 w-2 shrink-0 rounded-full bg-[#d7b05a]" aria-hidden="true" />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </ContentSection>
         </div>
       </main>

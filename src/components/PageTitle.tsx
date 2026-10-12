@@ -22,6 +22,8 @@ const routeTitles: Record<string, string> = {
   [ROUTES.cyberSecurityGuidelines]: 'ارشادات الامن السيبرانى',
   [ROUTES.forKidsAndWomen]: 'ركن الأطفال ولكِ سيدتي',
   [ROUTES.laboratoriesSector]: 'قطاع المعامل',
+  [ROUTES.laboratoriesSectorAchievements]: 'إنجازات قطاع المعامل',
+  [ROUTES.laboratoriesSectorServices]: 'خدمات قطاع المعامل',
   [ROUTES.laboratoriesSectorStructure]: 'هيكل قطاع المعامل',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
@@ -108,6 +110,14 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.laboratoriesSectorStructure) {
     return isEnglish ? 'Laboratory Sector Structure' : 'هيكل قطاع المعامل';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorAchievements) {
+    return isEnglish ? 'Laboratory Sector Achievements' : 'إنجازات قطاع المعامل';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorServices) {
+    return isEnglish ? 'Laboratory Sector Services' : 'خدمات قطاع المعامل';
   }
 
   if (pathname === ROUTES.tendersArchive) {
@@ -234,6 +244,18 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 };
 
 const resolveDescription = (pathname: string, pageTitle: string, isEnglish: boolean) => {
+  if (pathname === ROUTES.laboratoriesSectorServices) {
+    return isEnglish
+      ? 'Water and wastewater sample analysis, sand and gravel testing, and external tank cleaning services from the Laboratory Sector.'
+      : 'خدمات تحليل عينات مياه الشرب والصرف الصحي وفحص الرمل والزلط وغسيل الخزانات التي يقدمها قطاع المعامل.';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorAchievements) {
+    return isEnglish
+      ? 'Achievements, ISO certifications, laboratory qualifications, and sustainable goals of the Laboratory Sector.'
+      : 'إنجازات وشهادات الأيزو وتأهيل المعامل والأهداف المستدامة لقطاع المعامل.';
+  }
+
   if (pathname === ROUTES.laboratoriesSectorStructure) {
     return isEnglish
       ? 'Interactive organizational chart of the Laboratory and Quality Control Sector, including its departments and laboratories.'
