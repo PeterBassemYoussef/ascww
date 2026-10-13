@@ -1,0 +1,108 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, Tahoma, sans-serif;
+  color: #263746;
+  background: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  direction: rtl;
+  background: #fff;
+}
+
+.document-content {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  padding: 28px clamp(16px, 4vw, 42px) 52px;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.document-paragraph {
+  margin: 0 0 14px;
+  white-space: pre-wrap;
+}
+
+.document-title,
+.document-heading {
+  margin-top: 24px;
+  margin-bottom: 14px;
+  color: #0a3555;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.document-title {
+  font-size: 1.6rem;
+}
+
+.document-list-item {
+  padding-inline-start: 1.5em;
+}
+
+.document-list-marker {
+  display: inline-block;
+  margin-inline-end: 0.5em;
+  color: #0a3555;
+  font-weight: 700;
+}
+
+.document-table-wrap {
+  max-width: 100%;
+  margin: 18px 0 24px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+td,
+th {
+  min-width: 72px;
+  padding: 9px 11px;
+  border: 1px solid #cbd5e1;
+  vertical-align: top;
+}
+
+td > .document-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.document-image {
+  display: block;
+  width: auto;
+  max-width: min(100%, 780px);
+  max-height: 620px;
+  height: auto;
+  margin: 12px auto 20px;
+  object-fit: contain;
+}
+
+.document-page-break {
+  display: block;
+  height: 18px;
+  margin: 20px 0;
+  border-top: 1px dashed #cbd5e1;
+}
+
+@media (max-width: 640px) {
+  .document-content {
+    padding: 18px 14px 36px;
+    font-size: 15px;
+  }
+
+  td,
+  th {
+    padding: 7px;
+  }
+}

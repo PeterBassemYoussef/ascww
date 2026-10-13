@@ -20,6 +20,7 @@ const AdviceAndContactPage = lazy(() => import('./pages/AwarenessContact'));
 const CyberSecurityGuidelinesPage = lazy(() => import('./pages/AwarenessCyberSecurity'));
 const ForKidsAndWomenPage = lazy(() => import('./pages/AwarenessCommunityOutreach'));
 const LaboratoriesSectorPage = lazy(() => import('./pages/LaboratoriesSector'));
+const LaboratoriesSectorCentralLabPage = lazy(() => import('./pages/LaboratoriesSectorCentralLab'));
 const LaboratoriesSectorAchievementsPage = lazy(() => import('./pages/LaboratoriesSectorAchievements'));
 const LaboratoriesSectorServicesPage = lazy(() => import('./pages/LaboratoriesSectorServices'));
 const LaboratoriesSectorStructurePage = lazy(() => import('./pages/LaboratoriesSectorStructure'));
@@ -86,6 +87,7 @@ function App() {
           <Route path={ROUTES.cyberSecurityGuidelines} element={<CyberSecurityGuidelinesPage />} />
           <Route path={ROUTES.forKidsAndWomen} element={<ForKidsAndWomenPage />} />
           <Route path={ROUTES.laboratoriesSector} element={<LaboratoriesSectorPage />} />
+          <Route path={ROUTES.laboratoriesSectorCentralLab} element={<LaboratoriesSectorCentralLabPage />} />
           <Route path={ROUTES.laboratoriesSectorAchievements} element={<LaboratoriesSectorAchievementsPage />} />
           <Route path={ROUTES.laboratoriesSectorServices} element={<LaboratoriesSectorServicesPage />} />
           <Route path={ROUTES.laboratoriesSectorStructure} element={<LaboratoriesSectorStructurePage />} />

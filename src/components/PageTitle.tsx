@@ -22,6 +22,7 @@ const routeTitles: Record<string, string> = {
   [ROUTES.cyberSecurityGuidelines]: 'ارشادات الامن السيبرانى',
   [ROUTES.forKidsAndWomen]: 'ركن الأطفال ولكِ سيدتي',
   [ROUTES.laboratoriesSector]: 'قطاع المعامل',
+  [ROUTES.laboratoriesSectorCentralLab]: 'المعمل المركزي',
   [ROUTES.laboratoriesSectorAchievements]: 'إنجازات قطاع المعامل',
   [ROUTES.laboratoriesSectorServices]: 'خدمات قطاع المعامل',
   [ROUTES.laboratoriesSectorStructure]: 'هيكل قطاع المعامل',
@@ -110,6 +111,10 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.laboratoriesSectorStructure) {
     return isEnglish ? 'Laboratory Sector Structure' : 'هيكل قطاع المعامل';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorCentralLab) {
+    return isEnglish ? 'Central Laboratory' : 'المعمل المركزي';
   }
 
   if (pathname === ROUTES.laboratoriesSectorAchievements) {

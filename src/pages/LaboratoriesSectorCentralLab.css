@@ -1,0 +1,98 @@
+.central-lab-document {
+  direction: rtl;
+  width: 100%;
+  padding: 24px clamp(16px, 4vw, 40px) 44px;
+  overflow-wrap: anywhere;
+  color: #334155;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.central-lab-document .document-paragraph {
+  margin: 0 0 14px;
+  white-space: pre-wrap;
+}
+
+.central-lab-document .document-title,
+.central-lab-document .document-heading {
+  margin: 24px 0 14px;
+  color: #0a3555;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.central-lab-document .document-title {
+  font-size: 1.6rem;
+}
+
+.central-lab-document .document-list-item {
+  padding-inline-start: 1.5em;
+}
+
+.central-lab-document .document-list-marker {
+  display: inline-block;
+  margin-inline-end: 0.5em;
+  color: #0a3555;
+  font-weight: 700;
+}
+
+.central-lab-document .document-table-wrap {
+  max-width: 100%;
+  margin: 18px 0 24px;
+  overflow-x: auto;
+}
+
+.central-lab-document table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.central-lab-document td,
+.central-lab-document th {
+  min-width: 72px;
+  padding: 9px 11px;
+  border: 1px solid #cbd5e1;
+  vertical-align: top;
+}
+
+.central-lab-document td > .document-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.central-lab-document .document-image {
+  display: block;
+  width: auto;
+  max-width: min(100%, 780px);
+  max-height: 620px;
+  height: auto;
+  margin: 12px auto 20px;
+  object-fit: contain;
+}
+
+.central-lab-document .document-page-break {
+  display: block;
+  height: 18px;
+  margin: 20px 0;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.central-lab-document .document-footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 640px) {
+  .central-lab-document {
+    padding: 18px 14px 36px;
+    font-size: 0.9375rem;
+  }
+
+  .central-lab-document td,
+  .central-lab-document th {
+    padding: 7px;
+  }
+}

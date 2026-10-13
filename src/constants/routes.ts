@@ -12,6 +12,7 @@ export const ROUTES = {
   cyberSecurityGuidelines: '/awareness/cyber-security',
   forKidsAndWomen: '/awareness/community-outreach',
   laboratoriesSector: '/laboratories-sector',
+  laboratoriesSectorCentralLab: '/laboratories-sector/central-lab',
   laboratoriesSectorAchievements: '/laboratories-sector/achievements',
   laboratoriesSectorServices: '/laboratories-sector/services',
   laboratoriesSectorStructure: '/laboratories-sector/structure',
