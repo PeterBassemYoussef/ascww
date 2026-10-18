@@ -507,19 +507,7 @@ function LaboratoriesSectorServicesPage() {
             </p>
           </section>
 
-          <section aria-label={t('الخدمات المتاحة', 'Available services')} className="grid gap-5 lg:grid-cols-2">
-            {services.map((service, index) => (
-              <ServiceCard
-                key={service.title}
-                number={String(index + 1).padStart(2, '0')}
-                title={service.title}
-                description={service.description}
-                details={service.details}
-              />
-            ))}
-          </section>
-
-          <section className="space-y-5">
+          <section aria-label={t('الخدمات وطلبات الخدمة', 'Services and service requests')} className="space-y-7">
             <div>
               <h2 className="text-2xl font-black leading-8 text-[#0a3555]">
                 {t('بيانات طلب الخدمة', 'Service Request Details')}
@@ -531,9 +519,30 @@ function LaboratoriesSectorServicesPage() {
                 )}
               </p>
             </div>
-            <div className="grid gap-5 lg:grid-cols-2">
+
+            <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
               <SampleRequestForm isEnglish={isEnglish} />
+              <div className="grid gap-5">
+                {services.slice(0, 3).map((service, index) => (
+                  <ServiceCard
+                    key={service.title}
+                    number={String(index + 1).padStart(2, '0')}
+                    title={service.title}
+                    description={service.description}
+                    details={service.details}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
               <TankCleaningRequestForm isEnglish={isEnglish} />
+              <ServiceCard
+                number="04"
+                title={services[3].title}
+                description={services[3].description}
+                details={services[3].details}
+              />
             </div>
           </section>
 

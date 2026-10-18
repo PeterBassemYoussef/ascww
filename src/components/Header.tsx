@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
 import { buildSearchApiUrl, normalizeSearchPayload, type SearchResultItem } from '../utils/helpers';
 import { useSiteLanguage, type SiteLanguage } from '../context/SiteLanguageContext';
 
@@ -39,9 +40,6 @@ function Header() {
         ROUTES.branches,
         ROUTES.projectsArchive,
         ROUTES.newsArchive,
-        ROUTES.waterQuality,
-        ROUTES.refiningWater,
-        ROUTES.labOfCompanyWater,
         ROUTES.visionAndMessage,
         ROUTES.informationTechnologyOfCompany,
         ROUTES.organizationStructure,
@@ -781,17 +779,6 @@ function Header() {
                                     <a className="nav-dropdown-item" href={ROUTES.branches}>{t('فروع الشركه', 'Company branches')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.projectsArchive}>{t('مشروعات الشركة', 'Company projects')}</a>
                                     <Link className="nav-dropdown-item" to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link>
-                                    <div className="nav-submenu">
-                                        <button type="button" className="nav-submenu-trigger">
-                                            {t('جودة المياه', 'Water quality')}
-                                            <span className="nav-submenu-caret" aria-hidden="true">◀</span>
-                                        </button>
-                                        <div className="nav-submenu-menu" role="menu">
-                                            <a className="nav-dropdown-item" href={ROUTES.waterQuality}>{t('جودة المياه', 'Water quality')}</a>
-                                            <a className="nav-dropdown-item" href={ROUTES.refiningWater}>{t('تنقية مياه الشرب', 'Drinking water purification')}</a>
-                                            <a className="nav-dropdown-item" href={ROUTES.labOfCompanyWater}>{t('المعمل المركزي لمياه الشرب', 'Central drinking water laboratory')}</a>
-                                        </div>
-                                    </div>
                                     <Link className="nav-dropdown-item" to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a>
                                     <div className="nav-submenu">
@@ -841,7 +828,23 @@ function Header() {
                                     <a className="nav-dropdown-item" href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a>
                                     <Link className="nav-dropdown-item" to={ROUTES.laboratoriesSectorAchievements}>{t('إنجازات قطاع المعامل', 'Laboratory Sector Achievements')}</Link>
                                     <Link className="nav-dropdown-item" to={ROUTES.laboratoriesSectorServices}>{t('خدمات قطاع المعامل', 'Laboratory Sector Services')}</Link>
-                                    <Link className="nav-dropdown-item" to={ROUTES.laboratoriesSectorCentralLab}>{t('المعمل المركزي', 'Central Laboratory')}</Link>
+                                    <div className="nav-submenu">
+                                        <button type="button" className="nav-submenu-trigger">
+                                            {t('المعمل المركزي', 'Central Laboratory')}
+                                            <span className="nav-submenu-caret" aria-hidden="true">◀</span>
+                                        </button>
+                                        <div className="nav-submenu-menu" role="menu">
+                                            {CENTRAL_LAB_DOCUMENTS.map((document) => (
+                                                <Link
+                                                    key={document.id}
+                                                    className="nav-dropdown-item"
+                                                    to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                >
+                                                    {isEnglish ? document.en : document.ar}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
                                     <div className="nav-submenu">
                                         <button type="button" className="nav-submenu-trigger">
                                             {t('الصرف الصحي', 'Wastewater')}
@@ -1094,9 +1097,9 @@ function Header() {
                                 {nextLanguageLabel}
                             </button>
                         </div>
-                        <details className="mobile-nav-group"><summary>{t('عن الشركة', 'About')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.aboutCompany}>{t('عن الشركة', 'About the company')}</Link><a href={ROUTES.branches}>{t('فروع الشركه', 'Company branches')}</a><a href={ROUTES.projectsArchive}>{t('مشروعات الشركة', 'Company projects')}</a><Link to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link><div className="mobile-nav-subtitle">{t('جودة المياه', 'Water quality')}</div><a href={ROUTES.waterQuality}>{t('جودة المياه', 'Water quality')}</a><a href={ROUTES.refiningWater}>{t('تنقية مياه الشرب', 'Drinking water purification')}</a><a href={ROUTES.labOfCompanyWater}>{t('المعمل المركزي لمياه الشرب', 'Central drinking water laboratory')}</a><Link to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link><a href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a><Link to={ROUTES.organizationStructure}>{t('الهيكل التنظيمي', 'Organizational structure')}</Link><Link to={ROUTES.companyAchievements}>{t('إنجازات الشركة', 'Company achievements')}</Link><a href={ROUTES.contractsRegulation}>{t('اللائحه الموحده للعقود والمشتريات', 'Unified regulations for contracts and procurement')}</a></div></details>
+                        <details className="mobile-nav-group"><summary>{t('عن الشركة', 'About')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.aboutCompany}>{t('عن الشركة', 'About the company')}</Link><a href={ROUTES.branches}>{t('فروع الشركه', 'Company branches')}</a><a href={ROUTES.projectsArchive}>{t('مشروعات الشركة', 'Company projects')}</a><Link to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link><Link to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link><a href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a><Link to={ROUTES.organizationStructure}>{t('الهيكل التنظيمي', 'Organizational structure')}</Link><Link to={ROUTES.companyAchievements}>{t('إنجازات الشركة', 'Company achievements')}</Link><a href={ROUTES.contractsRegulation}>{t('اللائحه الموحده للعقود والمشتريات', 'Unified regulations for contracts and procurement')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('التوعية والاتصال', 'Awareness and communication')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.adviceAndContact}>{t('التوعية والأتصال', 'Awareness and communication')}</a><Link to={ROUTES.cyberSecurityGuidelines}>{t('ارشادات الامن السيبرانى', 'Cybersecurity guidelines')}</Link><a href={ROUTES.forKidsAndWomen}>{t('ركن الأطفال ولكِ سيدتي', 'Kids and women corner')}</a></div></details>
-                        <details className="mobile-nav-group"><summary>{t('قطاع المعامل', 'Laboratory sector')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a><a href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a><Link to={ROUTES.laboratoriesSectorAchievements}>{t('إنجازات قطاع المعامل', 'Laboratory Sector Achievements')}</Link><Link to={ROUTES.laboratoriesSectorServices}>{t('خدمات قطاع المعامل', 'Laboratory Sector Services')}</Link><Link to={ROUTES.laboratoriesSectorCentralLab}>{t('المعمل المركزي', 'Central Laboratory')}</Link><details className="mobile-nav-group"><summary>{t('الصرف الصحي', 'Wastewater')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.sewageTreatment}>{t('معالجه الصرف الصحي', 'Wastewater treatment')}</Link><a href={ROUTES.safeSewageDisposal}>{t('أهمية التخلص الآمن من الصرف الصحى ومعالجته', 'Importance of safe wastewater disposal and treatment')}</a><a href={ROUTES.saveSewageNetwork}>{t('أهميه الحفاظ علي شبكه الصرف الصحي', 'Importance of protecting the sewer network')}</a></div></details><details className="mobile-nav-group"><summary>{t('الصرف الصناعي', 'Industrial wastewater')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.industrialWaste}>{t('الصرف الصناعي', 'Industrial wastewater')}</a><a href={ROUTES.industrialWasteRole}>{t('دور إدارة الصرف الصناعي', 'Role of the industrial wastewater department')}</a></div></details></div></details>
+                        <details className="mobile-nav-group"><summary>{t('قطاع المعامل', 'Laboratory sector')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a><a href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a><Link to={ROUTES.laboratoriesSectorAchievements}>{t('إنجازات قطاع المعامل', 'Laboratory Sector Achievements')}</Link><Link to={ROUTES.laboratoriesSectorServices}>{t('خدمات قطاع المعامل', 'Laboratory Sector Services')}</Link><details className="mobile-nav-group"><summary>{t('المعمل المركزي', 'Central Laboratory')}</summary><div className="mobile-nav-submenu">{CENTRAL_LAB_DOCUMENTS.map((document) => <Link key={document.id} to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}>{isEnglish ? document.en : document.ar}</Link>)}</div></details><details className="mobile-nav-group"><summary>{t('الصرف الصحي', 'Wastewater')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.sewageTreatment}>{t('معالجه الصرف الصحي', 'Wastewater treatment')}</Link><a href={ROUTES.safeSewageDisposal}>{t('أهمية التخلص الآمن من الصرف الصحى ومعالجته', 'Importance of safe wastewater disposal and treatment')}</a><a href={ROUTES.saveSewageNetwork}>{t('أهميه الحفاظ علي شبكه الصرف الصحي', 'Importance of protecting the sewer network')}</a></div></details><details className="mobile-nav-group"><summary>{t('الصرف الصناعي', 'Industrial wastewater')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.industrialWaste}>{t('الصرف الصناعي', 'Industrial wastewater')}</a><a href={ROUTES.industrialWasteRole}>{t('دور إدارة الصرف الصناعي', 'Role of the industrial wastewater department')}</a></div></details></div></details>
                         <Link className="rounded-lg bg-slate-100 px-3 py-2" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                         <details className="mobile-nav-group"><summary>{t('التدريب', 'Training')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</a><a href={ROUTES.trainingHallsBooking}>{t('قاعات التدريب', 'Training Halls')}</a><a href={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('وظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>

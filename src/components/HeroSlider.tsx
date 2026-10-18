@@ -14,7 +14,7 @@ function HeroSlider() {
                     data-subtitle="الاهتمام بمعايير منظمة الصحة العالمية للتاكد من جودة المياه بأحدث المعايير والتقنيات"
                     data-subtitle-ar="الاهتمام بمعايير منظمة الصحة العالمية للتاكد من جودة المياه بأحدث المعايير والتقنيات"
                     data-subtitle-en="We follow World Health Organization standards to verify water quality with the latest methods and technologies."
-                    data-link={ROUTES.labOfCompanyWater}
+                    data-link={ROUTES.laboratoriesSector}
                     data-cta="تعرف علي المزيد"
                     data-cta-ar="تعرف علي المزيد"
                     data-cta-en="Learn more"

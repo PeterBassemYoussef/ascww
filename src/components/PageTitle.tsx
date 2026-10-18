@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
+import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
 import { ROUTES } from '../constants/routes';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
@@ -28,9 +29,6 @@ const routeTitles: Record<string, string> = {
   [ROUTES.laboratoriesSectorStructure]: 'هيكل قطاع المعامل',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
-  [ROUTES.waterQuality]: 'جودة المياه',
-  [ROUTES.refiningWater]: 'تنقية مياه الشرب',
-  [ROUTES.labOfCompanyWater]: 'المعمل المركزي لمياه الشرب',
   [ROUTES.sanitation]: 'الصرف الصحي',
   [ROUTES.sewageTreatment]: 'معالجه الصرف الصحي',
   [ROUTES.safeSewageDisposal]: 'أهمية التخلص الآمن من الصرف الصحى',
@@ -115,6 +113,12 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.laboratoriesSectorCentralLab) {
     return isEnglish ? 'Central Laboratory' : 'المعمل المركزي';
+  }
+
+  if (pathname.startsWith(`${ROUTES.laboratoriesSectorCentralLab}/`)) {
+    const documentId = Number(pathname.slice(`${ROUTES.laboratoriesSectorCentralLab}/`.length));
+    const document = CENTRAL_LAB_DOCUMENTS.find((item) => item.id === documentId);
+    if (document) return isEnglish ? document.en : document.ar;
   }
 
   if (pathname === ROUTES.laboratoriesSectorAchievements) {
@@ -249,6 +253,15 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 };
 
 const resolveDescription = (pathname: string, pageTitle: string, isEnglish: boolean) => {
+  if (
+    pathname === ROUTES.laboratoriesSectorCentralLab
+    || pathname.startsWith(`${ROUTES.laboratoriesSectorCentralLab}/`)
+  ) {
+    return isEnglish
+      ? `${pageTitle} at the Assiut and New Valley Water and Wastewater Company Central Laboratory. The document is presented in Arabic.`
+      : `${pageTitle} من ملفات المعمل المركزي بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.`;
+  }
+
   if (pathname === ROUTES.laboratoriesSectorServices) {
     return isEnglish
       ? 'Water and wastewater sample analysis, sand and gravel testing, and external tank cleaning services from the Laboratory Sector.'

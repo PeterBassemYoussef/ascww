@@ -15,9 +15,6 @@ https://ascww.org/awareness | التوعية
 https://ascww.org/awareness/contact | الاستشارات والتواصل
 https://ascww.org/awareness/cyber-security | إرشادات الأمان السيبراني
 https://ascww.org/awareness/community-outreach | للأطفال والنساء
-https://ascww.org/water-quality | جودة المياه
-https://ascww.org/water-quality/purification | تنقية المياه
-https://ascww.org/water-quality/central-lab | المعمل المركزي
 https://ascww.org/lab-of-company | معامل الشركة
 https://ascww.org/waste-of-company | النفايات
 https://ascww.org/training-of-company | التدريب
@@ -69,10 +66,6 @@ https://ascww.org/services/search | البحث
 - فروع الشركه
 - مشروعات الشركة
 - أرشيف الأخبار
-- جودة المياه
-	- جودة المياه
-	- تنقية مياه الشرب
-	- المعمل المركزي لمياه الشرب
 - الصرف الصحي
 	- معالجه الصرف الصحي
 	- أهمية التخلص الآمن من الصرف الصحى ومعالجته
@@ -143,10 +136,6 @@ https://ascww.org/services/search | البحث
 - فروع الشركه — https://ascww.org/branches
 - مشروعات الشركة — https://ascww.org/projects
 - أرشيف الأخبار — https://ascww.org/news
-- جودة المياه — https://ascww.org/water-quality
-	- جودة المياه — https://ascww.org/water-quality
-	- تنقية مياه الشرب — https://ascww.org/water-quality/purification
-	- المعمل المركزي لمياه الشرب — https://ascww.org/water-quality/central-lab
 - الصرف الصحي — https://ascww.org/sanitation
 	- معالجه الصرف الصحي — https://ascww.org/sanitation/treatment
 	- أهمية التخلص الآمن من الصرف الصحى ومعالجته — https://ascww.org/sanitation/safe-disposal

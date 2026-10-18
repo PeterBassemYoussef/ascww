@@ -25,9 +25,6 @@ const ROUTE_TITLES = {
   '/forKidsAndWomen': 'ركن الأطفال ولكِ سيدتي',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
-  '/water-quality': 'جودة المياه',
-  '/refining-water': 'تنقية مياه الشرب',
-  '/lab-of-company-water': 'المعمل المركزي لمياه الشرب',
   '/sewage-treatment': 'معالجه الصرف الصحي',
   '/safe-sewage-disposal': 'أهمية التخلص الآمن من الصرف الصحى',
   '/Riddence-waste-water': 'أهمية التخلص الآمن من الصرف الصحى',
@@ -453,4 +450,3 @@ export default async function handler(request, response) {
   response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
   return response.status(200).send(html);
 }
-
