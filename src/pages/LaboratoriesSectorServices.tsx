@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
@@ -125,7 +125,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
   const labelClassName = 'block text-sm font-bold text-slate-700';
 
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+    <section id="sample-request-form" className="scroll-mt-40 flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <h3 className="text-lg font-extrabold leading-7 text-[#0a3555]">
         {t('طلب فحص وتحليل عينات', 'Sample Testing and Analysis Request')}
       </h3>
@@ -299,7 +299,7 @@ function TankCleaningRequestForm({ isEnglish }: { isEnglish: boolean }) {
   const labelClassName = 'block text-sm font-bold text-slate-700';
 
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+    <section id="tank-cleaning-form" className="scroll-mt-40 flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <h3 className="text-lg font-extrabold leading-7 text-[#0a3555]">
         {t('طلب غسيل خزان', 'Tank Cleaning Request')}
       </h3>
@@ -438,6 +438,24 @@ function LaboratoriesSectorServicesPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+
+  useEffect(() => {
+    const formId = window.location.hash === '#tank-cleaning-form'
+      ? 'tank-cleaning-form'
+      : window.location.hash === '#sample-request-form'
+        ? 'sample-request-form'
+        : null;
+    if (!formId) return undefined;
+
+    const scrollToForm = window.setTimeout(() => {
+      document.getElementById(formId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 0);
+
+    return () => window.clearTimeout(scrollToForm);
+  }, []);
 
   const services = [
     {
