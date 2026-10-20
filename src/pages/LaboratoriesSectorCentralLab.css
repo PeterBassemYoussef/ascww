@@ -138,6 +138,56 @@
   text-align: center !important;
 }
 
+.central-lab-document .organic-equipment-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 20px 0;
+}
+
+.central-lab-document .organic-equipment-gallery-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #dbe7ef;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(15 45 70 / 5%);
+}
+
+.central-lab-document .organic-equipment-gallery-title {
+  margin-bottom: 10px;
+  color: #0a3555;
+  font-weight: 800;
+  text-align: center;
+}
+
+.central-lab-document .organic-equipment-gallery-title .document-paragraph {
+  margin: 0;
+}
+
+.central-lab-document .organic-equipment-gallery-images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 10px;
+}
+
+.central-lab-document .organic-equipment-gallery-image {
+  min-width: 0;
+}
+
+.central-lab-document .organic-equipment-gallery-image .document-paragraph {
+  margin: 0;
+  text-align: center !important;
+}
+
+.central-lab-document .organic-equipment-gallery-image .document-image {
+  width: auto !important;
+  max-width: 100%;
+  max-height: 340px;
+  margin: 0 auto;
+}
+
 .central-lab-document .organic-device-table td {
   line-height: 1.65;
 }
@@ -274,6 +324,71 @@
   line-height: 1.4;
 }
 
+.central-lab-document .sample-collection-device {
+  margin: 24px 0;
+  border: 1px solid #dbe7ef;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(15 45 70 / 5%);
+  overflow: hidden;
+}
+
+.central-lab-document .sample-collection-device-name {
+  margin: 0;
+  padding: 12px 16px;
+  color: #0a3555;
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: #edf6fa;
+}
+
+.central-lab-document .sample-collection-device-table {
+  margin: 0;
+}
+
+.central-lab-document .sample-collection-device-details > .document-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.central-lab-document img[data-zoomable="true"] {
+  cursor: zoom-in;
+}
+
+.central-lab-document img[data-zoomable="true"]:focus-visible {
+  outline: 3px solid #1680a8;
+  outline-offset: 4px;
+}
+
+.central-lab-image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 82%);
+  cursor: zoom-out;
+}
+
+.central-lab-image-lightbox-image {
+  max-width: min(95vw, 1400px);
+  max-height: 92vh;
+  object-fit: contain;
+}
+
+.central-lab-image-lightbox-close {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .central-lab-document .inorganic-lab-departments {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -401,6 +516,41 @@
   margin-bottom: 0;
 }
 
+.central-lab-document .inorganic-lab-device-card {
+  margin: 18px 0;
+  overflow: hidden;
+  border: 1px solid #dbe7ef;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(15 45 70 / 5%);
+}
+
+.central-lab-document .inorganic-lab-device-name {
+  margin: 0;
+  padding: 12px 16px;
+  background: #edf6fa;
+  color: #0a3555;
+}
+
+.central-lab-document .inorganic-lab-device-name .inorganic-lab-equipment-name {
+  margin: 0;
+}
+
+.central-lab-document .inorganic-lab-device-table {
+  margin: 0;
+}
+
+.central-lab-document .inorganic-lab-device-details > .document-paragraph:last-child,
+.central-lab-document .inorganic-lab-device-images > .document-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.central-lab-document .inorganic-lab-device-images .document-image {
+  max-width: 100%;
+  max-height: 360px;
+  margin: 10px auto;
+}
+
 .central-lab-document .inorganic-icp-ms-details {
   display: grid;
   gap: 12px;
@@ -468,6 +618,69 @@
   border-top: 1px solid #e2e8f0;
 }
 
+@media (min-width: 768px) {
+  .central-lab-document .inorganic-lab-device-table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .central-lab-document .inorganic-lab-device-table tbody {
+    display: table-row-group;
+  }
+
+  .central-lab-document .inorganic-lab-device-table tr {
+    display: table-row;
+  }
+
+  .central-lab-document .inorganic-lab-device-table td {
+    display: table-cell;
+    min-width: 0;
+    vertical-align: middle;
+    white-space: normal;
+  }
+
+  .central-lab-document .inorganic-lab-device-details {
+    width: 58%;
+  }
+
+  .central-lab-document .inorganic-lab-device-images {
+    width: 42%;
+  }
+
+  .central-lab-document .sample-collection-device-table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .central-lab-document .sample-collection-device-table tbody {
+    display: table-row-group;
+  }
+
+  .central-lab-document .sample-collection-device-table tr {
+    display: table-row;
+  }
+
+  .central-lab-document .sample-collection-device-table td {
+    display: table-cell;
+    width: 55%;
+    min-width: 0;
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .central-lab-document .sample-collection-device-table .sample-collection-device-image {
+    width: 45%;
+  }
+
+  .central-lab-document .sample-collection-device-image .document-image {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 640px) {
   .central-lab-document {
     padding: 18px 14px 36px;
@@ -493,6 +706,18 @@
 
   .central-lab-document .central-lab-image-pair {
     gap: 8px;
+  }
+
+  .central-lab-document .organic-equipment-gallery {
+    gap: 10px;
+  }
+
+  .central-lab-document .organic-equipment-gallery-card {
+    padding: 8px;
+  }
+
+  .central-lab-document .organic-equipment-gallery-images {
+    gap: 6px;
   }
 
   .central-lab-document .quality-management-feature {

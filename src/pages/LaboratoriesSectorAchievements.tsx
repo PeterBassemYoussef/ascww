@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import Footer from '../components/Footer';
+import GalleryLightbox, { type GalleryLightboxImage } from '../components/GalleryLightbox';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
@@ -51,6 +53,17 @@ function LaboratoriesSectorAchievementsPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxImages: GalleryLightboxImage[] = [
+    ...ACHIEVEMENT_IMAGES.map((image) => ({ src: image.src, alt: t(image.ar, image.en) })),
+    {
+      src: '/images/laboratories-achievements/iso-sector-proof.webp',
+      alt: t(
+        'صورة توثيقية لشهادات قطاع المعامل من العرض التقديمي',
+        'Photographic documentation of the Laboratory Sector certificates from the presentation'
+      ),
+    },
+  ];
 
   const safetyAchievements = [
     t('تم اعتماد ١٥ خطة لمأمونية مياه الشرب.', '15 drinking water safety plans were approved.'),
@@ -187,13 +200,20 @@ function LaboratoriesSectorAchievementsPage() {
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {ACHIEVEMENT_IMAGES.map((lab) => (
                 <figure key={lab.src} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                  <img
-                    src={lab.src}
-                    alt={t(lab.ar, lab.en)}
-                    className="aspect-[4/3] w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <button
+                    type="button"
+                    aria-label={t(`تكبير صورة ${lab.ar}`, `Enlarge image: ${lab.en}`)}
+                    className="block w-full cursor-zoom-in focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-[#1170b0]"
+                    onClick={() => setLightboxIndex(ACHIEVEMENT_IMAGES.findIndex((image) => image.src === lab.src))}
+                  >
+                    <img
+                      src={lab.src}
+                      alt={t(lab.ar, lab.en)}
+                      className="aspect-[4/3] w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
                   <figcaption className="px-4 py-3 text-center font-bold leading-6 text-[#0a3555]">
                     {t(lab.ar, lab.en)}
                   </figcaption>
@@ -224,13 +244,20 @@ function LaboratoriesSectorAchievementsPage() {
             title={t('توثيق شهادة الأيزو', 'ISO Certification Documentation')}
           >
             <figure className="mx-auto max-w-4xl overflow-hidden rounded-xl border border-slate-200 bg-[#f7f9fb] p-2 sm:p-4">
-              <img
-                src="/images/laboratories-achievements/iso-sector-proof.webp"
-                alt={t('صورة توثيقية لشهادات قطاع المعامل من العرض التقديمي', 'Photographic documentation of the Laboratory Sector certificates from the presentation')}
-                className="mx-auto max-h-[720px] w-full object-contain"
-                loading="lazy"
-                decoding="async"
-              />
+              <button
+                type="button"
+                aria-label={t('تكبير صورة توثيق شهادات قطاع المعامل', 'Enlarge the Laboratory Sector certification image')}
+                className="mx-auto block w-full cursor-zoom-in focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-[#1170b0]"
+                onClick={() => setLightboxIndex(ACHIEVEMENT_IMAGES.length)}
+              >
+                <img
+                  src="/images/laboratories-achievements/iso-sector-proof.webp"
+                  alt={lightboxImages[ACHIEVEMENT_IMAGES.length].alt}
+                  className="mx-auto max-h-[720px] w-full object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
             </figure>
           </AchievementSection>
 
@@ -260,6 +287,16 @@ function LaboratoriesSectorAchievementsPage() {
           </AchievementSection>
         </div>
       </main>
+      <GalleryLightbox
+        images={lightboxImages}
+        currentIndex={lightboxIndex}
+        closeLabel={t('إغلاق', 'Close')}
+        previousLabel={t('الصورة السابقة', 'Previous image')}
+        nextLabel={t('الصورة التالية', 'Next image')}
+        closeButtonSide={isEnglish ? 'left' : 'right'}
+        onClose={() => setLightboxIndex(null)}
+        onChange={setLightboxIndex}
+      />
       <Footer />
     </>
   );
