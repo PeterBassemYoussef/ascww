@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist",
   "functions": {
     "api/gallery/[name].js": {
       "includeFiles": "public/gallery-manifest.json"

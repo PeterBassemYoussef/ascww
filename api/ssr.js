@@ -36,12 +36,6 @@ const ROUTE_TITLES = {
   '/forKidsAndWomen': 'ركن الأطفال ولكِ سيدتي',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
-  '/water-quality': 'جودة المياه',
-  '/refining-water': 'تنقية مياه الشرب',
-  '/water-quality/purification': 'تنقية مياه الشرب',
-  '/central-water-lab': 'المعمل المركزي لمياه الشرب',
-  '/lab-of-company-water': 'المعمل المركزي لمياه الشرب',
-  '/water-quality/central-lab': 'المعمل المركزي لمياه الشرب',
   '/sanitation': 'الصرف الصحي',
   '/sanitation/treatment': 'معالجه الصرف الصحي',
   '/sewage-treatment': 'معالجه الصرف الصحي',
@@ -498,4 +492,3 @@ export default async function handler(request, response) {
   response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
   return response.status(200).send(html);
 }
-

@@ -10,6 +10,28 @@ function MainContent() {
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const serviceImage = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
+    const laboratoryServices = [
+        {
+            image: '/images/services/laboratories-sector/1.webp',
+            englishImage: '/images/services/laboratories-sector/1E.webp',
+            title: t('تحليل عينات مياه الصرف الصحي', 'Wastewater Sample Analysis'),
+        },
+        {
+            image: '/images/services/laboratories-sector/2.webp',
+            englishImage: '/images/services/laboratories-sector/2E.webp',
+            title: t('فحص عينات الرمل والزلط', 'Sand and Gravel Sample Testing'),
+        },
+        {
+            image: '/images/services/laboratories-sector/3.webp',
+            englishImage: '/images/services/laboratories-sector/3E.webp',
+            title: t('تحليل عينات مياه الشرب', 'Drinking Water Sample Analysis'),
+        },
+        {
+            image: '/images/services/laboratories-sector/4.webp',
+            englishImage: '/images/services/laboratories-sector/4E.webp',
+            title: t('غسيل وتطهير الخزانات', 'Tank Cleaning and Disinfection'),
+        },
+    ];
 
     return (
         <>
@@ -115,6 +137,27 @@ function MainContent() {
                                 </div>
                             </Link>
                         </div>
+                        {laboratoryServices.map((service, index) => (
+                            <div key={service.image} className="animate-on-scroll h-full" data-delay={300 + index * 50}>
+                                <Link to={index === 3 ? `${ROUTES.laboratoriesSectorServices}#tank-cleaning-form` : `${ROUTES.laboratoriesSectorServices}#sample-request-form`} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
+                                    <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
+                                        <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                                            <img
+                                                src={serviceImage(service.image, service.englishImage)}
+                                                alt={service.title}
+                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                loading="lazy"
+                                                decoding="async"
+                                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                            />
+                                        </div>
+                                        <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
+                                            <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{service.title}</h3>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -127,4 +170,3 @@ function MainContent() {
 }
 
 export default memo(MainContent);
-

@@ -47,28 +47,6 @@
     "/images/hotline/hotline2.webp",
     "/images/hotline/hotline2EN.webp"
   ],
-  "Labofcompany": [
-    "/images/Labofcompany/lab-1.webp",
-    "/images/Labofcompany/lab-2.webp",
-    "/images/Labofcompany/lab-3.webp",
-    "/images/Labofcompany/lab-4.webp",
-    "/images/Labofcompany/slide-lab.webp"
-  ],
-  "lap-pdf": [
-    "/images/lap-pdf/1.webp",
-    "/images/lap-pdf/2.webp",
-    "/images/lap-pdf/3.webp",
-    "/images/lap-pdf/4.webp",
-    "/images/lap-pdf/5.webp",
-    "/images/lap-pdf/6.webp",
-    "/images/lap-pdf/7.webp",
-    "/images/lap-pdf/8.webp",
-    "/images/lap-pdf/9.webp",
-    "/images/lap-pdf/10.webp",
-    "/images/lap-pdf/11.webp",
-    "/images/lap-pdf/12.webp",
-    "/images/lap-pdf/13.webp"
-  ],
   "nabza-an-elnazaha": [
     "/images/nabza-an-elnazaha/72.webp",
     "/images/nabza-an-elnazaha/73.webp",
@@ -227,11 +205,5 @@
     "/images/training/62.webp",
     "/images/training/63.webp",
     "/images/training/64.webp"
-  ],
-  "water-quality": [
-    "/images/water-quality/quality_1.webp",
-    "/images/water-quality/quality_1EN.webp",
-    "/images/water-quality/quality_2.webp",
-    "/images/water-quality/quality_2EN.png"
   ]
 }

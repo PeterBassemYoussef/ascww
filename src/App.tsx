@@ -19,9 +19,11 @@ const CompanyAchievementsPage = lazy(() => import('./pages/AboutAchievements'));
 const AdviceAndContactPage = lazy(() => import('./pages/AwarenessContact'));
 const CyberSecurityGuidelinesPage = lazy(() => import('./pages/AwarenessCyberSecurity'));
 const ForKidsAndWomenPage = lazy(() => import('./pages/AwarenessCommunityOutreach'));
-const WaterQualityPage = lazy(() => import('./pages/WaterQuality'));
-const RefiningWaterPage = lazy(() => import('./pages/WaterQualityPurification'));
-const LabOfCompanyWaterPage = lazy(() => import('./pages/WaterQualityCentralLab'));
+const LaboratoriesSectorPage = lazy(() => import('./pages/LaboratoriesSector'));
+const LaboratoriesSectorCentralLabPage = lazy(() => import('./pages/LaboratoriesSectorCentralLab'));
+const LaboratoriesSectorAchievementsPage = lazy(() => import('./pages/LaboratoriesSectorAchievements'));
+const LaboratoriesSectorServicesPage = lazy(() => import('./pages/LaboratoriesSectorServices'));
+const LaboratoriesSectorStructurePage = lazy(() => import('./pages/LaboratoriesSectorStructure'));
 const LabOfCompanyPage = lazy(() => import('./pages/LabOfCompany'));
 const WasteOfCompanyPage = lazy(() => import('./pages/WasteOfCompany'));
 const TrainingOfCompanyPage = lazy(() => import('./pages/TrainingOfCompany'));
@@ -81,9 +83,12 @@ function App() {
           <Route path={ROUTES.adviceAndContact} element={<AdviceAndContactPage />} />
           <Route path={ROUTES.cyberSecurityGuidelines} element={<CyberSecurityGuidelinesPage />} />
           <Route path={ROUTES.forKidsAndWomen} element={<ForKidsAndWomenPage />} />
-          <Route path={ROUTES.waterQuality} element={<WaterQualityPage />} />
-          <Route path={ROUTES.refiningWater} element={<RefiningWaterPage />} />
-          <Route path={ROUTES.labOfCompanyWater} element={<LabOfCompanyWaterPage />} />
+          <Route path={ROUTES.laboratoriesSector} element={<LaboratoriesSectorPage />} />
+          <Route path={ROUTES.laboratoriesSectorCentralLab} element={<LaboratoriesSectorCentralLabPage />} />
+          <Route path={ROUTES.laboratoriesSectorCentralLabDocument} element={<LaboratoriesSectorCentralLabPage />} />
+          <Route path={ROUTES.laboratoriesSectorAchievements} element={<LaboratoriesSectorAchievementsPage />} />
+          <Route path={ROUTES.laboratoriesSectorServices} element={<LaboratoriesSectorServicesPage />} />
+          <Route path={ROUTES.laboratoriesSectorStructure} element={<LaboratoriesSectorStructurePage />} />
           <Route path={ROUTES.labOfCompany} element={<LabOfCompanyPage />} />
           <Route path={ROUTES.wasteOfCompany} element={<WasteOfCompanyPage />} />
           <Route path={ROUTES.trainingOfCompany} element={<TrainingOfCompanyPage />} />

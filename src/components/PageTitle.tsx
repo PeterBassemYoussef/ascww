@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
+import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
 import { ROUTES } from '../constants/routes';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
@@ -21,11 +22,13 @@ const routeTitles: Record<string, string> = {
   [ROUTES.adviceAndContact]: 'التوعية والأتصال',
   [ROUTES.cyberSecurityGuidelines]: 'ارشادات الامن السيبرانى',
   [ROUTES.forKidsAndWomen]: 'ركن الأطفال ولكِ سيدتي',
+  [ROUTES.laboratoriesSector]: 'قطاع المعامل',
+  [ROUTES.laboratoriesSectorCentralLab]: 'المعمل المركزي',
+  [ROUTES.laboratoriesSectorAchievements]: 'إنجازات قطاع المعامل',
+  [ROUTES.laboratoriesSectorServices]: 'خدمات قطاع المعامل',
+  [ROUTES.laboratoriesSectorStructure]: 'هيكل قطاع المعامل',
   '/forKids': 'ركن الأطفال ولكِ سيدتي',
   '/toWomen': 'ركن الأطفال ولكِ سيدتي',
-  [ROUTES.waterQuality]: 'جودة المياه',
-  [ROUTES.refiningWater]: 'تنقية مياه الشرب',
-  [ROUTES.labOfCompanyWater]: 'المعمل المركزي لمياه الشرب',
   [ROUTES.sanitation]: 'الصرف الصحي',
   [ROUTES.sewageTreatment]: 'معالجه الصرف الصحي',
   [ROUTES.safeSewageDisposal]: 'أهمية التخلص الآمن من الصرف الصحى',
@@ -102,6 +105,28 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 
   if (pathname === ROUTES.forKidsAndWomen || pathname === '/forKids' || pathname === '/toWomen') {
     return isEnglish ? 'Kids and Women Corner' : 'ركن الأطفال ولكِ سيدتي';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorStructure) {
+    return isEnglish ? 'Laboratory Sector Structure' : 'هيكل قطاع المعامل';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorCentralLab) {
+    return isEnglish ? 'Central Laboratory' : 'المعمل المركزي';
+  }
+
+  if (pathname.startsWith(`${ROUTES.laboratoriesSectorCentralLab}/`)) {
+    const documentId = Number(pathname.slice(`${ROUTES.laboratoriesSectorCentralLab}/`.length));
+    const document = CENTRAL_LAB_DOCUMENTS.find((item) => item.id === documentId);
+    if (document) return isEnglish ? document.en : document.ar;
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorAchievements) {
+    return isEnglish ? 'Laboratory Sector Achievements' : 'إنجازات قطاع المعامل';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorServices) {
+    return isEnglish ? 'Laboratory Sector Services' : 'خدمات قطاع المعامل';
   }
 
   if (pathname === ROUTES.tendersArchive) {
@@ -228,6 +253,33 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
 };
 
 const resolveDescription = (pathname: string, pageTitle: string, isEnglish: boolean) => {
+  if (
+    pathname === ROUTES.laboratoriesSectorCentralLab
+    || pathname.startsWith(`${ROUTES.laboratoriesSectorCentralLab}/`)
+  ) {
+    return isEnglish
+      ? `${pageTitle} at the Assiut and New Valley Water and Wastewater Company Central Laboratory. The document is presented in Arabic.`
+      : `${pageTitle} من ملفات المعمل المركزي بشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.`;
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorServices) {
+    return isEnglish
+      ? 'Water and wastewater sample analysis, sand and gravel testing, and external tank cleaning services from the Laboratory Sector.'
+      : 'خدمات تحليل عينات مياه الشرب والصرف الصحي وفحص الرمل والزلط وغسيل الخزانات التي يقدمها قطاع المعامل.';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorAchievements) {
+    return isEnglish
+      ? 'Achievements, ISO certifications, laboratory qualifications, and sustainable goals of the Laboratory Sector.'
+      : 'إنجازات وشهادات الأيزو وتأهيل المعامل والأهداف المستدامة لقطاع المعامل.';
+  }
+
+  if (pathname === ROUTES.laboratoriesSectorStructure) {
+    return isEnglish
+      ? 'Interactive organizational chart of the Laboratory and Quality Control Sector, including its departments and laboratories.'
+      : 'الهيكل التنظيمي التفاعلي لقطاع المعامل وضبط الجودة، ويشمل الإدارات والمعامل التابعة له.';
+  }
+
   if (pathname === ROUTES.adviceAndContact) {
     return isEnglish
       ? 'Awareness and communication content about water conservation and responsible use.'
