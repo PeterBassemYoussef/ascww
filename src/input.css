@@ -249,11 +249,11 @@
     transition: transform 180ms ease;
   }
 
-  .mobile-nav-group[open] summary {
+  .mobile-nav-group[open] > summary {
     @apply border-b border-slate-200;
   }
 
-  .mobile-nav-group[open] summary::after {
+  .mobile-nav-group[open] > summary::after {
     transform: rotate(225deg);
   }
 
