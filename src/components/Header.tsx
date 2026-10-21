@@ -243,7 +243,7 @@ function Header() {
         const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const openDelay = 0;
-        const closeDelay = prefersReducedMotion ? 0 : 450;
+        const closeDelay = 0;
         const slideDuration = prefersReducedMotion ? 1 : 400;
         const openTimers = new WeakMap<HTMLElement, number>();
         const closeTimers = new WeakMap<HTMLElement, number>();
@@ -275,6 +275,24 @@ function Header() {
 
         const getTrigger = (dropdown: HTMLElement) => dropdown.querySelector<HTMLElement>('.nav-dropdown-trigger');
         const getMenu = (dropdown: HTMLElement) => dropdown.querySelector<HTMLElement>('.nav-dropdown-menu');
+        const getMenuContentHeight = (menu: HTMLElement) => {
+            const menuStyle = window.getComputedStyle(menu);
+            const contentHeight = Array.from(menu.children).reduce((height, child) => {
+                const childStyle = window.getComputedStyle(child);
+                return height
+                    + child.getBoundingClientRect().height
+                    + (Number.parseFloat(childStyle.marginTop) || 0)
+                    + (Number.parseFloat(childStyle.marginBottom) || 0);
+            }, 0);
+            const verticalInsets = [
+                menuStyle.paddingTop,
+                menuStyle.paddingBottom,
+                menuStyle.borderTopWidth,
+                menuStyle.borderBottomWidth,
+            ].reduce((height, value) => height + (Number.parseFloat(value) || 0), 0);
+
+            return menuStyle.boxSizing === 'border-box' ? contentHeight + verticalInsets : contentHeight;
+        };
 
         const setExpandedState = (dropdown: HTMLElement, menu: HTMLElement, expanded: boolean) => {
             const trigger = getTrigger(dropdown);
@@ -422,7 +440,7 @@ function Header() {
             }
 
             const startHeight = menu.getBoundingClientRect().height;
-            const targetHeight = menu.scrollHeight;
+            const targetHeight = getMenuContentHeight(menu);
 
             if (targetHeight <= 0) {
                 menu.style.height = 'auto';
@@ -468,8 +486,14 @@ function Header() {
 
             const onMouseEnter = () => scheduleOpen(dropdown);
             const onMouseLeave = () => {
-                if (dropdown.dataset.submenuHover === 'true') return;
-                scheduleClose(dropdown);
+                dropdown.dataset.submenuHover = 'false';
+                dropdown.querySelectorAll<HTMLElement>('.nav-submenu-trigger').forEach((submenuTrigger) => {
+                    submenuTrigger.setAttribute('aria-expanded', 'false');
+                });
+                dropdown.querySelectorAll<HTMLElement>('.nav-submenu-menu').forEach((submenuMenu) => {
+                    submenuMenu.setAttribute('aria-hidden', 'true');
+                });
+                closeDropdown(dropdown, true);
             };
             const onFocusIn = () => openDropdown(dropdown);
             const onFocusOut = (event: FocusEvent) => {
