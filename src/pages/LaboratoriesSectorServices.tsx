@@ -209,6 +209,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
             autoComplete="tel"
             pattern="[0-9]{11}"
             title={t('أدخل رقم هاتف مكوّنًا من 11 رقمًا.', 'Enter an 11-digit phone number.')}
+            minLength={11}
             maxLength={11}
             onInput={(event) => {
               event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '').slice(0, 11);
@@ -434,6 +435,126 @@ function TankCleaningRequestForm({ isEnglish }: { isEnglish: boolean }) {
   );
 }
 
+function InstrumentCalibrationRequestForm({ isEnglish }: { isEnglish: boolean }) {
+  const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const { errors, handleInvalid, handleInput } = useRequiredFieldErrors(isEnglish);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const clientName = String(formData.get('calibrationClientName') ?? '').trim();
+    const phone = String(formData.get('calibrationPhone') ?? '').trim();
+    const email = String(formData.get('calibrationEmail') ?? '').trim();
+    const instrumentName = String(formData.get('instrumentName') ?? '').trim();
+    const model = String(formData.get('instrumentModel') ?? '').trim();
+    const calibrationType = String(formData.get('calibrationType') ?? '').trim();
+    const serialNumber = String(formData.get('instrumentSerialNumber') ?? '').trim();
+    const lastCalibrationDate = String(formData.get('lastCalibrationDate') ?? '').trim();
+
+    const message = isEnglish
+      ? [
+        'Instrument Calibration Request',
+        `Client name: ${clientName}`,
+        `Contact phone: ${phone}`,
+        `Email: ${email}`,
+        `Instrument to calibrate: ${instrumentName}`,
+        `Instrument model: ${model}`,
+        `Calibration type: ${calibrationType}`,
+        `S/N: ${serialNumber}`,
+        `Previous calibration date: ${lastCalibrationDate}`,
+      ].join('\n')
+      : [
+        'طلب معايرة جهاز',
+        `اسم العميل: ${clientName}`,
+        `رقم التليفون للتواصل: ${phone}`,
+        `الايميل: ${email}`,
+        `اسم الجهاز المراد له المعايرة: ${instrumentName}`,
+        `موديل الجهاز: ${model}`,
+        `نوع المعايرة: ${calibrationType}`,
+        `S/N: ${serialNumber}`,
+        `آخر تاريخ تمت له المعايرة السابقة: ${lastCalibrationDate}`,
+      ].join('\n');
+
+    const whatsappUrl = `https://wa.me/${LABORATORY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.location.assign(whatsappUrl);
+  };
+
+  const fieldClassName = 'mt-1.5 block min-h-12 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal text-slate-800 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#1687a7] focus:ring-2 focus:ring-[#1687a7]/20';
+  const labelClassName = 'block text-sm font-bold text-slate-700';
+
+  return (
+    <section id="instrument-calibration-form" className="scroll-mt-40 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <h3 className="text-lg font-extrabold leading-7 text-[#0a3555]">
+        {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
+      </h3>
+      <p className="mt-2 text-sm leading-7 text-slate-600">
+        {t('املأ بيانات العميل والجهاز، وستُفتح رسالة جاهزة في واتساب لمراجعتها ثم إرسالها.', 'Fill in the client and instrument details. A prepared WhatsApp message will open for you to review and send.')}
+      </p>
+      <form onSubmit={handleSubmit} onInvalidCapture={handleInvalid} onInputCapture={handleInput} onChangeCapture={handleInput} className="mt-5 grid gap-4 sm:grid-cols-2">
+        <label className={labelClassName}>
+          {t('اسم العميل', 'Client name')}
+          <input className={fieldClassName} name="calibrationClientName" autoComplete="name" maxLength={50} required />
+          <FormFieldError message={errors.calibrationClientName} />
+        </label>
+        <label className={labelClassName}>
+          {t('رقم التليفون للتواصل', 'Contact phone')}
+          <input
+            className={fieldClassName}
+            name="calibrationPhone"
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel"
+            pattern="[0-9]{11}"
+            title={t('أدخل رقم هاتف مكوّنًا من 11 رقمًا.', 'Enter an 11-digit phone number.')}
+            maxLength={11}
+            onInput={(event) => {
+              event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '').slice(0, 11);
+            }}
+            required
+          />
+          <FormFieldError message={errors.calibrationPhone} />
+        </label>
+        <label className={labelClassName}>
+          {t('الايميل', 'Email')}
+          <input className={fieldClassName} name="calibrationEmail" type="email" autoComplete="email" maxLength={50} required />
+          <FormFieldError message={errors.calibrationEmail} />
+        </label>
+        <label className={labelClassName}>
+          {t('اسم الجهاز المراد له المعايرة', 'Instrument to calibrate')}
+          <input className={fieldClassName} name="instrumentName" maxLength={50} required />
+          <FormFieldError message={errors.instrumentName} />
+        </label>
+        <label className={labelClassName}>
+          {t('موديل الجهاز', 'Instrument model')}
+          <input className={fieldClassName} name="instrumentModel" maxLength={50} required />
+          <FormFieldError message={errors.instrumentModel} />
+        </label>
+        <label className={labelClassName}>
+          {t('نوع المعايرة', 'Calibration type')}
+          <input className={fieldClassName} name="calibrationType" maxLength={50} required />
+          <FormFieldError message={errors.calibrationType} />
+        </label>
+        <label className={labelClassName}>
+          {t('S/N', 'S/N')}
+          <input className={fieldClassName} name="instrumentSerialNumber" maxLength={50} required />
+          <FormFieldError message={errors.instrumentSerialNumber} />
+        </label>
+        <label className={labelClassName}>
+          {t('آخر تاريخ تمت له المعايرة السابقة', 'Date of previous calibration')}
+          <input className={fieldClassName} name="lastCalibrationDate" type="date" required />
+          <FormFieldError message={errors.lastCalibrationDate} />
+        </label>
+        <button
+          type="submit"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#0a7a57] px-5 py-3 font-bold text-white transition hover:bg-[#086447] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1687a7] sm:col-span-2"
+        >
+          {t('إرسال طلب المعايرة عبر واتساب', 'Send calibration request via WhatsApp')}
+        </button>
+      </form>
+    </section>
+  );
+}
+
 function LaboratoriesSectorServicesPage() {
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
@@ -444,6 +565,8 @@ function LaboratoriesSectorServicesPage() {
       ? 'tank-cleaning-form'
       : window.location.hash === '#sample-request-form'
         ? 'sample-request-form'
+        : window.location.hash === '#instrument-calibration-form'
+          ? 'instrument-calibration-form'
         : null;
     if (!formId) return undefined;
 
@@ -562,6 +685,8 @@ function LaboratoriesSectorServicesPage() {
                 details={services[3].details}
               />
             </div>
+
+            <InstrumentCalibrationRequestForm isEnglish={isEnglish} />
           </section>
 
           <section className="rounded-2xl border border-[#d7b05a]/50 bg-[#fbf8ef] p-5 sm:p-7">
