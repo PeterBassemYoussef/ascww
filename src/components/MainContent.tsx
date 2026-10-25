@@ -31,6 +31,11 @@ function MainContent() {
             englishImage: '/images/services/laboratories-sector/4E.webp',
             title: t('غسيل وتطهير الخزانات', 'Tank Cleaning and Disinfection'),
         },
+        {
+            image: '/images/services/laboratories-sector/5.webp',
+            englishImage: '/images/services/laboratories-sector/5E.webp',
+            title: t('معايرة الأجهزة', 'Instrument Calibration'),
+        },
     ];
 
     return (
@@ -139,7 +144,7 @@ function MainContent() {
                         </div>
                         {laboratoryServices.map((service, index) => (
                             <div key={service.image} className="animate-on-scroll h-full" data-delay={300 + index * 50}>
-                                <Link to={index === 3 ? `${ROUTES.laboratoriesSectorServices}#tank-cleaning-form` : `${ROUTES.laboratoriesSectorServices}#sample-request-form`} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
+                                <Link to={index === 4 ? `${ROUTES.laboratoriesSectorServices}#instrument-calibration-form` : index === 3 ? `${ROUTES.laboratoriesSectorServices}#tank-cleaning-form` : `${ROUTES.laboratoriesSectorServices}#sample-request-form`} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
                                     <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
                                         <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                             <img
