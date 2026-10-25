@@ -127,44 +127,45 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
   return (
     <section id="sample-request-form" className="scroll-mt-40 flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <h3 className="text-lg font-extrabold leading-7 text-[#0a3555]">
-        {t('طلب فحص وتحليل عينات', 'Sample Testing and Analysis Request')}
+        {t(
+          'طلب فحص وتحليل عينات مياه الشرب والصرف الصحي والرمل والزلط',
+          'Request to Test and Analyze Drinking Water, Wastewater, Sand, and Gravel Samples'
+        )}
       </h3>
       <p className="mt-2 text-sm leading-7 text-slate-600">
         {t('املأ بيانات الطلب، وستُفتح رسالة جاهزة في واتساب لمراجعتها ثم إرسالها.', 'Fill in the request details. A prepared WhatsApp message will open for you to review and send.')}
       </p>
-      <form onSubmit={handleSubmit} onInvalidCapture={handleInvalid} onInputCapture={handleInput} onChangeCapture={handleInput} className="mt-5 flex flex-1 flex-col justify-between gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className={labelClassName}>
-            {t('عدد العينات', 'Number of samples')}
-            <input
-              className={fieldClassName}
-              name="sampleCount"
-              type="text"
-              inputMode="numeric"
-              pattern="(?:[1-9]|[1-9][0-9])"
-              title={t('أدخل رقمًا من 1 إلى 99.', 'Enter a number from 1 to 99.')}
-              maxLength={2}
-              onInput={(event) => {
-                event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '').slice(0, 2);
-              }}
-              required
-            />
-            <FormFieldError message={errors.sampleCount} />
-          </label>
-          <label className={labelClassName}>
-            {t('نوع العينة', 'Sample type')}
-            <select className={fieldClassName} name="sampleType" defaultValue="" required>
-              <option value="" disabled>{t('اختر نوع العينة', 'Select a sample type')}</option>
-              <option value={t('مياه شرب', 'drinking water')}>{t('مياه شرب', 'Drinking water')}</option>
-              <option value={t('صرف صحي', 'wastewater')}>{t('صرف صحي', 'Wastewater')}</option>
-              <option value={t('زلط', 'gravel')}>{t('زلط', 'Gravel')}</option>
-              <option value={t('رمل', 'sand')}>{t('رمل', 'Sand')}</option>
-            </select>
-            <FormFieldError message={errors.sampleType} />
-          </label>
-        </div>
-
+      <form onSubmit={handleSubmit} onInvalidCapture={handleInvalid} onInputCapture={handleInput} onChangeCapture={handleInput} className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className={labelClassName}>
+          {t('عدد العينات', 'Number of samples')}
+          <input
+            className={fieldClassName}
+            name="sampleCount"
+            type="text"
+            inputMode="numeric"
+            pattern="(?:[1-9]|[1-9][0-9])"
+            title={t('أدخل رقمًا من 1 إلى 99.', 'Enter a number from 1 to 99.')}
+            maxLength={2}
+            onInput={(event) => {
+              event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '').slice(0, 2);
+            }}
+            required
+          />
+          <FormFieldError message={errors.sampleCount} />
+        </label>
+        <label className={labelClassName}>
+          {t('نوع العينة', 'Sample type')}
+          <select className={fieldClassName} name="sampleType" defaultValue="" required>
+            <option value="" disabled>{t('اختر نوع العينة', 'Select a sample type')}</option>
+            <option value={t('مياه شرب', 'drinking water')}>{t('مياه شرب', 'Drinking water')}</option>
+            <option value={t('صرف صحي', 'wastewater')}>{t('صرف صحي', 'Wastewater')}</option>
+            <option value={t('زلط', 'gravel')}>{t('زلط', 'Gravel')}</option>
+            <option value={t('رمل', 'sand')}>{t('رمل', 'Sand')}</option>
+          </select>
+          <FormFieldError message={errors.sampleType} />
+        </label>
+
+        <label className={`${labelClassName} sm:col-span-2`}>
           {t('اسم الشركة', 'Company name')}
           <input
             className={fieldClassName}
@@ -178,7 +179,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
           <FormFieldError message={errors.companyName} />
         </label>
 
-        <label className={labelClassName}>
+        <label className={`${labelClassName} sm:col-span-2`}>
           {t('موقع الشركة (العنوان)', 'Company location (address)')}
           <textarea
             className={`${fieldClassName} min-h-24 resize-y`}
@@ -219,10 +220,6 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
           <FormFieldError message={errors.phone} />
         </label>
 
-        <p className="rounded-lg border-r-4 border-[#d7b05a] bg-[#fbf8ef] px-4 py-3 font-bold leading-7 text-[#0a3555]">
-          {t('ونحن على أتم الاستعداد لدفع الرسوم المقررة.', 'We are prepared to pay the applicable fees.')}
-        </p>
-
         <label className={labelClassName}>
           {t('مقدمه لسيادتكم / أ', 'Submitted by / Mr./Ms.')}
           <input
@@ -238,9 +235,13 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
           <FormFieldError message={errors.applicantName} />
         </label>
 
+        <p className="rounded-lg border-r-4 border-[#d7b05a] bg-[#fbf8ef] px-4 py-3 font-bold leading-7 text-[#0a3555] sm:col-span-2">
+          {t('ونحن على أتم الاستعداد لدفع الرسوم المقررة.', 'We are prepared to pay the applicable fees.')}
+        </p>
+
         <button
           type="submit"
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#0a7a57] px-5 py-3 font-bold text-white transition hover:bg-[#086447] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1687a7]"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#0a7a57] px-5 py-3 font-bold text-white transition hover:bg-[#086447] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1687a7] sm:col-span-2"
         >
           {t('إرسال الطلب عبر واتساب', 'Send request via WhatsApp')}
         </button>
@@ -484,9 +485,6 @@ function InstrumentCalibrationRequestForm({ isEnglish }: { isEnglish: boolean })
 
   return (
     <section id="instrument-calibration-form" className="scroll-mt-40 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <h3 className="text-lg font-extrabold leading-7 text-[#0a3555]">
-        {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
-      </h3>
       <p className="mt-2 text-sm leading-7 text-slate-600">
         {t('املأ بيانات العميل والجهاز، وستُفتح رسالة جاهزة في واتساب لمراجعتها ثم إرسالها.', 'Fill in the client and instrument details. A prepared WhatsApp message will open for you to review and send.')}
       </p>
@@ -661,31 +659,32 @@ function LaboratoriesSectorServicesPage() {
               </p>
             </div>
 
-            <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-              <SampleRequestForm isEnglish={isEnglish} />
-              <div className="grid gap-5">
-                {services.slice(0, 3).map((service, index) => (
-                  <ServiceCard
-                    key={service.title}
-                    number={String(index + 1).padStart(2, '0')}
-                    title={service.title}
-                    description={service.description}
-                    details={service.details}
-                  />
-                ))}
-              </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {services.slice(0, 3).map((service, index) => (
+                <ServiceCard
+                  key={service.title}
+                  number={String(index + 1).padStart(2, '0')}
+                  title={service.title}
+                  description={service.description}
+                  details={service.details}
+                />
+              ))}
             </div>
 
-            <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-              <TankCleaningRequestForm isEnglish={isEnglish} />
-              <ServiceCard
-                number="04"
-                title={services[3].title}
-                description={services[3].description}
-                details={services[3].details}
-              />
-            </div>
+            <SampleRequestForm isEnglish={isEnglish} />
 
+            <ServiceCard
+              number="04"
+              title={services[3].title}
+              description={services[3].description}
+              details={services[3].details}
+            />
+
+            <TankCleaningRequestForm isEnglish={isEnglish} />
+
+            <h2 className="border-t border-slate-200 pt-6 text-xl font-extrabold leading-8 text-[#0a3555]">
+              {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
+            </h2>
             <InstrumentCalibrationRequestForm isEnglish={isEnglish} />
           </section>
 
