@@ -701,11 +701,16 @@ function LaboratoriesSectorServicesPage() {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(10,53,85,0.07)] sm:p-5">
-              <h2 className="border-b border-slate-200 pb-5 text-xl font-extrabold leading-8 text-[#0a3555]">
-                {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
-              </h2>
-              <div className="mt-5">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_30px_rgba(10,53,85,0.07)]">
+              <div className="flex items-start gap-4 border-b border-slate-200 bg-[#f7f9fb] p-5 sm:p-6">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0a3555] text-lg font-black text-white">
+                  05
+                </span>
+                <h2 className="pt-1 text-lg font-extrabold leading-7 text-[#0a3555] sm:text-xl">
+                  {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
+                </h2>
+              </div>
+              <div className="p-4 sm:p-5">
                 <InstrumentCalibrationRequestForm isEnglish={isEnglish} />
               </div>
             </div>
