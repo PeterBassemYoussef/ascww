@@ -44,18 +44,20 @@ function useRequiredFieldErrors(isEnglish: boolean) {
 }
 
 function ServiceCard({
+  id,
   number,
   title,
   description,
   details,
 }: {
+  id?: string;
   number: string;
   title: string;
   description: string;
   details: string[];
 }) {
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_30px_rgba(10,53,85,0.07)]">
+    <article id={id} className="scroll-mt-40 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_30px_rgba(10,53,85,0.07)]">
       <div className="flex items-start gap-4 border-b border-slate-200 bg-[#f7f9fb] p-5 sm:p-6">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0a3555] text-lg font-black text-white">
           {number}
@@ -559,17 +561,20 @@ function LaboratoriesSectorServicesPage() {
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
 
   useEffect(() => {
-    const formId = window.location.hash === '#tank-cleaning-form'
-      ? 'tank-cleaning-form'
-      : window.location.hash === '#sample-request-form'
-        ? 'sample-request-form'
-        : window.location.hash === '#instrument-calibration-form'
-          ? 'instrument-calibration-form'
-        : null;
-    if (!formId) return undefined;
+    const requestedId = window.location.hash.slice(1);
+    const serviceIds = [
+      'wastewater-sample-service',
+      'sand-gravel-sample-service',
+      'drinking-water-sample-service',
+      'tank-cleaning-service',
+    ];
+    const formIds = ['sample-request-form', 'tank-cleaning-form', 'instrument-calibration-form'];
+    if (!serviceIds.includes(requestedId) && !formIds.includes(requestedId)) return undefined;
+
+    const targetId = requestedId;
 
     const scrollToForm = window.setTimeout(() => {
-      document.getElementById(formId)?.scrollIntoView({
+      document.getElementById(targetId)?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       });
@@ -659,33 +664,51 @@ function LaboratoriesSectorServicesPage() {
               </p>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {services.slice(0, 3).map((service, index) => (
-                <ServiceCard
-                  key={service.title}
-                  number={String(index + 1).padStart(2, '0')}
-                  title={service.title}
-                  description={service.description}
-                  details={service.details}
-                />
-              ))}
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(10,53,85,0.07)] sm:p-5">
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {services.slice(0, 3).map((service, index) => (
+                  <ServiceCard
+                    key={service.title}
+                    id={[
+                      'drinking-water-sample-service',
+                      'wastewater-sample-service',
+                      'sand-gravel-sample-service',
+                    ][index]}
+                    number={String(index + 1).padStart(2, '0')}
+                    title={service.title}
+                    description={service.description}
+                    details={service.details}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-5">
+                <SampleRequestForm isEnglish={isEnglish} />
+              </div>
             </div>
 
-            <SampleRequestForm isEnglish={isEnglish} />
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(10,53,85,0.07)] sm:p-5">
+              <ServiceCard
+                id="tank-cleaning-service"
+                number="04"
+                title={services[3].title}
+                description={services[3].description}
+                details={services[3].details}
+              />
 
-            <ServiceCard
-              number="04"
-              title={services[3].title}
-              description={services[3].description}
-              details={services[3].details}
-            />
+              <div className="mt-5">
+                <TankCleaningRequestForm isEnglish={isEnglish} />
+              </div>
+            </div>
 
-            <TankCleaningRequestForm isEnglish={isEnglish} />
-
-            <h2 className="border-t border-slate-200 pt-6 text-xl font-extrabold leading-8 text-[#0a3555]">
-              {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
-            </h2>
-            <InstrumentCalibrationRequestForm isEnglish={isEnglish} />
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(10,53,85,0.07)] sm:p-5">
+              <h2 className="border-b border-slate-200 pb-5 text-xl font-extrabold leading-8 text-[#0a3555]">
+                {t('طلب معايرة الأجهزة', 'Instrument Calibration Request')}
+              </h2>
+              <div className="mt-5">
+                <InstrumentCalibrationRequestForm isEnglish={isEnglish} />
+              </div>
+            </div>
           </section>
 
           <section className="rounded-2xl border border-[#d7b05a]/50 bg-[#fbf8ef] p-5 sm:p-7">
