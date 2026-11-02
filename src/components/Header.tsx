@@ -5,6 +5,15 @@ import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
 import { buildSearchApiUrl, normalizeSearchPayload, type SearchResultItem } from '../utils/helpers';
 import { useSiteLanguage, type SiteLanguage } from '../context/SiteLanguageContext';
 
+const CENTRAL_LAB_EQUIPMENT_DOCUMENT_IDS = [9, 4, 10, 11, 12];
+const getCentralLabEquipmentDocuments = () =>
+    CENTRAL_LAB_DOCUMENTS
+        .filter((document) => CENTRAL_LAB_EQUIPMENT_DOCUMENT_IDS.includes(document.id))
+        .sort((first, second) =>
+            CENTRAL_LAB_EQUIPMENT_DOCUMENT_IDS.indexOf(first.id)
+            - CENTRAL_LAB_EQUIPMENT_DOCUMENT_IDS.indexOf(second.id),
+        );
+
 function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toggleRef = useRef<HTMLButtonElement | null>(null);
@@ -858,7 +867,7 @@ function Header() {
                                             <span className="nav-submenu-caret" aria-hidden="true">◀</span>
                                         </button>
                                         <div className="nav-submenu-menu" role="menu">
-                                            {CENTRAL_LAB_DOCUMENTS.map((document) => (
+                                            {CENTRAL_LAB_DOCUMENTS.filter((document) => ![4, 9, 10, 11, 12].includes(document.id)).map((document) => (
                                                 <Link
                                                     key={document.id}
                                                     className="nav-dropdown-item"
@@ -867,6 +876,23 @@ function Header() {
                                                     {isEnglish ? document.en : document.ar}
                                                 </Link>
                                             ))}
+                                            <div className="nav-submenu nav-submenu--opens-up">
+                                                <button type="button" className="nav-submenu-trigger">
+                                                    {t('أجهزة المعامل', 'Laboratory Equipment')}
+                                                    <span className="nav-submenu-caret" aria-hidden="true">◀</span>
+                                                </button>
+                                                <div className="nav-submenu-menu" role="menu">
+                                                    {getCentralLabEquipmentDocuments().map((document) => (
+                                                        <Link
+                                                            key={document.id}
+                                                            className="nav-dropdown-item"
+                                                            to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                        >
+                                                            {isEnglish ? document.en : document.ar}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="nav-submenu">
@@ -1123,7 +1149,58 @@ function Header() {
                         </div>
                         <details className="mobile-nav-group"><summary>{t('عن الشركة', 'About')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.aboutCompany}>{t('عن الشركة', 'About the company')}</Link><a href={ROUTES.branches}>{t('فروع الشركه', 'Company branches')}</a><a href={ROUTES.projectsArchive}>{t('مشروعات الشركة', 'Company projects')}</a><Link to={ROUTES.newsArchive}>{t('أرشيف الأخبار', 'News archive')}</Link><Link to={ROUTES.visionAndMessage}>{t('الرؤيه والرساله', 'Vision and mission')}</Link><a href={ROUTES.informationTechnologyOfCompany}>{t('إدارة تكنولوجيا المعلومات', 'Information technology department')}</a><Link to={ROUTES.organizationStructure}>{t('الهيكل التنظيمي', 'Organizational structure')}</Link><Link to={ROUTES.companyAchievements}>{t('إنجازات الشركة', 'Company achievements')}</Link><a href={ROUTES.contractsRegulation}>{t('اللائحه الموحده للعقود والمشتريات', 'Unified regulations for contracts and procurement')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('التوعية والاتصال', 'Awareness and communication')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.adviceAndContact}>{t('التوعية والأتصال', 'Awareness and communication')}</a><Link to={ROUTES.cyberSecurityGuidelines}>{t('ارشادات الامن السيبرانى', 'Cybersecurity guidelines')}</Link><a href={ROUTES.forKidsAndWomen}>{t('ركن الأطفال ولكِ سيدتي', 'Kids and women corner')}</a></div></details>
-                        <details className="mobile-nav-group"><summary>{t('قطاع المعامل', 'Laboratory sector')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a><a href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a><Link to={ROUTES.laboratoriesSectorAchievements}>{t('إنجازات قطاع المعامل', 'Laboratory Sector Achievements')}</Link><Link to={ROUTES.laboratoriesSectorServices}>{t('خدمات قطاع المعامل', 'Laboratory Sector Services')}</Link><details className="mobile-nav-group"><summary>{t('المعمل المركزي', 'Central Laboratory')}</summary><div className="mobile-nav-submenu">{CENTRAL_LAB_DOCUMENTS.map((document) => <Link key={document.id} to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}>{isEnglish ? document.en : document.ar}</Link>)}</div></details><details className="mobile-nav-group"><summary>{t('الصرف الصحي', 'Wastewater')}</summary><div className="mobile-nav-submenu"><Link to={ROUTES.sewageTreatment}>{t('معالجه الصرف الصحي', 'Wastewater treatment')}</Link><a href={ROUTES.safeSewageDisposal}>{t('أهمية التخلص الآمن من الصرف الصحى ومعالجته', 'Importance of safe wastewater disposal and treatment')}</a><a href={ROUTES.saveSewageNetwork}>{t('أهميه الحفاظ علي شبكه الصرف الصحي', 'Importance of protecting the sewer network')}</a></div></details><details className="mobile-nav-group"><summary>{t('الصرف الصناعي', 'Industrial wastewater')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.industrialWaste}>{t('الصرف الصناعي', 'Industrial wastewater')}</a><a href={ROUTES.industrialWasteRole}>{t('دور إدارة الصرف الصناعي', 'Role of the industrial wastewater department')}</a></div></details></div></details>
+                        <details className="mobile-nav-group">
+                            <summary>{t('قطاع المعامل', 'Laboratory sector')}</summary>
+                            <div className="mobile-nav-submenu">
+                                <a href={ROUTES.laboratoriesSector}>{t('عن قطاع المعامل', 'About the laboratory sector')}</a>
+                                <a href={ROUTES.laboratoriesSectorStructure}>{t('هيكل قطاع المعامل', 'Laboratory sector structure')}</a>
+                                <Link to={ROUTES.laboratoriesSectorAchievements}>{t('إنجازات قطاع المعامل', 'Laboratory Sector Achievements')}</Link>
+                                <Link to={ROUTES.laboratoriesSectorServices}>{t('خدمات قطاع المعامل', 'Laboratory Sector Services')}</Link>
+                                <details className="mobile-nav-group">
+                                    <summary>{t('المعمل المركزي', 'Central Laboratory')}</summary>
+                                    <div className="mobile-nav-submenu">
+                                        {CENTRAL_LAB_DOCUMENTS
+                                            .filter((document) => ![4, 9, 10, 11, 12].includes(document.id))
+                                            .map((document) => (
+                                                <Link
+                                                    key={document.id}
+                                                    to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                >
+                                                    {isEnglish ? document.en : document.ar}
+                                                </Link>
+                                            ))}
+                                        <details className="mobile-nav-group">
+                                            <summary>{t('أجهزة المعامل', 'Laboratory Equipment')}</summary>
+                                            <div className="mobile-nav-submenu">
+                                                {getCentralLabEquipmentDocuments().map((document) => (
+                                                    <Link
+                                                        key={document.id}
+                                                        to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                    >
+                                                        {isEnglish ? document.en : document.ar}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </details>
+                                    </div>
+                                </details>
+                                <details className="mobile-nav-group">
+                                    <summary>{t('الصرف الصحي', 'Wastewater')}</summary>
+                                    <div className="mobile-nav-submenu">
+                                        <Link to={ROUTES.sewageTreatment}>{t('معالجه الصرف الصحي', 'Wastewater treatment')}</Link>
+                                        <a href={ROUTES.safeSewageDisposal}>{t('أهمية التخلص الآمن من الصرف الصحى ومعالجته', 'Importance of safe wastewater disposal and treatment')}</a>
+                                        <a href={ROUTES.saveSewageNetwork}>{t('أهميه الحفاظ علي شبكه الصرف الصحي', 'Importance of protecting the sewer network')}</a>
+                                    </div>
+                                </details>
+                                <details className="mobile-nav-group">
+                                    <summary>{t('الصرف الصناعي', 'Industrial wastewater')}</summary>
+                                    <div className="mobile-nav-submenu">
+                                        <a href={ROUTES.industrialWaste}>{t('الصرف الصناعي', 'Industrial wastewater')}</a>
+                                        <a href={ROUTES.industrialWasteRole}>{t('دور إدارة الصرف الصناعي', 'Role of the industrial wastewater department')}</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </details>
                         <Link className="rounded-lg bg-slate-100 px-3 py-2" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                         <details className="mobile-nav-group"><summary>{t('التدريب', 'Training')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</a><a href={ROUTES.trainingHallsBooking}>{t('قاعات التدريب', 'Training Halls')}</a><a href={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('وظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>

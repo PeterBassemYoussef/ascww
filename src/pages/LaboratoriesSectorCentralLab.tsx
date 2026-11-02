@@ -6,6 +6,14 @@ import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import './LaboratoriesSectorCentralLab.css';
 
+const LABORATORY_EQUIPMENT_PAGE_BY_SOURCE_ID: Record<number, number> = {
+  2: 9,
+  3: 4,
+  5: 10,
+  6: 11,
+  7: 12,
+};
+
 function normalizeBulletMarkers(content: Element) {
   content.querySelectorAll('.document-list-marker').forEach((marker) => {
     const markerText = marker.textContent ?? '';
@@ -70,6 +78,9 @@ function arrangeOrganicLabListsInTables(content: Element) {
     wrapper.className = 'document-table-wrap document-list-table-wrap';
     const table = content.ownerDocument.createElement('table');
     table.className = 'document-list-table';
+    if (listItems.some((item) => /UPLC\/MS\/MS/i.test(item.textContent ?? ''))) {
+      table.classList.add('organic-equipment-list-table');
+    }
     const body = content.ownerDocument.createElement('tbody');
 
     parent.insertBefore(wrapper, firstItem);
@@ -86,6 +97,29 @@ function arrangeOrganicLabListsInTables(content: Element) {
       body.append(row);
     }
   }
+}
+
+function moveOrganicCompoundNumbersAfterNames(content: Element) {
+  content.querySelectorAll('.document-list-item').forEach((item) => {
+    const marker = item.firstElementChild;
+    if (!marker?.classList.contains('document-list-marker')) return;
+
+    const markerLength = marker.textContent?.length ?? 0;
+    const itemText = item.textContent ?? '';
+    const match = itemText.slice(markerLength).match(/^-([\d,]+)(.+)$/);
+    if (!match) return;
+
+    const [ , numbers, compoundName] = match;
+    const value = content.ownerDocument.createElement('span');
+    const originalText = marker.nextElementSibling;
+    if (originalText instanceof HTMLElement && originalText.hasAttribute('style')) {
+      value.setAttribute('style', originalText.getAttribute('style') ?? '');
+    }
+    value.textContent = `${compoundName}-${numbers}`;
+
+    while (marker.nextSibling) marker.nextSibling.remove();
+    item.append(value);
+  });
 }
 
 function removeOrganicLabHeader(content: Element, isEnglish: boolean) {
@@ -156,10 +190,14 @@ function arrangeLaboratoryOverviewArticle(content: Element, markUnnumberedListEn
     });
 
     paragraphs.forEach((paragraph, index) => {
+      const hasMarker = Boolean(paragraph.querySelector('.document-list-marker'));
       const isExistingListItem = paragraph.classList.contains('document-list-item');
+      const isNumberedEntry = /^\s*\d+\s*[.)-]/.test(paragraph.textContent ?? '');
       if (
-        isExistingListItem
-        || (markUnnumberedListEntries && (isEquipmentSection || (isAnalysisSection && index > 0)))
+        !hasMarker
+        && !isNumberedEntry
+        && markUnnumberedListEntries
+        && (isExistingListItem || isEquipmentSection || (isAnalysisSection && index > 0))
       ) {
         paragraph.classList.add('laboratory-overview-list-item');
       }
@@ -529,6 +567,18 @@ function formatInorganicIcpMsDetails(content: Element) {
   });
 }
 
+function emphasizeBiologicalMicroscopicExamination(content: Element, isEnglish: boolean) {
+  const phrase = isEnglish
+    ? 'conducting microscopic examinations of drinking water samples'
+    : 'إجراء الفحوصات الميكروسكوبية لعينات مياه الشرب';
+
+  content.querySelectorAll<HTMLElement>('strong').forEach((text) => {
+    if (text.textContent?.trim().toLocaleLowerCase() === phrase.toLocaleLowerCase()) {
+      text.style.color = '#111111';
+    }
+  });
+}
+
 function normalizeBiologicalLabImageCaptions(content: Element, isEnglish: boolean) {
   const isDeviceImageCaption = (text: string) => {
     const normalized = text.replace(/\s+/g, ' ').trim().replace(/^[（(]\s*|\s*[）)]$/g, '');
@@ -576,63 +626,313 @@ function normalizeBiologicalLabImageCaptions(content: Element, isEnglish: boolea
   });
 }
 
-function arrangeOrganicEquipmentGallery(content: Element) {
-  const children = Array.from(content.children) as HTMLElement[];
-  const imageIndexes = children
-    .map((element, index) => (element.querySelector('img') ? index : -1))
-    .filter((index) => index >= 0);
-  if (imageIndexes.length < 2) return;
+function removeOrganicLabEquipmentSection(content: Element, isEnglish: boolean) {
+  const children = Array.from(content.children);
+  const sectionStart = children.findIndex((element) => {
+    const text = element.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+    return isEnglish
+      ? /^Third:\s*Equipment used in the organic laboratory/i.test(text)
+      : /^ثالثا:\s*الأجهزة المستخدمة بالمعمل العضوى/.test(text);
+  });
+  if (sectionStart < 0) return;
 
-  const firstImageIndex = imageIndexes[0];
-  const galleryStartIndex = children.findIndex((element, index) =>
-    index <= firstImageIndex && element.textContent?.trim()
+  const sectionEnd = children.findIndex((element, index) => {
+    if (index <= sectionStart) return false;
+    return /^QR-10\./i.test(element.textContent?.replace(/\s+/g, ' ').trim() ?? '');
+  });
+
+  children.slice(sectionStart, sectionEnd < 0 ? children.length : sectionEnd).forEach((element) => element.remove());
+}
+
+function removeLaboratoryEquipmentSection(content: Element, isEnglish: boolean) {
+  const children = Array.from(content.children);
+  const sectionStart = children.findIndex((element) => {
+    const text = element.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+    return isEnglish ? /^Equipment in the laboratory$/i.test(text) : /^الأجهزة الموجودة بالمعمل$/.test(text);
+  });
+  if (sectionStart < 0) return;
+  children.slice(sectionStart).forEach((element) => element.remove());
+}
+
+function removeLaboratoryEquipmentSummary(content: Element, isEnglish: boolean) {
+  const summaryHeading = isEnglish
+    ? 'The most important devices in the laboratory'
+    : 'أهم الأجهزة الموجودة بالمعمل';
+  const heading = Array.from(content.querySelectorAll('p')).find(
+    (element) => element.textContent?.replace(/\s+/g, ' ').trim() === summaryHeading,
   );
-  if (galleryStartIndex < 0) return;
-  const lastImageIndex = imageIndexes[imageIndexes.length - 1];
-  const gallery = content.ownerDocument.createElement('div');
-  gallery.className = 'organic-equipment-gallery';
-  children[galleryStartIndex].before(gallery);
+  heading?.closest('tr')?.remove();
+}
 
-  let pendingTitle: HTMLElement[] = [];
-  let currentImages: HTMLElement | undefined;
+function appendLaboratoryEquipmentPageLink(content: Element, sourceDocumentId: number, isEnglish: boolean) {
+  const equipmentDocumentId = LABORATORY_EQUIPMENT_PAGE_BY_SOURCE_ID[sourceDocumentId];
+  if (!equipmentDocumentId) return;
 
-  for (let index = galleryStartIndex; index <= lastImageIndex; index += 1) {
-    const element = children[index];
-    const image = element.querySelector('img');
-
-    if (!image) {
-      const text = element.textContent?.replace(/\s+/g, ' ').trim() ?? '';
-      if (text) pendingTitle.push(element);
-      continue;
-    }
-
-    if (!currentImages || pendingTitle.length > 0) {
-      const card = content.ownerDocument.createElement('article');
-      card.className = 'organic-equipment-gallery-card';
-
-      if (pendingTitle.length > 0) {
-        const title = content.ownerDocument.createElement('div');
-        title.className = 'organic-equipment-gallery-title';
-        pendingTitle.forEach((heading) => title.append(heading));
-        card.append(title);
-        pendingTitle = [];
-      }
-
-      currentImages = content.ownerDocument.createElement('div');
-      currentImages.className = 'organic-equipment-gallery-images';
-      card.append(currentImages);
-      gallery.append(card);
-    }
-
-    const imageContainer = content.ownerDocument.createElement('div');
-    imageContainer.className = 'organic-equipment-gallery-image';
-    imageContainer.append(element);
-    currentImages.append(imageContainer);
+  const equipmentDocument = CENTRAL_LAB_DOCUMENTS.find((document) => document.id === equipmentDocumentId);
+  if (!equipmentDocument) {
+    throw new Error(`Laboratory equipment document ${equipmentDocumentId} is missing`);
   }
 
-  children.slice(galleryStartIndex, lastImageIndex + 1).forEach((element) => {
-    if (element.parentElement === content) element.remove();
+  const paragraph = content.ownerDocument.createElement('p');
+  paragraph.className = 'document-paragraph central-lab-equipment-page-link';
+  const link = content.ownerDocument.createElement('a');
+  link.href = `/laboratories-sector/central-lab/${equipmentDocumentId}`;
+  link.textContent = isEnglish
+    ? `View ${equipmentDocument.en}`
+    : `عرض ${equipmentDocument.ar}`;
+  paragraph.append(link);
+  content.append(paragraph);
+}
+
+function createLaboratoryEquipmentGallery(
+  content: Element,
+  equipmentContent: Element,
+  isEnglish: boolean,
+  heading: string,
+  galleryClassName: string,
+) {
+  const sourceChildren = Array.from(equipmentContent.children);
+  const sectionStart = sourceChildren.findIndex((element) =>
+    (element.textContent?.replace(/\s+/g, ' ').trim() ?? '') === heading
+  );
+  if (sectionStart < 0) {
+    throw new Error(`${heading} heading is missing from the source document`);
+  }
+  const equipmentTables = sourceChildren
+    .slice(sectionStart + 1)
+    .filter((element) =>
+      element.classList.contains('document-table-wrap') && element.querySelector('img')
+    );
+  if (!equipmentTables.length) {
+    throw new Error(`${heading} equipment details are missing from the source document`);
+  }
+
+  if (isEnglish) {
+    equipmentContent.querySelectorAll<HTMLElement>('[dir="rtl"]').forEach((element) => {
+      element.dir = 'ltr';
+      if (element.style.textAlign === 'right') element.style.textAlign = 'left';
+    });
+  }
+  normalizeBulletMarkers(equipmentContent);
+  const gallery = content.ownerDocument.createElement('div');
+  gallery.className = `organic-equipment-gallery ${galleryClassName}`;
+  const deviceNamePattern = /^(?:اسم الجهاز|اسم المعدة|device name|equipment name)\s*[:：]|(?:اسم الجهاز|اسم المعدة|device name|equipment name)\s*[:：]?\s*$/i;
+
+  equipmentTables.forEach((wrapper) => {
+    const sourceTable = wrapper.querySelector('table');
+    if (!sourceTable) return;
+    const rows = Array.from(sourceTable.rows);
+    const deviceStartRows = rows
+      .map((row, index) => ({ row, index, text: row.textContent?.replace(/\s+/g, ' ').trim() ?? '' }))
+      .filter(({ text }) => deviceNamePattern.test(text));
+
+    deviceStartRows.forEach(({ row, index }, deviceIndex) => {
+      const endIndex = deviceStartRows[deviceIndex + 1]?.index ?? rows.length;
+      const deviceRows = rows.slice(index, endIndex);
+      const nameCell = row.cells[0];
+      const sourceImages = deviceRows.flatMap((deviceRow) =>
+        Array.from(deviceRow.querySelectorAll<HTMLImageElement>('img'))
+      );
+      if (!nameCell || !sourceImages.length) return;
+
+      const card = content.ownerDocument.createElement('article');
+      card.className = 'organic-equipment-gallery-card';
+      const imageList = content.ownerDocument.createElement('div');
+      imageList.className = 'organic-equipment-gallery-images';
+      sourceImages.forEach((sourceImage) => {
+        const image = sourceImage.cloneNode(true) as HTMLImageElement;
+        image.dataset.zoomable = 'true';
+        image.tabIndex = 0;
+        image.setAttribute('role', 'button');
+        image.setAttribute(
+          'aria-label',
+          isEnglish ? `Enlarge image: ${image.alt || 'device image'}` : `تكبير الصورة: ${image.alt || 'صورة الجهاز'}`,
+        );
+        const imageContainer = content.ownerDocument.createElement('div');
+        imageContainer.className = 'organic-equipment-gallery-image';
+        imageContainer.append(image);
+        imageList.append(imageContainer);
+      });
+      card.append(imageList);
+
+      const title = content.ownerDocument.createElement('h2');
+      title.className = 'organic-equipment-gallery-title';
+      title.textContent = nameCell.textContent
+        ?.replace(/\s+/g, ' ')
+        .trim()
+        .replace(/^(?:اسم الجهاز|اسم المعدة|device name|equipment name)\s*[:：]\s*/i, '')
+        .replace(/\s*(?:اسم الجهاز|اسم المعدة|device name|equipment name)\s*[:：]?\s*$/i, '')
+        .replace(/[,،:؛\s]+$/, '') ?? '';
+      card.append(title);
+
+      const description = content.ownerDocument.createElement('div');
+      description.className = `organic-equipment-gallery-detail ${galleryClassName}-description`;
+      deviceRows
+        .filter((deviceRow) => deviceRow !== row)
+        .forEach((deviceRow) => {
+          Array.from(deviceRow.cells).forEach((cell) => {
+            Array.from(cell.children).forEach((child) => {
+              const descriptionElement = child.cloneNode(true) as Element;
+              descriptionElement.querySelectorAll('img').forEach((image) => image.remove());
+              if (!descriptionElement.textContent?.trim()) return;
+              description.append(descriptionElement);
+            });
+          });
+        });
+      if (description.childElementCount > 0) card.append(description);
+      gallery.append(card);
+    });
   });
+
+  if (!gallery.children.length) {
+    throw new Error(`No equipment photos could be matched to their descriptions for ${heading}`);
+  }
+  content.replaceChildren(gallery);
+}
+
+function createOrganicEquipmentGallery(content: Element, equipmentContent: Element, isEnglish: boolean) {
+  const paragraphs = Array.from(equipmentContent.querySelectorAll<HTMLElement>(':scope > .document-paragraph'));
+  const start = paragraphs.findIndex((paragraph) => {
+    const text = paragraph.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+    return isEnglish
+      ? /^Third:\s*Equipment used in the organic laboratory/i.test(text)
+      : /^ثالثا:\s*الأجهزة المستخدمة بالمعمل العضوى/.test(text);
+  });
+  const detailedSections = paragraphs
+    .map((paragraph, index) => ({ paragraph, index, text: paragraph.textContent?.replace(/\s+/g, ' ').trim() ?? '' }))
+    .filter(({ index, text }) => index > start && /^[1-7]\s*[-–]\s*/.test(text));
+
+  if (start < 0 || detailedSections.length === 0) {
+    throw new Error('Organic equipment details are missing from the organic laboratory document');
+  }
+
+  const sectionDetails = new Map<number, { title: string; subtitle: string; manufacturer: string; model: string; description: string }>();
+  detailedSections.forEach(({ paragraph, index, text }, sectionIndex) => {
+    const number = Number(text.match(/^(\d+)/)?.[1]);
+    const nextIndex = detailedSections[sectionIndex + 1]?.index ?? paragraphs.length;
+    const sectionParagraphs = paragraphs.slice(index, nextIndex);
+    const cleanText = (item: HTMLElement) => {
+      const clone = item.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll('.document-list-marker').forEach((marker) => marker.remove());
+      return clone.textContent?.replace(/^[\u2022\u00b7\u25aa\u25cf\s]+/, '').replace(/\s+/g, ' ').trim() ?? '';
+    };
+    const title = text.replace(/^\d+\s*[-–]\s*/, '').trim();
+    const subtitle = cleanText(sectionParagraphs[1] ?? paragraph);
+    let activeField = '';
+    const fields = new Map<string, string[]>();
+
+    sectionParagraphs.slice(1).forEach((item) => {
+      const value = cleanText(item);
+      if (!value) return;
+      const field = value.match(/^(manufacturer|model|description|concentrations?|analyses|الشركة المصنعة|الموديل|الوصف|التركيزات|التحاليل(?: الخاصة به| المرتبطة به| المرتبطة| الخاصة)?)\s*[:：]\s*(.*)$/i);
+      if (field) {
+        activeField = field[1].toLowerCase();
+        if (!fields.has(activeField)) fields.set(activeField, []);
+        if (field[2]) fields.get(activeField)?.push(field[2]);
+      } else if (activeField) {
+        fields.get(activeField)?.push(value);
+      }
+    });
+
+    const valuesFor = (names: string[]) => {
+      for (const name of names) {
+        const values = fields.get(name);
+        if (values?.length) return values.join(' ');
+      }
+      return '';
+    };
+    sectionDetails.set(number, {
+      title,
+      subtitle,
+      manufacturer: valuesFor(['manufacturer', 'الشركة المصنعة']),
+      model: valuesFor(['model', 'الموديل']),
+      description: valuesFor(['description', 'الوصف']),
+    });
+  });
+
+  const images = new Map<string, HTMLImageElement>();
+  content.querySelectorAll<HTMLImageElement>('.document-image').forEach((image) => {
+    const fileName = image.getAttribute('src')?.split('/').pop();
+    if (fileName) images.set(fileName, image);
+  });
+
+  const gallery = content.ownerDocument.createElement('div');
+  gallery.className = 'organic-equipment-gallery';
+  const cardGroups = [
+    { numbers: [1], images: ['4-image3.png', '4-image4.png'] },
+    { numbers: [5, 6], images: ['4-image1.jpeg', '4-image2.jpeg'], extraTitle: isEnglish ? 'GC-ECD – Gas Chromatography–Electron Capture Detector' : 'GC-ECD – كاشف الالتقاط الإلكتروني' },
+    { numbers: [7], images: ['4-image5.png'] },
+    { numbers: [4], images: ['4-image6.png'] },
+    { numbers: [3], images: ['4-image7.png'] },
+    { numbers: [2], images: ['4-image8.png'] },
+  ];
+
+  cardGroups.forEach(({ numbers, images: imageNames, extraTitle }) => {
+    const devices = numbers.map((number) => sectionDetails.get(number)).filter((device) => device !== undefined);
+    if (!devices.length) return;
+
+    const card = content.ownerDocument.createElement('article');
+    card.className = 'organic-equipment-gallery-card';
+    const imageList = content.ownerDocument.createElement('div');
+    imageList.className = 'organic-equipment-gallery-images';
+    imageNames.forEach((imageName) => {
+      const sourceImage = images.get(imageName);
+      if (!sourceImage) return;
+      const image = sourceImage.cloneNode(true) as HTMLImageElement;
+      const imageContainer = content.ownerDocument.createElement('div');
+      imageContainer.className = 'organic-equipment-gallery-image';
+      image.alt = devices.map((device) => device.subtitle || device.title).join(' / ');
+      image.dataset.zoomable = 'true';
+      image.tabIndex = 0;
+      image.setAttribute('role', 'button');
+      image.setAttribute(
+        'aria-label',
+        isEnglish ? `Enlarge image: ${image.alt}` : `تكبير الصورة: ${image.alt}`,
+      );
+      imageContainer.append(image);
+      imageList.append(imageContainer);
+    });
+    card.append(imageList);
+
+    const title = content.ownerDocument.createElement('h2');
+    title.className = 'organic-equipment-gallery-title';
+    title.textContent = [...devices.map((device) => device.title), ...(extraTitle ? [extraTitle] : [])].join(' / ');
+    card.append(title);
+
+    devices.forEach((device) => {
+      if (device.subtitle) {
+        const subtitle = content.ownerDocument.createElement('p');
+        subtitle.className = 'organic-equipment-gallery-subtitle';
+        subtitle.textContent = device.subtitle;
+        card.append(subtitle);
+      }
+      if (device.manufacturer) {
+        const manufacturer = content.ownerDocument.createElement('p');
+        manufacturer.className = 'organic-equipment-gallery-detail';
+        manufacturer.textContent = `${isEnglish ? 'Manufacturer' : 'الشركة المصنعة'}: ${device.manufacturer}`;
+        card.append(manufacturer);
+      }
+      if (device.model) {
+        const model = content.ownerDocument.createElement('p');
+        model.className = 'organic-equipment-gallery-detail';
+        model.textContent = `${isEnglish ? 'Model' : 'الموديل'}: ${device.model}`;
+        card.append(model);
+      }
+      if (device.description) {
+        const description = content.ownerDocument.createElement('p');
+        description.className = 'organic-equipment-gallery-detail';
+        description.textContent = device.description;
+        card.append(description);
+      }
+    });
+
+    gallery.append(card);
+  });
+
+  if (!gallery.children.length) {
+    throw new Error('No organic equipment photos could be matched to their descriptions');
+  }
+  content.replaceChildren(gallery);
 }
 
 function summarizeOrganicLabEquipment(content: Element, isEnglish: boolean) {
@@ -640,7 +940,7 @@ function summarizeOrganicLabEquipment(content: Element, isEnglish: boolean) {
   const deviceHeading = (element: Element) => {
     if (element.tagName !== 'P') return false;
     const text = element.textContent?.trim() ?? '';
-    return /^[2-7]\s*[-–]\s*/.test(text);
+    return /^[1-7]\s*[-–]\s*/.test(text);
   };
   const sections = children
     .map((element, index) => ({ element, index }))
@@ -665,7 +965,7 @@ function summarizeOrganicLabEquipment(content: Element, isEnglish: boolean) {
       const text = paragraph.textContent?.replace(/^[\u2022\u00b7\u25aa\u25cf\s]+/, '').replace(/\s+/g, ' ').trim() ?? '';
       if (!text) return;
 
-      if (paragraphIndex < 3 && !marker) {
+      if (paragraphIndex < 3 && (!marker || /^\d+\s*[-–]$/.test(marker))) {
         titleParts.push(text);
         return;
       }
@@ -949,9 +1249,11 @@ function arrangeQualityManagementArticleAndImages(content: Element) {
 
 function LaboratoriesSectorCentralLabPage() {
   const { language } = useSiteLanguage();
-  const isEnglish = language === 'en';
   const { documentId } = useParams<{ documentId: string }>();
   const [searchParams] = useSearchParams();
+  const requestedLanguage = searchParams.get('lang');
+  const isEnglish = requestedLanguage === 'en' || (requestedLanguage !== 'ar' && language === 'en');
+  const isEmbedded = searchParams.get('embedded') === 'true';
   const [documentHtml, setDocumentHtml] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -995,14 +1297,24 @@ function LaboratoriesSectorCentralLabPage() {
         normalizeBulletMarkers(content);
         if (selectedDocument.id === 3) {
           removeOrganicLabHeader(content, isEnglish);
+          removeOrganicLabEquipmentSection(content, isEnglish);
+          moveOrganicCompoundNumbersAfterNames(content);
+          summarizeOrganicLabEquipment(content, isEnglish);
           arrangeOrganicLabListsInTables(content);
           compactOrganicLabPesticideLists(content, isEnglish);
-          summarizeOrganicLabEquipment(content, isEnglish);
+        }
+        if (selectedDocument.id === 2 || selectedDocument.id === 7) {
+          removeLaboratoryEquipmentSection(content, isEnglish);
+        }
+        if (selectedDocument.id === 5 || selectedDocument.id === 6) {
+          removeLaboratoryEquipmentSummary(content, isEnglish);
+          removeLaboratoryEquipmentSection(content, isEnglish);
         }
         removePageMetadataHeading(content);
         removePageEditorialNotes(content);
         if (selectedDocument.id === 7) {
           arrangeLaboratoryOverviewArticle(content);
+          emphasizeBiologicalMicroscopicExamination(content, isEnglish);
           normalizeBiologicalLabImageCaptions(content, isEnglish);
           if (window.matchMedia('(min-width: 768px)').matches) {
             arrangeFinalBiologicalLaboratoryDevice(content, isEnglish);
@@ -1045,11 +1357,69 @@ function LaboratoriesSectorCentralLabPage() {
           arrangeLaboratoryDeviceTables(content, isEnglish, /\/6-image\d+\./i, 'bacteriology-lab-device-card');
         }
         if (selectedDocument.id === 4) {
-          arrangeOrganicEquipmentGallery(content);
+          const equipmentResponse = await fetch(isEnglish ? '/central-lab/en/3.html' : '/central-lab/3.html', {
+            signal: controller.signal,
+          });
+          if (!equipmentResponse.ok) {
+            throw new Error(`Organic laboratory document request failed with status ${equipmentResponse.status}`);
+          }
+          const equipmentDocument = new DOMParser().parseFromString(await equipmentResponse.text(), 'text/html');
+          const equipmentContent = equipmentDocument.querySelector('.document-content');
+          if (!equipmentContent) {
+            throw new Error('Organic laboratory document has no rendered content');
+          }
+          createOrganicEquipmentGallery(content, equipmentContent, isEnglish);
+        }
+        if (selectedDocument.id === 9) {
+          const equipmentResponse = await fetch(isEnglish ? '/central-lab/en/2.html' : '/central-lab/2.html', {
+            signal: controller.signal,
+          });
+          if (!equipmentResponse.ok) {
+            throw new Error(`Sample collection laboratory document request failed with status ${equipmentResponse.status}`);
+          }
+          const equipmentDocument = new DOMParser().parseFromString(await equipmentResponse.text(), 'text/html');
+          const equipmentContent = equipmentDocument.querySelector('.document-content');
+          if (!equipmentContent) {
+            throw new Error('Sample collection laboratory document has no rendered content');
+          }
+          createLaboratoryEquipmentGallery(
+            content,
+            equipmentContent,
+            isEnglish,
+            isEnglish ? 'Equipment in the laboratory' : 'الأجهزة الموجودة بالمعمل',
+            'sample-collection-equipment-gallery',
+          );
+        }
+        if (selectedDocument.id === 10 || selectedDocument.id === 11 || selectedDocument.id === 12) {
+          const sourceDocumentId = selectedDocument.id === 10 ? 5 : selectedDocument.id === 11 ? 6 : 7;
+          const equipmentResponse = await fetch(
+            isEnglish ? `/central-lab/en/${sourceDocumentId}.html` : `/central-lab/${sourceDocumentId}.html`,
+            { signal: controller.signal },
+          );
+          if (!equipmentResponse.ok) {
+            throw new Error(`Laboratory document ${sourceDocumentId} request failed with status ${equipmentResponse.status}`);
+          }
+          const equipmentDocument = new DOMParser().parseFromString(await equipmentResponse.text(), 'text/html');
+          const equipmentContent = equipmentDocument.querySelector('.document-content');
+          if (!equipmentContent) {
+            throw new Error(`Laboratory document ${sourceDocumentId} has no rendered content`);
+          }
+          createLaboratoryEquipmentGallery(
+            content,
+            equipmentContent,
+            isEnglish,
+            isEnglish ? 'Equipment in the laboratory' : 'الأجهزة الموجودة بالمعمل',
+            selectedDocument.id === 10
+              ? 'inorganic-equipment-gallery'
+              : selectedDocument.id === 11
+                ? 'bacteriology-equipment-gallery'
+                : 'biology-equipment-gallery',
+          );
         }
         if (selectedDocument.id === 8) {
           arrangeQualityManagementArticleAndImages(content);
         }
+        appendLaboratoryEquipmentPageLink(content, selectedDocument.id, isEnglish);
         setDocumentHtml(content.innerHTML);
       } catch (error) {
         if ((error as Error).name === 'AbortError') return;
@@ -1080,24 +1450,26 @@ function LaboratoriesSectorCentralLabPage() {
 
   return (
     <>
-      <Header />
+      {!isEmbedded && <Header />}
       <main
-        className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.08),_transparent_50%)]"
+        className={isEmbedded ? 'bg-white' : 'min-h-screen bg-[radial-gradient(circle_at_top,_rgba(17,112,176,0.08),_transparent_50%)]'}
         dir={isEnglish ? 'ltr' : 'rtl'}
       >
-        <div className="container mx-auto max-w-7xl px-4 py-8 md:py-10">
-          <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]">
-            <header className="border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8">
-              <h1 className={`text-3xl font-black leading-tight sm:text-4xl ${isEnglish ? 'text-left' : 'text-right'}`}>
-                {selectedTitle}
-              </h1>
-            </header>
+        <div className={isEmbedded ? 'w-full' : 'container mx-auto max-w-7xl px-4 py-8 md:py-10'}>
+          <section className={isEmbedded ? 'overflow-hidden bg-white' : 'overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_55px_rgba(2,6,23,0.08)]'}>
+            {!isEmbedded && (
+              <header className="border-b border-[#d7b05a]/35 bg-white px-6 py-7 text-[#0a3555] sm:px-8">
+                <h1 className={`text-3xl font-black leading-tight sm:text-4xl ${isEnglish ? 'text-left' : 'text-right'}`}>
+                  {selectedTitle}
+                </h1>
+              </header>
+            )}
 
-            <div className="px-4 py-6 sm:px-8 sm:py-8">
+            <div className={isEmbedded ? 'p-0' : 'px-4 py-6 sm:px-8 sm:py-8'}>
               <section
                 id="central-lab-document-panel"
                 aria-label={selectedTitle}
-                className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
+                className={isEmbedded ? 'overflow-hidden bg-white' : 'overflow-hidden rounded-2xl border border-slate-200 bg-white'}
               >
                 {isLoading ? (
                   <p className="p-8 text-center text-sm font-semibold text-slate-500" role="status">
@@ -1158,7 +1530,7 @@ function LaboratoriesSectorCentralLabPage() {
           />
         </div>
       ) : null}
-      <Footer />
+      {!isEmbedded && <Footer />}
     </>
   );
 }

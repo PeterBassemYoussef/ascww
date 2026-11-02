@@ -122,6 +122,28 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
     overflow-x: hidden;
   }
 
+  main .laboratory-analysis-table {
+    display: block;
+    overflow: visible;
+  }
+
+  main .laboratory-analysis-table tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main .laboratory-analysis-table tr {
+    display: contents;
+  }
+
+  main .laboratory-analysis-table td {
+    width: auto;
+  }
+
+  main .laboratory-analysis-table tr > td:only-child {
+    grid-column: 1 / -1;
+  }
+
   .integrity-support-overview-page .integrity-support-body :where(p, li) {
     text-align: justify;
     text-justify: inter-word;
