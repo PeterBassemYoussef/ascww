@@ -157,6 +157,14 @@ function HomePage() {
       if (heroCta) {
         if (link) {
           heroCta.href = link;
+          const linkUrl = new URL(link, window.location.origin);
+          if (linkUrl.origin !== window.location.origin) {
+            heroCta.target = '_blank';
+            heroCta.rel = 'noopener noreferrer';
+          } else {
+            heroCta.removeAttribute('target');
+            heroCta.removeAttribute('rel');
+          }
           heroCta.classList.remove('hidden');
         } else {
           heroCta.classList.add('hidden');

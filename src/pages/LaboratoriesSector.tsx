@@ -514,7 +514,7 @@ function LaboratoriesSectorPage() {
           <ContentSection title={t('خطة مراقبة نوعية المياه', 'Water quality monitoring plan')}>
             <div dir={isEnglish ? 'ltr' : 'rtl'} className={isEnglish ? 'text-left' : 'text-right'}>
               <p className={`mb-5 text-base leading-8 text-slate-700 ${isEnglish ? 'text-left' : 'text-right'}`}>
-                {t('طبقًا لقرار وزير الصحة رقم 181 لسنة 2025، تُحلل معامل الشركة العناصر التالية وفق دوريات الفحص المحددة:', 'Under Minister of Health Decree No. 181 of 2025, company laboratories analyze the following parameters at the specified frequencies:')}
+                {t('طبقًا لقرار وزير الصحة رقم 182 لسنة 2025، تُحلل معامل الشركة العناصر التالية وفق دوريات الفحص المحددة:', 'Under Minister of Health Decree No. 182 of 2025, company laboratories analyze the following parameters at the specified frequencies:')}
               </p>
               <div className="overflow-x-auto rounded-lg border border-slate-200">
                 <table className={`min-w-[620px] w-full border-collapse ${isEnglish ? 'text-left' : 'text-right'}`}>

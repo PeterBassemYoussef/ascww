@@ -739,6 +739,9 @@ function createLaboratoryEquipmentGallery(
       card.className = 'organic-equipment-gallery-card';
       const imageList = content.ownerDocument.createElement('div');
       imageList.className = 'organic-equipment-gallery-images';
+      if (sourceImages.length % 2 === 1) {
+        imageList.classList.add('organic-equipment-gallery-images--odd');
+      }
       sourceImages.forEach((sourceImage) => {
         const image = sourceImage.cloneNode(true) as HTMLImageElement;
         image.dataset.zoomable = 'true';

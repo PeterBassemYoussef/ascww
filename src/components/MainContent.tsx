@@ -10,6 +10,32 @@ function MainContent() {
     const isEnglish = language === 'en';
     const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
     const serviceImage = (arabicSrc: string, englishSrc: string) => (isEnglish ? englishSrc : arabicSrc);
+    const digitalServices = [
+        {
+            image: '/images/services/1.webp',
+            englishImage: '/images/services/1E.webp',
+            title: t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Sanitation Services'),
+            url: 'https://dsp.hcww.com.eg/',
+        },
+        {
+            image: '/images/services/2.webp',
+            englishImage: '/images/services/2E.webp',
+            title: t('الاستعلام عن الفاتورة', 'Inquire About Your Bill'),
+            url: 'https://dsp.hcww.com.eg/bills',
+        },
+        {
+            image: '/images/services/3.webp',
+            englishImage: '/images/services/3E.webp',
+            title: t('سداد الفاتورة', 'Pay Your Bill'),
+            url: 'https://dsp.hcww.com.eg/bills',
+        },
+        {
+            image: '/images/services/4.webp',
+            englishImage: '/images/services/4E.webp',
+            title: t('تسجيل قراءة العداد', 'Register Your Meter Reading'),
+            url: 'https://dsp.hcww.com.eg/reading',
+        },
+    ];
     const laboratoryServices = [
         {
             image: '/images/services/laboratories-sector/1.webp',
@@ -20,7 +46,7 @@ function MainContent() {
         {
             image: '/images/services/laboratories-sector/2.webp',
             englishImage: '/images/services/laboratories-sector/2E.webp',
-            title: t('فحص عينات الرمل والزلط', 'Sand and Gravel Sample Testing'),
+            title: t('فحص عينات وسط ترشيحي', 'Filter Media Sample Testing'),
             targetId: 'sand-gravel-sample-service',
         },
         {
@@ -51,45 +77,28 @@ function MainContent() {
                     <div className="mb-10 text-center animate-on-scroll sm:mb-16">
                         <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">{t('خدماتنا الإلكترونية', 'Our E-Services')}</h2>
                     </div>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-                        <div className="animate-on-scroll h-full" data-delay="50">
-                            <a href="http://bills.ascww.com.eg/Inqeury.aspx" target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
-                                <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
-                                    <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                                        <img
-                                            src={serviceImage('/images/services/inquire-bill.webp', '/images/services/inquire-billEN.webp')}
-                                            alt={t('استعلم عن فاتورتك', 'Check your bill')}
-                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                            loading="lazy"
-                                            decoding="async"
-                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                        />
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {digitalServices.map((service, index) => (
+                            <div key={service.image} className="animate-on-scroll h-full" data-delay={50 + index * 50}>
+                                <a href={service.url} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
+                                    <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
+                                        <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                                            <img
+                                                src={serviceImage(service.image, service.englishImage)}
+                                                alt={service.title}
+                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                loading="lazy"
+                                                decoding="async"
+                                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                            />
+                                        </div>
+                                        <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
+                                            <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{service.title}</h3>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
-                                        <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{t('استعلم عن فاتورتك', 'Check your bill')}</h3>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div className="animate-on-scroll h-full" data-delay="100">
-                            <Link to={ROUTES.myReadingApp} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
-                                <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">
-                                    <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                                        <img
-                                            src={serviceImage('/images/services/enter-reading.webp', '/images/services/enter-readingEN.webp')}
-                                            alt={t('أدخل قراءة عدادك', 'Enter your meter reading')}
-                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                            loading="lazy"
-                                            decoding="async"
-                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                        />
-                                    </div>
-                                    <div className="flex flex-1 items-center justify-center border-t border-slate-100 bg-white p-4 text-center">
-                                        <h3 className="text-lg font-bold text-slate-800 transition-colors group-hover:text-[#0a3555] sm:text-xl">{t('أدخل قراءة عدادك', 'Enter your meter reading')}</h3>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
+                                </a>
+                            </div>
+                        ))}
                         <div className="animate-on-scroll h-full" data-delay="150">
                             <Link to={ROUTES.hotlineApp} className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 transition-shadow duration-300 hover:shadow-2xl hover:ring-[#0a3555]/20">
                                 <div className="flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-2">

@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
-const LABORATORY_WHATSAPP_NUMBER = '201005797550';
+const LABORATORY_WHATSAPP_NUMBER = '201280002087';
 const isValidCompanyAddress = (value: string) => /^(?=.*[\p{L}\p{N}])[\p{L}\p{N} ]{1,100}$/u.test(value);
 
 function FormFieldError({ message }: { message?: string }) {
@@ -612,7 +612,7 @@ function LaboratoriesSectorServicesPage() {
       ],
     },
     {
-      title: t('فحص عينات الرمل والزلط', 'Sand and Gravel Sample Testing'),
+      title: t('فحص عينات وسط ترشيحي', 'Filter Media Sample Testing'),
       description: t(
         'استلام عينات الرمل والزلط الخارجية المدفوعة بأجر وفحصها بالمعمل المركزي للشركة.',
         'Receive paid external sand and gravel samples for testing at the Company Central Laboratory.'

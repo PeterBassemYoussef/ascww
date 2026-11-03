@@ -202,6 +202,10 @@
   gap: 10px;
 }
 
+.central-lab-document .organic-equipment-gallery-images--odd > :last-child {
+  grid-column: 1 / -1;
+}
+
 .central-lab-document .organic-equipment-gallery-image {
   min-width: 0;
   display: flex;
@@ -239,6 +243,12 @@
   height: auto;
   margin: 12px auto 20px;
   object-fit: contain;
+}
+
+.central-lab-document img {
+  display: block;
+  float: none;
+  margin-inline: auto !important;
 }
 
 .central-lab-document .central-lab-image-pair {
