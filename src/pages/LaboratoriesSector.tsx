@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
@@ -78,8 +78,8 @@ const DEPARTMENT_TABS = [
   },
   {
     slide: 16,
-    arTitle: 'الإدارة العامة لمعامل مياه الشرب',
-    enTitle: 'General Department of Drinking Water Laboratories',
+    arTitle: 'الإدارة العامة لمعامل مياه الشرب والصرف',
+    enTitle: 'General Department of Drinking Water and Wastewater Laboratories',
     arDetails: [
       'تضم معامل مياه الشرب الرئيسية والفرعية الموزعة جغرافيًا على محافظتي أسيوط والوادي الجديد، بالإضافة إلى المعامل المتنقلة التابعة لبعض النطاقات الجغرافية.',
       'كما تضم بعض الإدارات النوعية التي تضمن جودة الأداء المؤسسي وفاعلية دور الإدارة في تحقيق أهداف قطاع المعامل والجودة والشركة.',
@@ -89,7 +89,59 @@ const DEPARTMENT_TABS = [
       'It also includes specialized departments that support institutional performance and help the Laboratory and Quality Sector achieve the company’s objectives.',
     ],
   },
+  {
+    slide: 17,
+    arTitle: 'الإدارة العامة للصرف الصناعي',
+    enTitle: 'General Department of Industrial Wastewater',
+    arDetails: [],
+    enDetails: [],
+  },
+  {
+    slide: 18,
+    arTitle: 'الإدارة العامة للمعمل المركزي',
+    enTitle: 'General Department of the Central Laboratory',
+    arDetails: ['الإدارة العامة لمعمل البيولوجي.'],
+    enDetails: ['General Department of the Biological Laboratory.'],
+  },
 ];
+
+function OrganicEquipmentDocument({ isEnglish }: { isEnglish: boolean }) {
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+  useEffect(() => () => resizeObserverRef.current?.disconnect(), []);
+
+  const resizeFrame = (frame: HTMLIFrameElement) => {
+    const document = frame.contentDocument;
+    if (!document) return;
+
+    frame.style.height = `${Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)}px`;
+  };
+
+  const handleFrameLoad = () => {
+    const frame = frameRef.current;
+    const document = frame?.contentDocument;
+    if (!frame || !document) return;
+
+    resizeObserverRef.current?.disconnect();
+    const observer = new ResizeObserver(() => resizeFrame(frame));
+    observer.observe(document.documentElement);
+    observer.observe(document.body);
+    resizeObserverRef.current = observer;
+    document.querySelectorAll('img').forEach((image) => image.addEventListener('load', () => resizeFrame(frame)));
+    resizeFrame(frame);
+  };
+
+  return (
+    <iframe
+      ref={frameRef}
+      title={isEnglish ? 'Organic Laboratory Equipment' : 'أجهزة المعمل العضوي'}
+      src={`/laboratories-sector/central-lab/4?embedded=true&lang=${isEnglish ? 'en' : 'ar'}`}
+      className="block min-h-[40rem] w-full border-0"
+      onLoad={handleFrameLoad}
+    />
+  );
+}
 
 const LABORATORY_RANGES = [
   { number: '1', laboratory: 'المعمل المركزي', laboratoryEn: 'Central Laboratory', scope: 'جميع المحطات بمحافظة أسيوط بواقع 228 محطة', scopeEn: 'All 228 plants in Assiut Governorate', plants: 'جميع المحطات', plantsEn: 'All plants', network: '7883786' },
@@ -286,6 +338,7 @@ function LaboratoriesSectorPage() {
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
   const [activeSlide, setActiveSlide] = useState(9);
+  const [activeCentralLabTab, setActiveCentralLabTab] = useState<'biology' | 'organic-equipment'>('biology');
   const departmentTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const activeDepartment = DEPARTMENT_TABS.find((tab) => tab.slide === activeSlide) ?? DEPARTMENT_TABS[0];
 
@@ -461,7 +514,7 @@ function LaboratoriesSectorPage() {
           <ContentSection title={t('خطة مراقبة نوعية المياه', 'Water quality monitoring plan')}>
             <div dir={isEnglish ? 'ltr' : 'rtl'} className={isEnglish ? 'text-left' : 'text-right'}>
               <p className={`mb-5 text-base leading-8 text-slate-700 ${isEnglish ? 'text-left' : 'text-right'}`}>
-                {t('طبقًا لقرار وزير الصحة رقم 458 لسنة 2007، تُحلل معامل الشركة العناصر التالية وفق دوريات الفحص المحددة:', 'Under Minister of Health Decree No. 458 of 2007, company laboratories analyze the following parameters at the specified frequencies:')}
+                {t('طبقًا لقرار وزير الصحة رقم 182 لسنة 2025، تُحلل معامل الشركة العناصر التالية وفق دوريات الفحص المحددة:', 'Under Minister of Health Decree No. 182 of 2025, company laboratories analyze the following parameters at the specified frequencies:')}
               </p>
               <div className="overflow-x-auto rounded-lg border border-slate-200">
                 <table className={`min-w-[620px] w-full border-collapse ${isEnglish ? 'text-left' : 'text-right'}`}>
@@ -505,11 +558,11 @@ function LaboratoriesSectorPage() {
             <p className="mb-5 text-base leading-8 text-slate-700">
               {t('تم تجهيز وتأهيل معامل الشركة الرئيسية لتحليل العناصر ذات الدورية اليومية، وتشمل مجموعات التحاليل التالية:', 'The company’s main laboratories were equipped and qualified to analyze parameters with daily testing schedules. The test groups include:')}
             </p>
-            <div className="grid gap-4 xl:grid-cols-3">
+            <div className="-mx-4 grid min-w-0 gap-4 sm:mx-0 xl:grid-cols-3">
               {TEST_GROUPS.map((group) => (
-                <div key={group.ar} className="overflow-hidden rounded-lg border border-slate-200">
+                <div key={group.ar} className="min-w-0 overflow-hidden rounded-lg border border-slate-200">
                   <h3 className="min-h-16 bg-[#0a3555] px-4 py-3 text-center font-bold leading-6 text-white">{t(group.ar, group.en)}</h3>
-                  <table className="w-full border-collapse text-center">
+                  <table className="laboratory-analysis-table w-full table-fixed border-collapse text-center">
                     <tbody>
                       {group.rows.map((row, rowIndex) => (
                         <tr key={`${group.ar}-${rowIndex}`} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#f2f6fa]'}>
@@ -544,7 +597,7 @@ function LaboratoriesSectorPage() {
           <ContentSection title={t('الإدارات التابعة لقطاع المعامل', 'Laboratory Sector Departments')}>
             <div
               aria-label={t('شرائح العرض التقديمي', 'Presentation slides')}
-              className="scrollbar-none flex gap-2 overflow-x-auto border-b border-slate-200 pb-3"
+              className="flex flex-wrap gap-2 border-b border-slate-200 pb-3"
               role="tablist"
             >
               {DEPARTMENT_TABS.map((tab, index) => {
@@ -583,7 +636,54 @@ function LaboratoriesSectorPage() {
               <h3 className="text-lg font-extrabold leading-8 text-[#0a3555] sm:text-xl">
                 {t(activeDepartment.arTitle, activeDepartment.enTitle)}
               </h3>
-              {activeDepartment.arDetails.length > 0 && (
+              {activeSlide === 18 ? (
+                <>
+                  <div className="mt-4 flex flex-wrap gap-2 border-b border-slate-200 pb-3" role="tablist" aria-label={t('أقسام المعمل المركزي', 'Central Laboratory sections')}>
+                    {([
+                      { id: 'biology', ar: 'معمل البيولوجي', en: 'Biological Laboratory' },
+                      { id: 'organic-equipment', ar: 'أجهزة المعامل', en: 'Laboratory Equipment' },
+                    ] as const).map((tab) => {
+                      const isActive = activeCentralLabTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          id={`central-lab-tab-${tab.id}`}
+                          aria-controls="central-lab-tab-panel"
+                          aria-selected={isActive}
+                          className={`rounded-lg px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1687a7] ${
+                            isActive ? 'bg-[#0a3555] text-white shadow-sm' : 'bg-white text-[#0a3555] hover:bg-[#e5eef5]'
+                          }`}
+                          onClick={() => setActiveCentralLabTab(tab.id)}
+                          role="tab"
+                          tabIndex={isActive ? 0 : -1}
+                          type="button"
+                        >
+                          {t(tab.ar, tab.en)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div id="central-lab-tab-panel" aria-labelledby={`central-lab-tab-${activeCentralLabTab}`} className="mt-4" role="tabpanel">
+                    {activeCentralLabTab === 'organic-equipment' ? (
+                      <>
+                        <h4 className={`mb-4 text-lg font-extrabold leading-8 text-[#0a3555] ${isEnglish ? 'text-left' : 'text-right'}`}>
+                          {t('أجهزة المعمل العضوي', 'Organic Laboratory Equipment')}
+                        </h4>
+                        <OrganicEquipmentDocument isEnglish={isEnglish} />
+                      </>
+                    ) : (
+                      <ul className="grid gap-3 text-base leading-8 text-slate-700">
+                        {(isEnglish ? activeDepartment.enDetails : activeDepartment.arDetails).map((detail) => (
+                          <li key={detail} className="flex gap-3">
+                            <span className="mt-3 h-2 w-2 shrink-0 rounded-full bg-[#d7b05a]" aria-hidden="true" />
+                            <span>{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </>
+              ) : activeDepartment.arDetails.length > 0 && (
                 <ul className="mt-4 grid gap-3 text-base leading-8 text-slate-700">
                   {(isEnglish ? activeDepartment.enDetails : activeDepartment.arDetails).map((detail) => (
                     <li key={detail} className="flex gap-3">

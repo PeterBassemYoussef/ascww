@@ -66,11 +66,13 @@ function LaboratoriesSectorAchievementsPage() {
   ];
 
   const safetyAchievements = [
+    t('إنشاء معمل مركزي لمياه الشرب بمحافظة أسيوط مجهز بأحدث الأجهزة.', 'Establishing a central drinking water laboratory in Assiut Governorate equipped with the latest instruments.'),
     t('تم اعتماد ١٥ خطة لمأمونية مياه الشرب.', '15 drinking water safety plans were approved.'),
     t('تمت مراجعة ٣ خطط لمأمونية المياه من قبل الشركة القابضة.', '3 water safety plans were reviewed by the Holding Company.'),
     t('توجد خطة مياه قيد المراجعة من قبل الجهاز التنظيمي لمياه الشرب وحماية المستهلك.', 'One water safety plan is under review by the Water and Wastewater Regulatory Agency.'),
     t('تم اعتماد خطتين لمأمونية تداول الصرف الصحي، وتوجد خطة قيد المراجعة لدى اللجنة العليا للمياه.', 'Two wastewater handling safety plans were approved, and one plan is under review by the Supreme Water Committee.'),
     t('تم تنفيذ ٦٠ ورشة عمل واجتماع دوري.', '60 workshops and regular meetings were held.'),
+    t('حصلت ٤ معامل بشركة مياه أسيوط على شهادة اعتماد الأيزو طبقًا للمواصفة الدولية ISO/IEC 17025:2017.', 'Four laboratories at Assiut Water Company received ISO accreditation in accordance with the international standard ISO/IEC 17025:2017.'),
   ];
 
   const sustainableGoals = [
@@ -152,7 +154,7 @@ function LaboratoriesSectorAchievementsPage() {
 
           <AchievementSection
             id="water-safety-achievements"
-            title={t('إنجازات الإدارة', 'Department Achievements')}
+            title={t('إنجازات القطاع', 'Sector Achievements')}
           >
             <ul className="grid gap-4 sm:grid-cols-2">
               {safetyAchievements.map((achievement, index) => (
@@ -182,16 +184,9 @@ function LaboratoriesSectorAchievementsPage() {
             </ol>
           </AchievementSection>
 
-          <AchievementSection
-            id="iso-sector"
-            title={t('حصول قطاع المعامل على شهادة الأيزو', 'Laboratory Sector ISO Certification')}
-          >
-            <div className="rounded-xl border border-[#d7b05a]/50 bg-[#fbf8ef] p-5 text-center sm:p-7">
-              <p className="text-lg font-extrabold leading-8 text-[#0a3555]">
-                {t('ثانيًا: حصول قطاع المعامل على شهادة الأيزو', 'Second: The Laboratory Sector receives ISO certification')}
-              </p>
-            </div>
-          </AchievementSection>
+          <h2 className="py-2 text-center text-xl font-extrabold leading-8 text-[#0a3555] sm:text-2xl">
+            {t('حصول قطاع المعامل على شهادة الأيزو', 'Laboratory Sector ISO Certification')}
+          </h2>
 
           <AchievementSection
             id="qualified-laboratories"

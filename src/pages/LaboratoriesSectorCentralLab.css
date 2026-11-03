@@ -18,6 +18,28 @@
   white-space: pre-wrap;
 }
 
+.central-lab-document .central-lab-equipment-page-link {
+  margin: 28px 0 0;
+  text-align: center;
+}
+
+.central-lab-document .central-lab-equipment-page-link a {
+  display: inline-block;
+  padding: 9px 18px;
+  border: 1px solid #d7b05a;
+  border-radius: 8px;
+  background: #0a3555;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.central-lab-document .central-lab-equipment-page-link a:hover,
+.central-lab-document .central-lab-equipment-page-link a:focus-visible {
+  background: #082b47;
+}
+
 .central-lab-document .document-title,
 .central-lab-document .document-heading {
   margin: 24px 0 14px;
@@ -155,14 +177,22 @@
 }
 
 .central-lab-document .organic-equipment-gallery-title {
-  margin-bottom: 10px;
+  margin: 12px 0 8px;
   color: #0a3555;
   font-weight: 800;
   text-align: center;
 }
 
-.central-lab-document .organic-equipment-gallery-title .document-paragraph {
-  margin: 0;
+.central-lab-document .organic-equipment-gallery-subtitle {
+  margin: 0 0 8px;
+  color: #334155;
+  font-weight: 700;
+  text-align: center;
+}
+
+.central-lab-document .organic-equipment-gallery-detail {
+  margin: 0 0 8px;
+  line-height: 1.75;
 }
 
 .central-lab-document .organic-equipment-gallery-images {
@@ -172,20 +202,23 @@
   gap: 10px;
 }
 
-.central-lab-document .organic-equipment-gallery-image {
-  min-width: 0;
+.central-lab-document .organic-equipment-gallery-images--odd > :last-child {
+  grid-column: 1 / -1;
 }
 
-.central-lab-document .organic-equipment-gallery-image .document-paragraph {
-  margin: 0;
-  text-align: center !important;
+.central-lab-document .organic-equipment-gallery-image {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .central-lab-document .organic-equipment-gallery-image .document-image {
+  display: block;
   width: auto !important;
   max-width: 100%;
   max-height: 340px;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .central-lab-document .organic-device-table td {
@@ -210,6 +243,12 @@
   height: auto;
   margin: 12px auto 20px;
   object-fit: contain;
+}
+
+.central-lab-document img {
+  display: block;
+  float: none;
+  margin-inline: auto !important;
 }
 
 .central-lab-document .central-lab-image-pair {
@@ -687,6 +726,74 @@
     font-size: 0.9375rem;
   }
 
+  .central-lab-document--organic .document-list-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .central-lab-document--organic .document-list-table tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .central-lab-document--organic .document-list-table tr {
+    display: contents;
+  }
+
+  .central-lab-document--organic .document-list-table td {
+    width: auto;
+    min-width: 0;
+    padding: 4px 2px;
+  }
+
+  .central-lab-document--organic .document-list-table .document-list-item {
+    font-size: 0.65rem;
+    white-space: nowrap !important;
+    overflow-wrap: normal;
+  }
+
+  .central-lab-document--organic .organic-equipment-list-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .central-lab-document--organic .organic-equipment-list-table tbody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .central-lab-document--organic .organic-equipment-list-table tr {
+    display: contents;
+  }
+
+  .central-lab-document--organic .organic-equipment-list-table td {
+    width: auto;
+    min-width: 0;
+    padding: 4px 2px;
+  }
+
+  .central-lab-document--organic .organic-equipment-list-table .document-list-item {
+    font-size: 0.5rem;
+  }
+
+  .central-lab-document--organic .organic-device-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .central-lab-document--organic .organic-device-table .organic-device-title {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .central-lab-document--organic .organic-device-table th[scope="row"] {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
   .central-lab-document td,
   .central-lab-document th {
     padding: 7px;
@@ -710,6 +817,7 @@
 
   .central-lab-document .organic-equipment-gallery {
     gap: 10px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .central-lab-document .organic-equipment-gallery-card {

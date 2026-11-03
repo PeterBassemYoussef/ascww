@@ -167,8 +167,13 @@
     transition-delay: 140ms;
   }
 
-  .nav-submenu:hover .nav-submenu-menu,
-  .nav-submenu:focus-within .nav-submenu-menu {
+  .nav-submenu--opens-up > .nav-submenu-menu {
+    top: auto;
+    bottom: 0;
+  }
+
+  .nav-submenu:hover > .nav-submenu-menu,
+  .nav-submenu:focus-within > .nav-submenu-menu {
     @apply visible;
     opacity: 1;
     pointer-events: auto;

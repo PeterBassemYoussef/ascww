@@ -39,4 +39,24 @@ export const CENTRAL_LAB_DOCUMENTS = [
     ar: 'إدارة الجودة',
     en: 'Quality Management',
   },
+  {
+    id: 9,
+    ar: 'أجهزة سحب وتكويد العينات',
+    en: 'Sample Collection and Coding Equipment',
+  },
+  {
+    id: 10,
+    ar: 'أجهزة المعمل غير العضوي',
+    en: 'Inorganic Laboratory Equipment',
+  },
+  {
+    id: 11,
+    ar: 'أجهزة المعمل البكتريولوجي',
+    en: 'Bacteriology Laboratory Equipment',
+  },
+  {
+    id: 12,
+    ar: 'أجهزة المعمل البيولوجي',
+    en: 'Biology Laboratory Equipment',
+  },
 ] as const;

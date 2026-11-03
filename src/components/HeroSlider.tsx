@@ -90,6 +90,20 @@ function HeroSlider() {
                     data-cta-ar="فتح الخدمة"
                     data-cta-en="Open service"
                 ></div>
+                <div
+                    className="hero-slide"
+                    data-bg="/images/slider/7.webp"
+                    data-title="المنصة الرقمية لخدمة مياه الشرب والصرف الصحي"
+                    data-title-ar="المنصة الرقمية لخدمة مياه الشرب والصرف الصحي"
+                    data-title-en="Digital Platform for Drinking Water and Sanitation Services"
+                    data-subtitle="يمكنك الاستعلام عن قيمة الفاتورة وتسجيل قراءة عداد المياه وسداد الفواتير إلكترونيًا"
+                    data-subtitle-ar="يمكنك الاستعلام عن قيمة الفاتورة وتسجيل قراءة عداد المياه وسداد الفواتير إلكترونيًا"
+                    data-subtitle-en="You can check your bill, submit your water meter reading, and pay bills electronically."
+                    data-link="https://dsp.hcww.com.eg/"
+                    data-cta="زيارة المنصة الرقمية"
+                    data-cta-ar="زيارة المنصة الرقمية"
+                    data-cta-en="Visit the Digital Platform"
+                ></div>
             </div>
             <div className="hero-overlay"></div>
             <button id="hero-prev" type="button" aria-label="السلايد السابق" className="hero-nav-btn hero-nav-btn--left">
@@ -112,6 +126,7 @@ function HeroSlider() {
                 <button type="button" data-hero-dot data-slide-index="3" aria-label="Slide 4" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="4" aria-label="Slide 5" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="5" aria-label="Slide 6" className="hero-dot pointer-events-auto"></button>
+                <button type="button" data-hero-dot data-slide-index="6" aria-label="Slide 7" className="hero-dot pointer-events-auto"></button>
             </div>
         </section>
     );

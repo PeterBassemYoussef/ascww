@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
-const LABORATORY_WHATSAPP_NUMBER = '201005797550';
+const LABORATORY_WHATSAPP_NUMBER = '201280002087';
 const isValidCompanyAddress = (value: string) => /^(?=.*[\p{L}\p{N}])[\p{L}\p{N} ]{1,100}$/u.test(value);
 
 function FormFieldError({ message }: { message?: string }) {
@@ -102,7 +102,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
         `Please examine ${sampleCount} ${sampleType} sample(s) for ${companyName}.`,
         `Location (address): ${address}`,
         'Please conduct the required analyses.',
-        '*We are prepared to pay the applicable fees.*',
+        '*Services are available for a set fee.*',
         'With sincere regards,',
         `Contact number: ${phone}`,
       ].join('\n\n')
@@ -113,7 +113,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
         `مقدمه لسيادتكم / ${applicantName}`,
         `الرجاء من سيادتكم التكرم بفحص عدد (${sampleCount}) عينة (${sampleType})`,
         `الخاصة بشركة ${companyName} وموقعها (العنوان) ${address}، وإجراء التحاليل اللازمة لها.`,
-        '*ونحن على أتم الاستعداد لدفع الرسوم المقررة.*',
+        '*الخدمات متاحة برسوم مقررة.*',
         'وتفضلوا بقبول وافر التحية والاحترام،،،',
         `مقدمه لسيادتكم / ${applicantName}`,
         `رقم للتواصل: ${phone}`,
@@ -238,7 +238,7 @@ function SampleRequestForm({ isEnglish }: { isEnglish: boolean }) {
         </label>
 
         <p className="rounded-lg border-r-4 border-[#d7b05a] bg-[#fbf8ef] px-4 py-3 font-bold leading-7 text-[#0a3555] sm:col-span-2">
-          {t('ونحن على أتم الاستعداد لدفع الرسوم المقررة.', 'We are prepared to pay the applicable fees.')}
+          {t('الخدمات متاحة برسوم مقررة.', 'Services are available for a set fee.')}
         </p>
 
         <button
@@ -277,7 +277,7 @@ function TankCleaningRequestForm({ isEnglish }: { isEnglish: boolean }) {
         `Capacity of each tank: ${tankCapacity} cubic meters.`,
         `Company: ${companyName}`,
         `Location (address): ${address}`,
-        '*We are prepared to pay the applicable fees.*',
+        '*Services are available for a set fee.*',
         'With sincere regards,',
         `Contact number: ${phone}`,
       ].join('\n\n')
@@ -289,7 +289,7 @@ function TankCleaningRequestForm({ isEnglish }: { isEnglish: boolean }) {
         `الرجاء من سيادتكم التكرم بغسيل وتعقيم وتطهير عدد (${tankCount}) خزان (${tankType})،`,
         `سعة الخزان الواحد (${tankCapacity}) متر مكعب، وموقعه (العنوان) ${address}.`,
         `الخاصة بشركة ${companyName}.`,
-        'ونحن على أتم الاستعداد لدفع الرسوم المقررة.',
+        'الخدمات متاحة برسوم مقررة.',
         'وتفضلوا بقبول وافر التحية والاحترام،،،',
         `مقدمه لسيادتكم / ${applicantName}`,
         `رقم للتواصل: ${phone}`,
@@ -409,7 +409,7 @@ function TankCleaningRequestForm({ isEnglish }: { isEnglish: boolean }) {
         </label>
 
         <p className="rounded-lg border-r-4 border-[#d7b05a] bg-[#fbf8ef] px-4 py-3 font-bold leading-7 text-[#0a3555]">
-          {t('ونحن على أتم الاستعداد لدفع الرسوم المقررة.', 'We are prepared to pay the applicable fees.')}
+          {t('الخدمات متاحة برسوم مقررة.', 'Services are available for a set fee.')}
         </p>
 
         <label className={labelClassName}>
@@ -465,6 +465,7 @@ function InstrumentCalibrationRequestForm({ isEnglish }: { isEnglish: boolean })
         `Calibration type: ${calibrationType}`,
         `S/N: ${serialNumber}`,
         `Previous calibration date: ${lastCalibrationDate}`,
+        'Services are available for a set fee.',
       ].join('\n')
       : [
         'طلب معايرة جهاز',
@@ -476,6 +477,7 @@ function InstrumentCalibrationRequestForm({ isEnglish }: { isEnglish: boolean })
         `نوع المعايرة: ${calibrationType}`,
         `S/N: ${serialNumber}`,
         `آخر تاريخ تمت له المعايرة السابقة: ${lastCalibrationDate}`,
+        'الخدمات متاحة برسوم مقررة.',
       ].join('\n');
 
     const whatsappUrl = `https://wa.me/${LABORATORY_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -489,6 +491,9 @@ function InstrumentCalibrationRequestForm({ isEnglish }: { isEnglish: boolean })
     <section id="instrument-calibration-form" className="scroll-mt-40 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <p className="mt-2 text-sm leading-7 text-slate-600">
         {t('املأ بيانات العميل والجهاز، وستُفتح رسالة جاهزة في واتساب لمراجعتها ثم إرسالها.', 'Fill in the client and instrument details. A prepared WhatsApp message will open for you to review and send.')}
+      </p>
+      <p className="mt-3 rounded-lg border-r-4 border-[#d7b05a] bg-[#fbf8ef] px-4 py-3 font-bold leading-7 text-[#0a3555]">
+        {t('الخدمات متاحة برسوم مقررة.', 'Services are available for a set fee.')}
       </p>
       <form onSubmit={handleSubmit} onInvalidCapture={handleInvalid} onInputCapture={handleInput} onChangeCapture={handleInput} className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className={labelClassName}>
@@ -607,7 +612,7 @@ function LaboratoriesSectorServicesPage() {
       ],
     },
     {
-      title: t('فحص عينات الرمل والزلط', 'Sand and Gravel Sample Testing'),
+      title: t('فحص عينات وسط ترشيحي', 'Filter Media Sample Testing'),
       description: t(
         'استلام عينات الرمل والزلط الخارجية المدفوعة بأجر وفحصها بالمعمل المركزي للشركة.',
         'Receive paid external sand and gravel samples for testing at the Company Central Laboratory.'
