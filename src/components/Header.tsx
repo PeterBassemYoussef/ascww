@@ -958,20 +958,28 @@ function Header() {
                                 >
                                     {t('خدمات', 'Services')}
                                 </button>
-                                <div className="nav-dropdown-menu">
-                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الموحدة', 'Unified Platform')}</a>
-                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن الفاتورة', 'Check your bill')}</a>
-                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفاتورة', 'Pay your bill')}</a>
-                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءتي', 'Register my meter reading')}</a>
+                                <div className="nav-dropdown-menu nav-dropdown-menu--submenu">
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفواتير إلكترونياً', 'Pay bills online')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءة عداد المياه', 'Register a water meter reading')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.provideComplaine}>{t('تقديم شكوى', 'Submit a complaint')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.callCenter}>{t('خدمة العملاء', 'Customer service')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a>
-                                    <Link className="nav-dropdown-item" to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
-                                    <a className="nav-dropdown-item" href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
-                                    <Link className="nav-dropdown-item" to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
-                                    <Link className="nav-dropdown-item" to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                    <div className="nav-submenu nav-submenu--opens-up">
+                                        <button type="button" className="nav-submenu-trigger">
+                                            {t('خدمات أخرى', 'Other services')}
+                                            <span className="nav-submenu-caret" aria-hidden="true">◀</span>
+                                        </button>
+                                        <div className="nav-submenu-menu">
+                                            <Link className="nav-dropdown-item" to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
+                                            <a className="nav-dropdown-item" href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
+                                            <Link className="nav-dropdown-item" to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
+                                            <Link className="nav-dropdown-item" to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1210,19 +1218,24 @@ function Header() {
                         <details className="mobile-nav-group">
                             <summary>{t('خدمات', 'Services')}</summary>
                             <div className="mobile-nav-submenu">
-                                <a href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الموحدة', 'Unified Platform')}</a>
-                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن الفاتورة', 'Check your bill')}</a>
-                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفاتورة', 'Pay your bill')}</a>
-                                <a href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءتي', 'Register my meter reading')}</a>
+                                <a href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
+                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>
+                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفواتير إلكترونياً', 'Pay bills online')}</a>
+                                <a href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءة عداد المياه', 'Register a water meter reading')}</a>
                                 <a href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a>
                                 <a href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a>
                                 <a href={ROUTES.provideComplaine}>{t('تقديم شكوى', 'Submit a complaint')}</a>
                                 <a href={ROUTES.callCenter}>{t('خدمة العملاء', 'Customer service')}</a>
                                 <a href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a>
-                                <Link to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
-                                <a href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
-                                <Link to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
-                                <Link to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                <details className="mobile-nav-group">
+                                    <summary>{t('خدمات أخرى', 'Other services')}</summary>
+                                    <div className="mobile-nav-submenu">
+                                        <Link to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
+                                        <a href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
+                                        <Link to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
+                                        <Link to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                    </div>
+                                </details>
                             </div>
                         </details>
                         <details className="mobile-nav-group"><summary>{t('دعم النزاهة', 'Integrity support')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.integritySupportOverview}>{t('إدارة دعم النزاهة', 'Integrity support department')}</a><a href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a><a href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a></div></details>
