@@ -7,7 +7,6 @@ function HeroSlider() {
             <div className="hero-slider absolute inset-0 z-0" aria-hidden="true">
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/1.webp"
                     data-title="معامل علي اعلي مستوي"
                     data-title-ar="معامل علي اعلي مستوي"
                     data-title-en="Advanced laboratories"
@@ -18,10 +17,14 @@ function HeroSlider() {
                     data-cta="تعرف علي المزيد"
                     data-cta-ar="تعرف علي المزيد"
                     data-cta-en="Learn more"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-1-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/1.webp" alt="المعمل المركزي لمياه الشرب" width={1600} height={900} fetchPriority="high" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/2.webp"
                     data-title="لتنزيل برنامج قرائتي اضغط هنا"
                     data-title-ar="لتنزيل برنامج قرائتي اضغط هنا"
                     data-title-en="Click here to download My Reading app"
@@ -32,11 +35,14 @@ function HeroSlider() {
                     data-cta="المزيد"
                     data-cta-ar="المزيد"
                     data-cta-en="More"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-2-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/2.webp" alt="تطبيق قرائتي لتسجيل قراءة عدادات المياه" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide is-active"
-                    style={{ backgroundImage: "url('/images/slider/3.webp')" }}
-                    data-bg="/images/slider/3.webp"
                     data-title="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-ar="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-en="Assiut and New Valley Water and Wastewater Company"
@@ -47,10 +53,14 @@ function HeroSlider() {
                     data-cta="تعرف علي المزيد"
                     data-cta-ar="تعرف علي المزيد"
                     data-cta-en="Learn more"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-3-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/3.webp" alt="محطة معالجة مياه الشرب" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/4.webp"
                     data-title="الإداره العامه للتدريب"
                     data-title-ar="الإداره العامه للتدريب"
                     data-title-en="General Administration of Training"
@@ -61,10 +71,14 @@ function HeroSlider() {
                     data-cta="تعرف علي المزيد"
                     data-cta-ar="تعرف علي المزيد"
                     data-cta-en="Learn more"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-4-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/4.webp" alt="قاعة تدريب" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/5.webp"
                     data-title="مركز خدمة العملاء"
                     data-title-ar="مركز خدمة العملاء"
                     data-title-en="Customer service center"
@@ -75,10 +89,14 @@ function HeroSlider() {
                     data-cta="تعرف علي المزيد"
                     data-cta-ar="تعرف علي المزيد"
                     data-cta-en="Learn more"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-5-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/5.webp" alt="مركز الخط الساخن 125" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/6.webp"
                     data-title="لتنزيل برنامج الخط الساخن اضغط هنا"
                     data-title-ar="لتنزيل برنامج الخط الساخن اضغط هنا"
                     data-title-en="Click here to download the Hotline app"
@@ -89,10 +107,14 @@ function HeroSlider() {
                     data-cta="فتح الخدمة"
                     data-cta-ar="فتح الخدمة"
                     data-cta-en="Open service"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-6-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/6.webp" alt="تطبيق الهاتف الذكي hcww-125" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
                 <div
                     className="hero-slide"
-                    data-bg="/images/slider/7.webp"
                     data-title="المنصة الرقمية لخدمة مياه الشرب والصرف الصحي"
                     data-title-ar="المنصة الرقمية لخدمة مياه الشرب والصرف الصحي"
                     data-title-en="Digital Platform for Drinking Water and Sanitation Services"
@@ -103,7 +125,12 @@ function HeroSlider() {
                     data-cta="زيارة المنصة الرقمية"
                     data-cta-ar="زيارة المنصة الرقمية"
                     data-cta-en="Visit the Digital Platform"
-                ></div>
+                >
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-7-mobile.webp" width={828} height={1500} />
+                        <img src="/images/slider/7.webp" alt="المنصة الرقمية لخدمات مياه الشرب والصرف الصحي" width={1600} height={900} loading="lazy" />
+                    </picture>
+                </div>
             </div>
             <div className="hero-overlay"></div>
             <button id="hero-prev" type="button" aria-label="السلايد السابق" className="hero-nav-btn hero-nav-btn--left">
@@ -112,7 +139,7 @@ function HeroSlider() {
             <button id="hero-next" type="button" aria-label="السلايد التالي" className="hero-nav-btn hero-nav-btn--right">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
-            <div className="relative z-20 mx-auto grid min-h-[85vh] max-w-7xl items-center px-4 py-14 sm:px-6 lg:min-h-[82vh] lg:px-8">
+            <div className="hero-content-wrapper relative z-20 mx-auto grid min-h-[85vh] max-w-7xl items-center px-4 py-14 sm:px-6 lg:min-h-[82vh] lg:px-8">
                 <div id="hero-content" className="hero-content-animate text-center text-white">
                     <h1 id="hero-title" className="hero-title hero-anim-item">شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد</h1>
                     <p id="hero-subtitle" className="hero-anim-item mx-auto mt-4 max-w-4xl text-base leading-8 text-slate-100 sm:text-lg">ترحب بكم و نفخر بأننا احدي الشركات الرائده في جمهوريه مصر العربيه</p>

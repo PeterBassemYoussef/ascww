@@ -34,6 +34,14 @@ main :where(img, video, canvas, svg) {
   height: auto !important;
 }
 
+main #home .hero-slide img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover;
+  object-position: center;
+}
+
 main .org-map-svg {
   max-width: none !important;
   width: 100% !important;

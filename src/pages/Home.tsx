@@ -223,20 +223,11 @@ function HomePage() {
         });
       };
 
-      const ensureSlideBackground = (slide: HTMLElement | undefined) => {
-        if (!slide) return;
-        const background = slide.dataset.bg;
-        if (!background || slide.style.backgroundImage) return;
-        slide.style.backgroundImage = `url('${background}')`;
-      };
-
       const moveToSlide = (nextIndex: number, directionClass: HeroDirectionClass = 'dir-right') => {
         if (nextIndex === currentSlide) return;
         const current = heroSlides[currentSlide];
         const next = heroSlides[nextIndex];
         if (!current || !next) return;
-
-        ensureSlideBackground(next);
 
         if (transitionTimeoutId) {
           clearTimeout(transitionTimeoutId);
@@ -275,23 +266,6 @@ function HomePage() {
       heroDots.forEach((dot, index) => {
         dot.setAttribute('aria-label', isEnglish ? `Slide ${index + 1}` : `الشريحة ${index + 1}`);
       });
-
-      const preloadIdleSlides = () => {
-        heroSlides.forEach((slide, index) => {
-          if (index === currentSlide) return;
-          ensureSlideBackground(slide);
-        });
-      };
-
-      const scheduleIdle = (cb: () => void) => {
-        const win = window as Window & { requestIdleCallback?: (callback: () => void) => number };
-        if (typeof win.requestIdleCallback === 'function') {
-          return win.requestIdleCallback(cb);
-        }
-        return window.setTimeout(cb, 1200);
-      };
-
-      scheduleIdle(preloadIdleSlides);
 
       let intervalId: number | undefined;
       const startAutoplay = () => {
