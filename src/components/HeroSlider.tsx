@@ -45,7 +45,7 @@ function HeroSlider() {
         <section id="home" className="relative overflow-hidden bg-[#0a3555]">
             <div className="hero-slider absolute inset-0 z-0" dir="ltr" aria-hidden="true">
                 <div
-                    className="hero-slide is-active"
+                    className="hero-slide"
                     data-title="معامل علي اعلي مستوي"
                     data-title-ar="معامل علي اعلي مستوي"
                     data-title-en="Advanced laboratories"
@@ -59,7 +59,7 @@ function HeroSlider() {
                 >
                     <picture>
                         <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-1-mobile.webp" width={828} height={1500} />
-                        <img data-desktop-src="/images/slider/1.webp" alt="المعمل المركزي لمياه الشرب" width={1600} height={900} {...{ fetchpriority: 'high' }} />
+                        <img data-desktop-src="/images/slider/1.webp" alt="المعمل المركزي لمياه الشرب" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
@@ -81,7 +81,7 @@ function HeroSlider() {
                     </picture>
                 </div>
                 <div
-                    className="hero-slide"
+                    className="hero-slide is-active"
                     data-title="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-ar="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-en="Assiut and New Valley Water and Wastewater Company"
@@ -95,7 +95,7 @@ function HeroSlider() {
                 >
                     <picture>
                         <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-3-mobile.webp" width={828} height={1500} />
-                        <img data-desktop-src="/images/slider/3.webp" alt="محطة معالجة مياه الشرب" width={1600} height={900} loading="lazy" />
+                        <img data-desktop-src="/images/slider/3.webp" alt="محطة معالجة مياه الشرب" width={1600} height={900} {...{ fetchpriority: 'high' }} />
                     </picture>
                 </div>
                 <div
@@ -186,9 +186,9 @@ function HeroSlider() {
                 </div>
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-5 z-30 flex items-center justify-center gap-2">
-                <button type="button" data-hero-dot data-slide-index="0" aria-label="Slide 1" className="hero-dot hero-dot--active pointer-events-auto"></button>
+                <button type="button" data-hero-dot data-slide-index="0" aria-label="Slide 1" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="1" aria-label="Slide 2" className="hero-dot pointer-events-auto"></button>
-                <button type="button" data-hero-dot data-slide-index="2" aria-label="Slide 3" className="hero-dot pointer-events-auto"></button>
+                <button type="button" data-hero-dot data-slide-index="2" aria-label="Slide 3" className="hero-dot hero-dot--active pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="3" aria-label="Slide 4" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="4" aria-label="Slide 5" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="5" aria-label="Slide 6" className="hero-dot pointer-events-auto"></button>
