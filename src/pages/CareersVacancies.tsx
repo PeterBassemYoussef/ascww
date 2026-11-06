@@ -128,7 +128,7 @@ function JobsAndCompetitionPage() {
 
     useEffect(() => {
         const pageUrl = window.location.href;
-        const imageUrl = `${window.location.origin}/images/ascww-logo.png`;
+        const imageUrl = `${window.location.origin}/images/ascww-logo.webp`;
         const title = t('مسابقات و وظائف', 'Competitions and Jobs');
 
         document.title = `${title} | ${t('شركة مياه أسيوط', 'Assiut Water Company')}`;

@@ -781,17 +781,15 @@ function Header() {
                                 className="h-10 w-auto sm:h-8 lg:h-10"
                                 loading="eager"
                                 decoding="async"
-                                fetchPriority="high"
                             />
                             <img
-                                src="/images/ascww-logo.png"
+                                src="/images/ascww-logo.webp"
                                 alt={t('شعار الشركة', 'Company logo')}
-                                width={250}
-                                height={205}
+                                width={160}
+                                height={132}
                                 className="h-10 w-auto sm:h-8 lg:h-10"
                                 loading="eager"
                                 decoding="async"
-                                fetchPriority="high"
                             />
                         </Link>
 

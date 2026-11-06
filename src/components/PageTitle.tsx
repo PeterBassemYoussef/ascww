@@ -7,7 +7,7 @@ import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const SITE_NAME = 'شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد';
 const DEFAULT_DESCRIPTION = 'البوابة الإلكترونية الرسمية لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد: خدمات المياه، الصرف الصحي، التوعية، المناقصات، والتواصل مع المواطنين.';
-const LOGO_PATH = '/images/ascww-logo.png';
+const LOGO_PATH = '/images/ascww-logo.webp';
 const DEFAULT_SITE_URL = 'https://ascww.org';
 
 const routeTitles: Record<string, string> = {

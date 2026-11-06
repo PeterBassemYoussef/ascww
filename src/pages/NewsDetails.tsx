@@ -13,6 +13,7 @@ import {
     getLatestNewsImagePath,
     sanitizeHtmlContent,
 } from '../utils/helpers';
+import { fallbackToOriginalImage, getOptimizedImageSrcSet, getOptimizedImageUrl } from '../utils/imageOptimization';
 
 const NEWS_DETAILS_ENDPOINT = 'https://backend.ascww.org/api/news';
 const NEWS_DETAILS_PROXY_ENDPOINT = '/api/news';
@@ -127,7 +128,12 @@ function NewsDetails() {
     const lightboxImages = useMemo<GalleryLightboxImage[]>(
         () =>
             images.map((image, index) => ({
-                src: `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(image.path || '')}`,
+                src: getOptimizedImageUrl(`${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(image.path || '')}`),
+                originalSrc: `${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(image.path || '')}`,
+                srcSet: getOptimizedImageSrcSet(`${NEWS_IMAGE_ENDPOINT}/${encodeURIComponent(image.path || '')}`),
+                sizes: '92vw',
+                width: 800,
+                height: 600,
                 alt: `${news?.title || t('صورة الخبر', 'News image')} ${index + 1}`,
             })),
         [images, news?.title, isEnglish]
@@ -227,11 +233,15 @@ function NewsDetails() {
                             }}
                         >
                             <img loading="lazy" decoding="async"
-                                src={currentImageUrl}
+                                src={getOptimizedImageUrl(currentImageUrl)}
+                                srcSet={getOptimizedImageSrcSet(currentImageUrl)}
+                                sizes="(max-width: 768px) 100vw, 800px"
+                                width={800}
+                                height={600}
                                 alt={news.title || t('صورة الخبر', 'News image')}
                                 className="!h-full !w-full object-contain"
                                 onError={(event) => {
-                                    event.currentTarget.style.display = 'none';
+                                    fallbackToOriginalImage(event.currentTarget, currentImageUrl);
                                 }}
                             />
                             {images.length > 1 && (

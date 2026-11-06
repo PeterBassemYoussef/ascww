@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { AdminInfoResponse } from '../types';
 import { ADMIN_IMAGE_ENDPOINT, sanitizeBossSpeechHtml } from '../utils/helpers';
+import { getOptimizedImageSrcSet, getOptimizedImageUrl } from '../utils/imageOptimization';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type BossWordProps = {
@@ -48,7 +49,9 @@ function BossWord({ adminInfo, adminInfoLoading, adminInfoError }: BossWordProps
 
                     <div className="boss-word-media order-1 relative overflow-hidden bg-slate-100 lg:order-1">
                         <img
-                            src={bossImageUrl}
+                            src={getOptimizedImageUrl(bossImageUrl)}
+                            srcSet={getOptimizedImageSrcSet(bossImageUrl)}
+                            sizes="(max-width: 768px) 100vw, 33vw"
                             alt={isEnglish ? `Photo of ${bossName}` : `صورة ${bossName}`}
                             className="boss-word-photo h-full w-full object-cover"
                             loading="lazy"
@@ -57,6 +60,7 @@ function BossWord({ adminInfo, adminInfoLoading, adminInfoError }: BossWordProps
                                 const image = event.currentTarget;
                                 if (image.dataset.fallbackApplied) return;
                                 image.dataset.fallbackApplied = 'true';
+                                image.removeAttribute('srcset');
                                 image.src = `${ADMIN_IMAGE_ENDPOINT}/boss.jpg`;
                             }}
                         />

@@ -28,6 +28,7 @@
     { "source": "/api/gallery", "destination": "/api/gallery" },
     { "source": "/api/addStudent", "destination": "/api/addStudent" },
     { "source": "/api/upload", "destination": "/api/upload" },
+    { "source": "/api/img", "destination": "/api/img" },
     { "source": "/api/(.*)", "destination": "https://backend.ascww.org/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
