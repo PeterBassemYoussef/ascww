@@ -180,7 +180,12 @@ main :where(section, article, .container, [class*="max-w-"], [class*="grid"], [c
 
   .hero-slide {
     filter: grayscale(0) brightness(0.9) saturate(1) contrast(1) blur(0) !important;
-    transform: scale(1.06) translate3d(0, 0, 0) !important;
+    transform: none !important;
+    transition-duration: 4600ms !important;
+  }
+
+  .hero-slide picture {
+    transform: scale(1.06) !important;
     transition-duration: 4600ms !important;
   }
 

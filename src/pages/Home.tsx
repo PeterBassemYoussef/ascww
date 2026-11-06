@@ -373,6 +373,49 @@ function HomePage() {
         cleanups.push(() => dot.removeEventListener('click', onDotClick));
       });
 
+      const heroSection = document.getElementById('home');
+      let touchStart: { x: number; y: number } | undefined;
+      const onHeroTouchStart = (event: TouchEvent) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest('a, button')) {
+          touchStart = undefined;
+          return;
+        }
+
+        const touch = event.touches[0];
+        touchStart = touch ? { x: touch.clientX, y: touch.clientY } : undefined;
+      };
+      const onHeroTouchEnd = (event: TouchEvent) => {
+        const start = touchStart;
+        const touch = event.changedTouches[0];
+        touchStart = undefined;
+        if (!start || !touch) return;
+
+        const deltaX = touch.clientX - start.x;
+        const deltaY = touch.clientY - start.y;
+        if (Math.abs(deltaX) < 50 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+        const forward = document.documentElement.dir === 'rtl' ? deltaX > 0 : deltaX < 0;
+        stopAutoplay();
+        const nextIndex = (currentSlide + (forward ? 1 : -1) + heroSlides.length) % heroSlides.length;
+        moveToSlide(nextIndex, getHorizontalDirection(forward));
+        startAutoplay();
+      };
+      const onHeroTouchCancel = () => {
+        touchStart = undefined;
+      };
+
+      heroSection?.addEventListener('touchstart', onHeroTouchStart, { passive: true });
+      heroSection?.addEventListener('touchend', onHeroTouchEnd, { passive: true });
+      heroSection?.addEventListener('touchcancel', onHeroTouchCancel, { passive: true });
+      if (heroSection) {
+        cleanups.push(() => {
+          heroSection.removeEventListener('touchstart', onHeroTouchStart);
+          heroSection.removeEventListener('touchend', onHeroTouchEnd);
+          heroSection.removeEventListener('touchcancel', onHeroTouchCancel);
+        });
+      }
+
       cleanups.push(() => {
         stopAutoplay();
         if (transitionTimeoutId) {

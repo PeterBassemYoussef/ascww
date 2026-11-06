@@ -43,7 +43,7 @@ function HeroSlider() {
 
     return (
         <section id="home" className="relative overflow-hidden bg-[#0a3555]">
-            <div className="hero-slider absolute inset-0 z-0" aria-hidden="true">
+            <div className="hero-slider absolute inset-0 z-0" dir="ltr" aria-hidden="true">
                 <div
                     className="hero-slide is-active"
                     data-title="معامل علي اعلي مستوي"
