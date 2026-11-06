@@ -53,7 +53,7 @@ function NewsCard({ article }: NewsCardProps) {
                     <img
                         src={getOptimizedImageUrl(imageUrl)}
                         srcSet={getOptimizedImageSrcSet(imageUrl)}
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
                         width={800}
                         height={600}
                         alt={article.title || t('صورة الخبر', 'News image')}

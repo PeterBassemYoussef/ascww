@@ -1,9 +1,9 @@
-const IMAGE_WIDTHS = [480, 800] as const;
+const IMAGE_WIDTHS = [480, 640, 800] as const;
 
 export const getOptimizedImageUrl = (src: string, width = 800): string => {
     if (!import.meta.env.PROD) return src;
 
-    if (width !== 480 && width !== 800) return src;
+    if (width !== 480 && width !== 640 && width !== 800) return src;
 
     let imagePath: string;
     try {

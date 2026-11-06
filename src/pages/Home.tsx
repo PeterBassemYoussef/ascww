@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { AdminInfoResponse, NewsItem } from '../types';
 import { ADMIN_INFO_ENDPOINT, NEWS_ENDPOINT } from '../utils/helpers';
 import Header from '../components/Header';
-import HeroSlider from '../components/HeroSlider';
+import HeroSlider, { setHeroSlideImageLoaded } from '../components/HeroSlider';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const BossWord = lazy(() => import('../components/BossWord'));
@@ -205,9 +205,21 @@ function HomePage() {
 
       const transitionDurationMs = 1200;
       type HeroDirectionClass = 'dir-right' | 'dir-left' | 'dir-up' | 'dir-down';
-      const autoplayDirections: HeroDirectionClass[] = ['dir-right', 'dir-left', 'dir-up', 'dir-down'];
       let autoplayDirectionIndex = 0;
       let transitionTimeoutId: number | undefined;
+      let autoplayStartTimeoutId: number | undefined;
+      let autoplayLoadHandler: (() => void) | undefined;
+      const mobileSliderQuery = window.matchMedia('(max-width: 767px)');
+      const getHorizontalDirection = (forward: boolean): HeroDirectionClass => {
+        const isRtl = document.documentElement.dir === 'rtl';
+        return forward === !isRtl ? 'dir-right' : 'dir-left';
+      };
+      const autoplayDirections: HeroDirectionClass[] = [
+        getHorizontalDirection(true),
+        getHorizontalDirection(false),
+        'dir-up',
+        'dir-down',
+      ];
 
       const clearTransientSlideClasses = () => {
         heroSlides.forEach((slide) => {
@@ -229,6 +241,8 @@ function HomePage() {
         const next = heroSlides[nextIndex];
         if (!current || !next) return;
 
+        setHeroSlideImageLoaded(next, true);
+
         if (transitionTimeoutId) {
           clearTimeout(transitionTimeoutId);
           transitionTimeoutId = undefined;
@@ -242,6 +256,12 @@ function HomePage() {
         transitionTimeoutId = window.setTimeout(() => {
           current.classList.remove('is-active', 'is-leaving', 'dir-forward', 'dir-backward', 'dir-right', 'dir-left', 'dir-up', 'dir-down');
           next.classList.remove('is-entering', 'dir-forward', 'dir-backward', 'dir-right', 'dir-left', 'dir-up', 'dir-down');
+          if (mobileSliderQuery.matches) {
+            const followingSlide = (currentSlide + 1) % heroSlides.length;
+            heroSlides.forEach((slide, index) => {
+              setHeroSlideImageLoaded(slide, index === currentSlide || index === followingSlide);
+            });
+          }
           transitionTimeoutId = undefined;
         }, transitionDurationMs);
 
@@ -268,9 +288,8 @@ function HomePage() {
       });
 
       let intervalId: number | undefined;
-      const startAutoplay = () => {
-        if (heroSlides.length <= 1) return;
-        stopAutoplay();
+      let autoplayReady = false;
+      const startAutoplayInterval = () => {
         intervalId = window.setInterval(() => {
           const nextIndex = (currentSlide + 1) % heroSlides.length;
           const directionClass = autoplayDirections[autoplayDirectionIndex % autoplayDirections.length];
@@ -278,11 +297,43 @@ function HomePage() {
           moveToSlide(nextIndex, directionClass);
         }, 6000);
       };
+      const startAutoplay = () => {
+        if (heroSlides.length <= 1) return;
+        stopAutoplay();
+        if (autoplayReady) {
+          startAutoplayInterval();
+          return;
+        }
+
+        const beginAfterPageLoad = () => {
+          autoplayLoadHandler = undefined;
+          autoplayStartTimeoutId = window.setTimeout(() => {
+            autoplayStartTimeoutId = undefined;
+            autoplayReady = true;
+            startAutoplayInterval();
+          }, 3000);
+        };
+
+        if (document.readyState === 'complete') {
+          beginAfterPageLoad();
+        } else {
+          autoplayLoadHandler = beginAfterPageLoad;
+          window.addEventListener('load', beginAfterPageLoad, { once: true });
+        }
+      };
 
       const stopAutoplay = () => {
-        if (intervalId) {
+        if (intervalId !== undefined) {
           clearInterval(intervalId);
           intervalId = undefined;
+        }
+        if (autoplayStartTimeoutId !== undefined) {
+          clearTimeout(autoplayStartTimeoutId);
+          autoplayStartTimeoutId = undefined;
+        }
+        if (autoplayLoadHandler) {
+          window.removeEventListener('load', autoplayLoadHandler);
+          autoplayLoadHandler = undefined;
         }
       };
 
@@ -292,7 +343,7 @@ function HomePage() {
         const onPrevClick = () => {
           stopAutoplay();
           const nextIndex = (currentSlide - 1 + heroSlides.length) % heroSlides.length;
-          moveToSlide(nextIndex, 'dir-left');
+          moveToSlide(nextIndex, getHorizontalDirection(false));
           startAutoplay();
         };
         heroPrev.addEventListener('click', onPrevClick);
@@ -303,7 +354,7 @@ function HomePage() {
         const onNextClick = () => {
           stopAutoplay();
           const nextIndex = (currentSlide + 1) % heroSlides.length;
-          moveToSlide(nextIndex, 'dir-right');
+          moveToSlide(nextIndex, getHorizontalDirection(true));
           startAutoplay();
         };
         heroNext.addEventListener('click', onNextClick);
@@ -314,7 +365,7 @@ function HomePage() {
         const onDotClick = () => {
           if (dotIndex === currentSlide) return;
           stopAutoplay();
-          const directionClass: HeroDirectionClass = dotIndex > currentSlide ? 'dir-right' : 'dir-left';
+          const directionClass = getHorizontalDirection(dotIndex > currentSlide);
           moveToSlide(dotIndex, directionClass);
           startAutoplay();
         };

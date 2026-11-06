@@ -97,7 +97,7 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                                             <img
                                                 src={getOptimizedImageUrl(imageUrl)}
                                                 srcSet={getOptimizedImageSrcSet(imageUrl)}
-                                                sizes="(max-width: 768px) 100vw, 33vw"
+                                                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                                                 width={800}
                                                 height={600}
                                                 alt={newsItem.title || t('صورة الخبر', 'News image')}

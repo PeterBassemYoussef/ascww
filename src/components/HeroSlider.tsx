@@ -1,12 +1,51 @@
-import { memo } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { ROUTES } from '../constants/routes';
 
+const MOBILE_SLIDER_QUERY = '(max-width: 767px)';
+
+export const setHeroSlideImageLoaded = (slide: HTMLElement, loaded: boolean): void => {
+    const source = slide.querySelector<HTMLSourceElement>('source[data-mobile-srcset]');
+    const image = slide.querySelector<HTMLImageElement>('img[data-desktop-src]');
+
+    if (!source || !image) return;
+
+    if (loaded) {
+        source.srcset = source.dataset.mobileSrcset || '';
+        image.src = image.dataset.desktopSrc || '';
+        return;
+    }
+
+    source.removeAttribute('srcset');
+    image.removeAttribute('src');
+};
+
 function HeroSlider() {
+    useLayoutEffect(() => {
+        const slides = Array.from(document.querySelectorAll<HTMLElement>('.hero-slide'));
+        if (slides.length === 0) return;
+
+        const mediaQuery = window.matchMedia(MOBILE_SLIDER_QUERY);
+
+        const updateLoadedSlides = () => {
+            const activeIndex = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
+            const mobileLoadedIndices = new Set([activeIndex, (activeIndex + 1) % slides.length]);
+
+            slides.forEach((slide, index) => {
+                setHeroSlideImageLoaded(slide, !mediaQuery.matches || mobileLoadedIndices.has(index));
+            });
+        };
+
+        updateLoadedSlides();
+        mediaQuery.addEventListener('change', updateLoadedSlides);
+
+        return () => mediaQuery.removeEventListener('change', updateLoadedSlides);
+    }, []);
+
     return (
         <section id="home" className="relative overflow-hidden bg-[#0a3555]">
             <div className="hero-slider absolute inset-0 z-0" aria-hidden="true">
                 <div
-                    className="hero-slide"
+                    className="hero-slide is-active"
                     data-title="معامل علي اعلي مستوي"
                     data-title-ar="معامل علي اعلي مستوي"
                     data-title-en="Advanced laboratories"
@@ -19,8 +58,8 @@ function HeroSlider() {
                     data-cta-en="Learn more"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-1-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/1.webp" alt="المعمل المركزي لمياه الشرب" width={1600} height={900} fetchPriority="high" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-1-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/1.webp" alt="المعمل المركزي لمياه الشرب" width={1600} height={900} {...{ fetchpriority: 'high' }} />
                     </picture>
                 </div>
                 <div
@@ -37,12 +76,12 @@ function HeroSlider() {
                     data-cta-en="More"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-2-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/2.webp" alt="تطبيق قرائتي لتسجيل قراءة عدادات المياه" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-2-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/2.webp" alt="تطبيق قرائتي لتسجيل قراءة عدادات المياه" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
-                    className="hero-slide is-active"
+                    className="hero-slide"
                     data-title="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-ar="شركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد"
                     data-title-en="Assiut and New Valley Water and Wastewater Company"
@@ -55,8 +94,8 @@ function HeroSlider() {
                     data-cta-en="Learn more"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-3-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/3.webp" alt="محطة معالجة مياه الشرب" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-3-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/3.webp" alt="محطة معالجة مياه الشرب" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
@@ -73,8 +112,8 @@ function HeroSlider() {
                     data-cta-en="Learn more"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-4-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/4.webp" alt="قاعة تدريب" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-4-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/4.webp" alt="قاعة تدريب" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
@@ -91,8 +130,8 @@ function HeroSlider() {
                     data-cta-en="Learn more"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-5-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/5.webp" alt="مركز الخط الساخن 125" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-5-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/5.webp" alt="مركز الخط الساخن 125" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
@@ -109,8 +148,8 @@ function HeroSlider() {
                     data-cta-en="Open service"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-6-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/6.webp" alt="تطبيق الهاتف الذكي hcww-125" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-6-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/6.webp" alt="تطبيق الهاتف الذكي hcww-125" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
                 <div
@@ -127,8 +166,8 @@ function HeroSlider() {
                     data-cta-en="Visit the Digital Platform"
                 >
                     <picture>
-                        <source media="(max-width: 767px)" srcSet="/images/slider/slide-7-mobile.webp" width={828} height={1500} />
-                        <img src="/images/slider/7.webp" alt="المنصة الرقمية لخدمات مياه الشرب والصرف الصحي" width={1600} height={900} loading="lazy" />
+                        <source media="(max-width: 767px)" data-mobile-srcset="/images/slider/slide-7-mobile.webp" width={828} height={1500} />
+                        <img data-desktop-src="/images/slider/7.webp" alt="المنصة الرقمية لخدمات مياه الشرب والصرف الصحي" width={1600} height={900} loading="lazy" />
                     </picture>
                 </div>
             </div>
@@ -147,9 +186,9 @@ function HeroSlider() {
                 </div>
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-5 z-30 flex items-center justify-center gap-2">
-                <button type="button" data-hero-dot data-slide-index="0" aria-label="Slide 1" className="hero-dot pointer-events-auto"></button>
+                <button type="button" data-hero-dot data-slide-index="0" aria-label="Slide 1" className="hero-dot hero-dot--active pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="1" aria-label="Slide 2" className="hero-dot pointer-events-auto"></button>
-                <button type="button" data-hero-dot data-slide-index="2" aria-label="Slide 3" className="hero-dot hero-dot--active pointer-events-auto"></button>
+                <button type="button" data-hero-dot data-slide-index="2" aria-label="Slide 3" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="3" aria-label="Slide 4" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="4" aria-label="Slide 5" className="hero-dot pointer-events-auto"></button>
                 <button type="button" data-hero-dot data-slide-index="5" aria-label="Slide 6" className="hero-dot pointer-events-auto"></button>

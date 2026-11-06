@@ -2,7 +2,7 @@ import sharp from 'sharp';
 
 const BACKEND_BASE_URL = (process.env.BACKEND_BASE_URL || 'https://backend.ascww.org').replace(/\/+$/, '');
 const ALLOWED_IMAGE_PREFIXES = ['/api/news/image/', '/api/image/'];
-const ALLOWED_WIDTHS = new Set([480, 800]);
+const ALLOWED_WIDTHS = new Set([480, 640, 800]);
 const CACHE_CONTROL = 'public, s-maxage=31536000, max-age=31536000, immutable';
 
 type ApiRequest = {
@@ -84,7 +84,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse): Promis
   const rawSource = req.query.src;
   const rawWidth = req.query.w;
   const imagePath = typeof rawSource === 'string' ? getSafeImagePath(rawSource) : null;
-  const width = rawWidth === '480' ? 480 : rawWidth === '800' ? 800 : Number.NaN;
+  const width = rawWidth === '480' ? 480 : rawWidth === '640' ? 640 : rawWidth === '800' ? 800 : Number.NaN;
 
   if (!imagePath || !ALLOWED_WIDTHS.has(width)) {
     res.setHeader('Cache-Control', 'no-store');
@@ -108,7 +108,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse): Promis
     try {
       const optimized = await sharp(original)
         .resize({ width, withoutEnlargement: true })
-        .webp({ quality: 72 })
+        .webp({ quality: 65 })
         .toBuffer();
 
       sendImage(res, upstream.status, optimized, 'image/webp');
