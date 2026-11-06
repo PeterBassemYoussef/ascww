@@ -35,8 +35,6 @@ const MIME_TYPES = {
 const GALLERY_API_PREFIX = '/api/gallery/';
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']);
 
-const IMAGE_PROXY_PATH_PATTERN = /^\/api\/(?:news|projects)\/image\//;
-const NON_WEBP_IMAGE_TYPES = ['image/svg+xml', 'image/gif', 'image/webp'];
 const SCHOOL_SUBMISSION_STATE_PATH = '/api/school-submission-data';
 const SCHOOL_SUBMISSION_GUARDED_PATHS = new Set(['/api/upload', '/api/addStudent']);
 const SKIPPED_UPSTREAM_HEADERS = new Set([
@@ -50,15 +48,6 @@ const SKIPPED_UPSTREAM_HEADERS = new Set([
   'trailer',
   'upgrade',
 ]);
-
-let sharpLoadPromise;
-const getSharp = async () => {
-  if (sharpLoadPromise) return sharpLoadPromise;
-  sharpLoadPromise = import('sharp')
-    .then((module) => module.default)
-    .catch(() => null);
-  return sharpLoadPromise;
-};
 
 const send = (res, statusCode, body, contentType = 'text/plain; charset=utf-8') => {
   res.statusCode = statusCode;
@@ -100,11 +89,10 @@ const createSsrResponseAdapter = (res) => {
   return adapter;
 };
 
-const copyUpstreamHeaders = (upstreamHeaders, res, { transformed = false } = {}) => {
+const copyUpstreamHeaders = (upstreamHeaders, res) => {
   upstreamHeaders.forEach((value, key) => {
     const normalizedKey = key.toLowerCase();
     if (SKIPPED_UPSTREAM_HEADERS.has(normalizedKey)) return;
-    if (transformed && (normalizedKey === 'content-length' || normalizedKey === 'content-type' || normalizedKey === 'etag' || normalizedKey === 'content-md5')) return;
     res.setHeader(key, value);
   });
 };
@@ -117,13 +105,6 @@ const buildBackendApiUrl = (requestUrl) => {
     ? apiPath.replace(/^\/api(?=\/|$)/, '')
     : apiPath;
   return `${BACKEND_BASE}${normalizedPath}${requestUrl.search}`;
-};
-
-const shouldTryWebpConversion = (req, pathname, method) => {
-  if (method !== 'GET') return false;
-  if (!IMAGE_PROXY_PATH_PATTERN.test(pathname)) return false;
-  const acceptHeader = String(req.headers.accept || '').toLowerCase();
-  return acceptHeader.includes('image/webp');
 };
 
 const parseBackendBoolean = (value) => {
@@ -242,7 +223,6 @@ const proxyApiRequest = async (req, res, requestUrl) => {
   const method = req.method || 'GET';
   const headers = { ...req.headers };
   delete headers.host;
-  const tryWebp = shouldTryWebpConversion(req, requestUrl.pathname, method);
 
   try {
     if (method !== 'GET' && SCHOOL_SUBMISSION_GUARDED_PATHS.has(requestUrl.pathname)) {
@@ -266,44 +246,8 @@ const proxyApiRequest = async (req, res, requestUrl) => {
     });
 
     res.statusCode = upstream.status;
-    const upstreamContentType = String(upstream.headers.get('content-type') || '').toLowerCase();
-    const canTranscode =
-      tryWebp
-      && upstream.ok
-      && upstreamContentType.startsWith('image/')
-      && !NON_WEBP_IMAGE_TYPES.some((type) => upstreamContentType.includes(type));
-
-    if (!canTranscode) {
-      copyUpstreamHeaders(upstream.headers, res);
-      await streamUpstreamBody(upstream, res);
-      return;
-    }
-
-    const sharp = await getSharp();
-    if (!sharp) {
-      copyUpstreamHeaders(upstream.headers, res);
-      await streamUpstreamBody(upstream, res);
-      return;
-    }
-
-    const sourceBuffer = Buffer.from(await upstream.arrayBuffer());
-
-    try {
-      const webpBuffer = await sharp(sourceBuffer).webp({ quality: 75, effort: 4 }).toBuffer();
-
-      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
-      res.setHeader('Content-Type', 'image/webp');
-      res.setHeader('Content-Length', String(webpBuffer.length));
-      res.setHeader('Vary', 'Accept');
-      res.setHeader('X-Image-Format', 'webp');
-      res.end(webpBuffer);
-    } catch {
-      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
-      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/octet-stream');
-      res.setHeader('Content-Length', String(sourceBuffer.length));
-      res.setHeader('X-Image-Format', 'original');
-      res.end(sourceBuffer);
-    }
+    copyUpstreamHeaders(upstream.headers, res);
+    await streamUpstreamBody(upstream, res);
   } catch (error) {
     send(res, 502, `API proxy failed: ${String(error)}`);
   }
