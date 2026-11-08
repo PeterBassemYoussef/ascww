@@ -17,7 +17,7 @@ const centers: Array<{
   {
     title: { ar: 'مركز خدمة عملاء الرئيسي', en: 'Main Customer Service Center' },
     image: '/images/call-center/4.webp',
-    mobile: '01278648276',
+    mobile: '01278647849',
     landline: '088-2131662',
     address: {
       ar: 'أسيوط-امتداد شارع الجيش امام مول النصر',
