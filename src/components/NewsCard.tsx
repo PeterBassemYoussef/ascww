@@ -4,6 +4,7 @@ import type { NewsItem } from '../types';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import { useSpeech } from '../hooks/useSpeech';
 import { NEWS_IMAGE_ENDPOINT, getLatestNewsImagePath, getNewsDetailsPath } from '../utils/helpers';
+import { fallbackToOriginalImage, getOptimizedImageSrcSet, getOptimizedImageUrl } from '../utils/imageOptimization';
 
 type NewsCardProps = {
     article: NewsItem;
@@ -50,13 +51,17 @@ function NewsCard({ article }: NewsCardProps) {
             <Link to={articlePath} className="relative block h-48 overflow-hidden">
                 {imageUrl ? (
                     <img
-                        src={imageUrl}
+                        src={getOptimizedImageUrl(imageUrl)}
+                        srcSet={getOptimizedImageSrcSet(imageUrl)}
+                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                        width={800}
+                        height={600}
                         alt={article.title || t('صورة الخبر', 'News image')}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                         decoding="async"
                         onError={(event) => {
-                            event.currentTarget.style.display = 'none';
+                            fallbackToOriginalImage(event.currentTarget, imageUrl);
                         }}
                     />
                 ) : (

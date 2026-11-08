@@ -9,6 +9,7 @@ import {
     truncateText,
     extractPlainTextFromHtml,
 } from '../utils/helpers';
+import { fallbackToOriginalImage, getOptimizedImageSrcSet, getOptimizedImageUrl } from '../utils/imageOptimization';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 type LatestNewsProps = {
@@ -94,13 +95,17 @@ function LatestNews({ latestNews, newsLoading, newsError }: LatestNewsProps) {
                                     <Link to={detailsPath} className="relative block aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         {imageUrl ? (
                                             <img
-                                                src={imageUrl}
+                                                src={getOptimizedImageUrl(imageUrl)}
+                                                srcSet={getOptimizedImageSrcSet(imageUrl)}
+                                                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                                                width={800}
+                                                height={600}
                                                 alt={newsItem.title || t('صورة الخبر', 'News image')}
                                                 className="absolute inset-0 !h-full !w-full object-cover transition duration-500 hover:scale-105"
                                                 loading="lazy"
                                                 decoding="async"
                                                 onError={(event) => {
-                                                    event.currentTarget.style.display = 'none';
+                                                    fallbackToOriginalImage(event.currentTarget, imageUrl);
                                                 }}
                                             />
                                         ) : (

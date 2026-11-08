@@ -6,7 +6,7 @@ const HOME_DESCRIPTION = 'البوابة الإلكترونية لشركة مي�
 const NEWS_DESCRIPTION = 'أرشيف الأخبار الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
 const PROJECTS_DESCRIPTION = 'أرشيف المشروعات الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
 const TENDERS_DESCRIPTION = 'أرشيف المناقصات الرسمي لشركة مياه الشرب والصرف الصحي بأسيوط والوادي الجديد.';
-const LOGO_PATH = '/images/ascww-logo.png';
+const LOGO_PATH = '/images/ascww-logo.webp';
 const ROUTE_TITLES = {
   '/': SITE_TITLE,
   '/about': 'نبذه عن الشركة',

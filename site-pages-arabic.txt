@@ -1,79 +1,91 @@
-قائمة روابط الصفحات  للموقع
-================================
+قائمة روابط الصفحات والتبويبات للموقع
+=====================================
 
-
-الصفحات الرئيسية
----------------
-https://ascww.org/ | الصفحة الرئيسية
+الصفحات والمسارات الداخلية
+-------------------------
+https://ascww.org/ | الرئيسية
 https://ascww.org/about | عن الشركة
 https://ascww.org/branches | الفروع
 https://ascww.org/about/vision-mission | الرؤية والرسالة
 https://ascww.org/about/structure | الهيكل التنظيمي
-https://ascww.org/about/regulations | الأنظمة واللوائح
+https://ascww.org/about/regulations | اللائحة الموحدة للعقود والمشتريات
 https://ascww.org/about/achievements | إنجازات الشركة
-https://ascww.org/awareness | التوعية
-https://ascww.org/awareness/contact | الاستشارات والتواصل
-https://ascww.org/awareness/cyber-security | إرشادات الأمان السيبراني
-https://ascww.org/awareness/community-outreach | للأطفال والنساء
-https://ascww.org/lab-of-company | معامل الشركة
-https://ascww.org/waste-of-company | النفايات
-https://ascww.org/training-of-company | التدريب
-https://ascww.org/it-management | إدارة تقنية المعلومات
-https://ascww.org/school-submission-data | بيانات تقديم المدارس
-https://ascww.org/school-of-company | مدرسة الشركة
-https://ascww.org/sport-of-company | رياضة الشركة
-https://ascww.org/sanitation | الصرف الصحي
+https://ascww.org/about/integrity | إدارة دعم النزاهة
+https://ascww.org/about/integrity-activities | أبرز أعمال دعم النزاهة
+https://ascww.org/about/code-of-conduct | السلوك الوظيفي
+https://ascww.org/awareness | التوعية والاتصال
+https://ascww.org/awareness/contact | التوعية والاتصال والاستشارات
+https://ascww.org/awareness/cyber-security | إرشادات الأمن السيبراني
+https://ascww.org/awareness/community-outreach | ركن الأطفال ولكِ سيدتي
+https://ascww.org/laboratories-sector | عن قطاع المعامل
+https://ascww.org/laboratories-sector/structure | هيكل قطاع المعامل
+https://ascww.org/laboratories-sector/achievements | إنجازات قطاع المعامل
+https://ascww.org/laboratories-sector/services | خدمات قطاع المعامل
+https://ascww.org/laboratories-sector/central-lab | المعمل المركزي
+https://ascww.org/laboratories-sector/central-lab/:documentId | صفحات المعمل المركزي وأجهزة المعامل (معرّف الصفحة من 1 إلى 12)
+https://ascww.org/lab-of-company | معامل الشركة - معرض الصور
+https://ascww.org/waste-of-company | محطات الصرف - معرض الصور
+https://ascww.org/training-of-company | مركز التدريب - معرض الصور
+https://ascww.org/it-management | إدارة تكنولوجيا المعلومات
+https://ascww.org/school-registration | التسجيل بالمدرسة الفنية
+https://ascww.org/school-of-company | المدرسة الفنية - معرض الصور
+https://ascww.org/sport-of-company | النشاط الرياضي - معرض الصور
+https://ascww.org/sanitation | صفحة معالجة الصرف الصحي
 https://ascww.org/sanitation/treatment | معالجة مياه الصرف
-https://ascww.org/sanitation/safe-disposal | التخلص الآمن من مياه الصرف
-https://ascww.org/sanitation/network-preservation | الحفاظ على شبكة الصرف
-https://ascww.org/sanitation/industrial-waste | النفايات الصناعية
-https://ascww.org/sanitation/industrial-waste-management | إدارة النفايات الصناعية
-https://ascww.org/services/customer-charter | ميثاق الخدمة
+https://ascww.org/sanitation/safe-disposal | أهمية التخلص الآمن من مياه الصرف ومعالجتها
+https://ascww.org/sanitation/network-preservation | أهمية الحفاظ على شبكة الصرف الصحي
+https://ascww.org/sanitation/industrial-waste | الصرف الصناعي
+https://ascww.org/sanitation/industrial-waste-management | دور إدارة الصرف الصناعي
+https://ascww.org/services/customer-charter | ميثاق المتعاملين
 https://ascww.org/news | أرشيف الأخبار
-https://ascww.org/projects | أرشيف المشاريع
+https://ascww.org/news/:id | تفاصيل الخبر
+https://ascww.org/projects | أرشيف المشروعات
+https://ascww.org/projects/:id | تفاصيل المشروع
 https://ascww.org/tenders | أرشيف المناقصات
-https://ascww.org/training/administrative | التدريب الإداري
-https://ascww.org/services/customer-care | مركز الاتصال
-https://ascww.org/services/inquiries | تقديم طلب
+https://ascww.org/tenders/:id | تفاصيل المناقصة
+https://ascww.org/training/administrative | الإدارة العامة للتدريب
+https://ascww.org/training/training-hall | قاعات التدريب
+https://ascww.org/services/customer-care | خدمة العملاء
+https://ascww.org/services/inquiries | الأسئلة الشائعة
 https://ascww.org/services/complaints | تقديم شكوى
 https://ascww.org/services/hotline-app | تطبيق الخط الساخن
-https://ascww.org/services/meter-reading | تطبيق قراءة العداد
-https://ascww.org/about/integrity | دعم النزاهة
-https://ascww.org/about/integrity-activities | أنشطة النزاهة
-https://ascww.org/about/code-of-conduct | السلوك المهني
-https://ascww.org/trips-the-boss | رحلات الرئيس
-https://ascww.org/careers/vacancies | الوظائف والمنافسات
-https://ascww.org/careers/results | نتائج العامل
-https://ascww.org/services/guide | دليل الخدمات
-https://ascww.org/services/contract-procedures | إجراءات التعاقد مع الخدمة
-https://ascww.org/services/search | البحث
+https://ascww.org/services/meter-reading | تطبيق قراءتي
+https://ascww.org/trips-the-boss | جولات رئيس مجلس الإدارة
+https://ascww.org/careers/vacancies | المسابقات والوظائف
+https://ascww.org/careers/results | نتائج المسابقات
+https://ascww.org/services/guide | دليل المستخدم
+https://ascww.org/services/contract-procedures | رحلة المتعامل للتعاقد على طلب خدمة
+https://ascww.org/services/search | البحث في أخبار الشركة
 
+المسارات القديمة التي تحوّل إلى المسارات الحالية
+-----------------------------------------------
+https://ascww.org/school-submission-data | يحوّل إلى التسجيل بالمدرسة الفنية
 
-نصوص عناصر "القائمة الرئيسية" كما تظهر حرفيًا باللغة العربية:
+عناصر القائمة الرئيسية على أجهزة سطح المكتب
+------------------------------------------
 - الرئيسية
 - عن الشركة
 - التوعية والاتصال
+- قطاع المعامل
 - المناقصات
 - التدريب
 - وظائف
 - خدمات
-- دعم النزاهة
 - معرض الصور
 
-قوائم فرعية (نصوص داخل كل تبويب):
+القوائم الفرعية كما تظهر في الموقع
+---------------------------------
 عن الشركة:
 - نبذه عن الشركة
 - فروع الشركه
 - مشروعات الشركة
 - أرشيف الأخبار
-- الصرف الصحي
-	- معالجه الصرف الصحي
-	- أهمية التخلص الآمن من الصرف الصحى ومعالجته
-	- أهميه الحفاظ علي شبكه الصرف الصحي
-	- الصرف الصناعي
-	- دور إدارة الصرف الصناعي
 - الرؤيه والرساله
 - إدارة تكنولوجيا المعلومات
+- دعم النزاهة
+  - إدارة دعم النزاهة
+  - أبرز أعمال دعم النزاهة
+  - السلوك الوظيفي
 - الهيكل التنظيمي
 - إنجازات الشركة
 - اللائحه الموحده للعقود والمشتريات
@@ -83,8 +95,35 @@ https://ascww.org/services/search | البحث
 - ارشادات الامن السيبرانى
 - ركن الأطفال ولكِ سيدتي
 
+قطاع المعامل:
+- عن قطاع المعامل
+- هيكل قطاع المعامل
+- إنجازات قطاع المعامل
+- خدمات قطاع المعامل
+- المعمل المركزي
+  - نبذة المعمل المركزي لمياه الشرب
+  - معمل سحب وتكويد العينات
+  - المعمل العضوي
+  - أجهزة المعمل العضوي
+  - معمل غير العضوي
+  - المعمل البكتريولوجي
+  - المعمل البيولوجي
+  - إدارة الجودة
+  - أجهزة سحب وتكويد العينات
+  - أجهزة المعمل غير العضوي
+  - أجهزة المعمل البكتريولوجي
+  - أجهزة المعمل البيولوجي
+- الصرف الصحي
+  - معالجه الصرف الصحي
+  - أهمية التخلص الآمن من الصرف الصحى ومعالجته
+  - أهميه الحفاظ علي شبكه الصرف الصحي
+- الصرف الصناعي
+  - الصرف الصناعي
+  - دور إدارة الصرف الصناعي
+
 التدريب:
-- أنواع التدريب والقاعات
+- الإدارة العامة للتدريب
+- قاعات التدريب
 - المدرسة الفنية
 
 وظائف:
@@ -92,21 +131,20 @@ https://ascww.org/services/search | البحث
 - نتائج المسابقات
 
 خدمات:
-- استعلم عن فاتورتك
-- خدمه العملاء
-- الخط الساخن
-- ابحث فى اخبار الشركة وخدماتها
+- المنصة الرقمية لخدمات مياه الشرب والصرف الصحي
+- الاستعلام عن قيمة الفاتورة
+- سداد الفواتير إلكترونياً
+- تسجيل قراءة عداد المياه
 - تطبيق قراءتي
-- ميثاق المتعاملين
-- دليل المستخدمين
-- رحلة المتعامل للتعاقد على طلب خدمة
 - الأسئلة الشائعة
-- تقديم شكوي
-
-دعم النزاهة:
-- نبذه عن إدارة دعم النزاهة
-- أبرز أعمال دعم النزاهية
-- السلوك الوظيفي
+- تقديم شكوى
+- خدمة العملاء
+- الخط الساخن
+- خدمات أخرى
+  - البحث في أخبار الشركة
+  - ميثاق المتعاملين
+  - دليل المستخدم
+  - رحلة المتعامل للتعاقد على طلب خدمة
 
 معرض الصور:
 - جولات رئيس مجلس الإدارة
@@ -116,74 +154,4 @@ https://ascww.org/services/search | البحث
 - المدرسه الفنيه
 - النشاط الرياضي
 
-ملاحظة: هذه النصوص مأخوذة حرفيًا من `src/components/Header.tsx` وتوضع هنا لسهولة المراجعة والمرجعية.
-
-
-القائمة مع الروابط (النص العربي — الرابط):
-- الرئيسية — https://ascww.org/
-- عن الشركة — https://ascww.org/about
-- التوعية والاتصال — https://ascww.org/awareness
-- المناقصات — https://ascww.org/tenders
-- التدريب — https://ascww.org/training/administrative
-- وظائف — https://ascww.org/careers/vacancies
-- خدمات — https://ascww.org/services/customer-care
-- دعم النزاهة — https://ascww.org/about/integrity
-- معرض الصور — https://ascww.org/trips-the-boss
-
-تفصيل القوائم الفرعية مع الروابط:
-عن الشركة:
-- نبذه عن الشركة — https://ascww.org/about
-- فروع الشركه — https://ascww.org/branches
-- مشروعات الشركة — https://ascww.org/projects
-- أرشيف الأخبار — https://ascww.org/news
-- الصرف الصحي — https://ascww.org/sanitation
-	- معالجه الصرف الصحي — https://ascww.org/sanitation/treatment
-	- أهمية التخلص الآمن من الصرف الصحى ومعالجته — https://ascww.org/sanitation/safe-disposal
-	- أهميه الحفاظ علي شبكه الصرف الصحي — https://ascww.org/sanitation/network-preservation
-	- الصرف الصناعي — https://ascww.org/sanitation/industrial-waste
-	- دور إدارة الصرف الصناعي — https://ascww.org/sanitation/industrial-waste-management
-- الرؤيه والرساله — https://ascww.org/about/vision-mission
-- إدارة تكنولوجيا المعلومات — https://ascww.org/it-management
-- الهيكل التنظيمي — https://ascww.org/about/structure
-- إنجازات الشركة — https://ascww.org/about/achievements
-- اللائحه الموحده للعقود والمشتريات — https://ascww.org/about/regulations
-
-التوعية والاتصال:
-- التوعية والأتصال — https://ascww.org/awareness/contact
-- ارشادات الامن السيبرانى — https://ascww.org/awareness/cyber-security
-- ركن الأطفال ولكِ سيدتي — https://ascww.org/awareness/community-outreach
-
-التدريب:
-- أنواع التدريب والقاعات — https://ascww.org/training/administrative
-- المدرسة الفنية — https://ascww.org/school-submission-data
-
-وظائف:
-- مسابقات و وظائف — https://ascww.org/careers/vacancies
-- نتائج المسابقات — https://ascww.org/careers/results
-
-خدمات:
-- استعلم عن فاتورتك — http://bills.ascww.com.eg/Inqeury.aspx
-- خدمه العملاء — https://ascww.org/services/customer-care
-- الخط الساخن — https://ascww.org/services/hotline-app
-- ابحث فى اخبار الشركة وخدماتها — https://ascww.org/services/search
-- تطبيق قراءتي — https://ascww.org/services/meter-reading
-- ميثاق المتعاملين — https://ascww.org/services/customer-charter
-- دليل المستخدمين — https://ascww.org/services/guide
-- رحلة المتعامل للتعاقد على طلب خدمة — https://ascww.org/services/contract-procedures
-- الأسئلة الشائعة — https://ascww.org/services/inquiries
-- تقديم شكوي — https://ascww.org/services/complaints
-
-دعم النزاهة:
-- نبذه عن إدارة دعم النزاهة — https://ascww.org/about/integrity
-- أبرز أعمال دعم النزاهة — https://ascww.org/about/integrity-activities
-- السلوك الوظيفي — https://ascww.org/about/code-of-conduct
-
-معرض الصور:
-- جولات رئيس مجلس الإدارة — https://ascww.org/trips-the-boss
-- معامل الشركه — https://ascww.org/lab-of-company
-- محطات الصرف — https://ascww.org/waste-of-company
-- مركز التدريب — https://ascww.org/training-of-company
-- المدرسه الفنيه — https://ascww.org/school-of-company
-- النشاط الرياضي — https://ascww.org/sport-of-company
-
-ملاحظة: إذا تريدي أن أرتبها بصيغة CSV أو JSON أو ملف منفصل، أخبريني وسأجهّزها.
+ملاحظة: في قائمة الهاتف يظهر «دعم النزاهة» كتَبويب مستقل، بينما يندرج تحت «عن الشركة» في قائمة أجهزة سطح المكتب. نصوص التبويبات مأخوذة من `src/components/Header.tsx`، ومسارات الصفحات من `src/constants/routes.ts` و`src/App.tsx`.

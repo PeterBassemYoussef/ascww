@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
+import { fallbackToOriginalImage } from '../utils/imageOptimization';
 
 export type GalleryLightboxImage = {
   src: string;
+  originalSrc?: string;
+  srcSet?: string;
+  sizes?: string;
+  width?: number;
+  height?: number;
   alt: string;
 };
 
@@ -145,8 +151,17 @@ function GalleryLightbox({
 
       <img
         src={currentImage.src}
+        srcSet={currentImage.srcSet}
+        sizes={currentImage.sizes}
+        width={currentImage.width}
+        height={currentImage.height}
         alt={currentImage.alt}
+        loading="lazy"
+        decoding="async"
         className="max-h-[92vh] max-w-[92vw] object-contain shadow-2xl"
+        onError={(event) => {
+          if (currentImage.originalSrc) fallbackToOriginalImage(event.currentTarget, currentImage.originalSrc);
+        }}
         onClick={(event) => event.stopPropagation()}
       />
     </div>

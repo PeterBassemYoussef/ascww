@@ -628,7 +628,7 @@ function SchoolRegistrationPage() {
                 ×
               </button>
               <img
-                src="/images/ascww-logo.png"
+                src="/images/ascww-logo.webp"
                 alt={t('شعار الشركة', 'Company logo')}
                 className="mx-auto mb-3 h-10 w-auto"
               />
@@ -662,7 +662,7 @@ function SchoolRegistrationPage() {
                 ×
               </button>
               <img
-                src="/images/ascww-logo.png"
+                src="/images/ascww-logo.webp"
                 alt={t('شعار الشركة', 'Company logo')}
                 className="mx-auto mb-2 h-10 w-auto"
               />
@@ -1172,6 +1172,5 @@ function SchoolRegistrationPage() {
 }
 
 export default SchoolRegistrationPage;
-
 
 
