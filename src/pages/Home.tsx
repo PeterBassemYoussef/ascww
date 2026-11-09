@@ -53,7 +53,9 @@ function HomePage() {
     if (!showServicesPrompt) return;
 
     const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setShowServicesPrompt(false);
     };
@@ -61,6 +63,7 @@ function HomePage() {
 
     return () => {
       document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
       document.removeEventListener('keydown', onKeyDown);
     };
   }, [showServicesPrompt]);
@@ -520,12 +523,14 @@ function HomePage() {
     {showServicesPrompt && (
       <div
         className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-950/65 p-3 backdrop-blur-sm sm:p-5"
+        onClick={dismissServicesPrompt}
         role="dialog"
         aria-modal="true"
         aria-labelledby="services-prompt-title"
       >
         <div
-          className="relative aspect-[3/2] w-[min(96vw,1152px,138vh)] overflow-hidden rounded-[3%] shadow-2xl"
+          className="relative aspect-[3/2] w-[min(96vw,600px,138vh)] shadow-2xl"
+          onClick={(event) => event.stopPropagation()}
         >
           <img
             src={`/images/services/pop-up${isEnglish ? 'E' : ''}.webp`}
@@ -536,9 +541,9 @@ function HomePage() {
             type="button"
             aria-label={t('إغلاق', 'Close')}
             onClick={dismissServicesPrompt}
-            className="absolute right-[2.4%] top-[2.4%] inline-flex h-[5.5%] min-h-8 max-h-12 aspect-square items-center justify-center rounded-full bg-white/90 text-[#0a3555] shadow-md transition hover:scale-105 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b05a]"
+            className={`absolute ${isEnglish ? 'left-0' : 'right-0'} top-0 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#0a3555] shadow-md transition hover:scale-105 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b05a]`}
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-1/2 w-1/2">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-2/5 w-2/5">
               <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" />
             </svg>
           </button>
