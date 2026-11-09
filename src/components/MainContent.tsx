@@ -46,37 +46,37 @@ const homeServices: HomeService[] = [
 function ServiceIcon({ name }: { name: ServiceIconName }) {
     const iconPaths: Record<ServiceIconName, string> = {
         portal: 'M3 4h18v13H3z M8 21h8 M12 17v4 M7 8h4 M7 12h10 M15 8h2',
-        bill: 'M6 3h9l4 4v14H6z M14 3v5h5 M9 11h7 M9 16h7 M9 20h7',
+        bill: 'M6 3h9l4 4v14H6z M14 3v5h5',
         payment: 'M3 6h18v13H3z M3 10h18 M7 15h4',
-        meter: 'M4 8h16v12H4z M7 8V5h10v3 M8 14a4 4 0 0 1 8 0 M12 14l2-2 M8 20v2 M16 20v2',
+        meter: 'M8 3h8v3H8z M9 6v1 M15 6v1 M10.5 17.5V21 M14.5 17.5V21 M8.5 21h8 M10.5 20h4 M5 12a5.5 5.5 0 1 0 11 0a5.5 5.5 0 0 0-11 0z M7 12a3.5 3.5 0 1 0 7 0a3.5 3.5 0 0 0-7 0z M10.5 12l1.8-1.6',
         hotline: 'M4 13v-2a8 8 0 0 1 16 0v2 M4 13h3v6H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 1-2 M20 13h-3v6h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-1-2 M17 19a6 6 0 0 1-5 2',
         reading: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2 M9 5h6 M10 18h4 M12 8c-2 2-3 3.5-3 5a3 3 0 0 0 6 0c0-1.5-1-3-3-5z',
         booking: 'M3 21V5l9-3 9 3v16 M3 10h18 M8 21v-6h8v6 M7 7h.01 M12 7h.01 M17 7h.01',
         wastewater: 'M9 3h6 M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3 M8 15h8 M10 18h4',
         filter: 'M3 5h18l-7 8v6l-4 2v-8z M7 9h10',
         water: 'M12 2C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-13z M9 16a3 3 0 0 0 3 3',
-        tank: 'M5 4h14v16H5z M5 8h14 M8 4V2h8v2 M9 12h.01 M15 12h.01 M9 16h6 M3 20h18',
+        tank: 'M7 3h10v2h2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5h2z M9 21v1 M15 21v1 M7 22h10',
         calibration: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M2 14h4 M10 8h4 M18 16h4',
     };
     const iconAccentPaths: Record<ServiceIconName, string> = {
         portal: 'M7 8h4',
-        bill: 'M9 11h7 M9 16h4',
+        bill: 'M9 11h7 M9 16h7',
         payment: 'M7 15h4',
-        meter: 'M12 14l2-2 M4 11h2 M18 11h2',
+        meter: 'M10.5 12l1.8-1.6',
         hotline: 'M9 10a3 3 0 0 1 6 0',
         reading: 'M12 8c-2 2-3 3.5-3 5a3 3 0 0 0 6 0c0-1.5-1-3-3-5z',
         booking: 'M7 7h.01 M12 7h.01 M17 7h.01',
         wastewater: 'M8 15h8',
         filter: 'M7 9h10',
         water: 'M9 16a3 3 0 0 0 3 3',
-        tank: 'M5 8h14 M9 16h6',
+        tank: 'M9 10l.35.75.75.35-.75.35L9 12.2l-.35-.75-.75-.35.75-.35z M15 10l.35.75.75.35-.75.35-.35.75-.35-.75-.75-.35.75-.35z M12 14l.35.75.75.35-.75.35-.35.75-.35-.75-.75-.35.75-.35z',
         calibration: 'M10 8h4',
     };
 
     return (
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#0a3555" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11 shrink-0 transition-transform duration-300 group-hover:scale-105">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#0a3555" strokeWidth={name === 'meter' ? 1.4 : 1.7} strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11 shrink-0 transition-transform duration-300 group-hover:scale-105">
             <path d={iconPaths[name]} />
-            <path d={iconAccentPaths[name]} stroke="#d7b05a" strokeWidth="2" />
+            {iconAccentPaths[name] && <path d={iconAccentPaths[name]} stroke="#d7b05a" strokeWidth={name === 'tank' || name === 'meter' ? 1.5 : 2} />}
         </svg>
     );
 }
@@ -131,7 +131,7 @@ function MainContent() {
     return (
         <>
             {/* الخدمات الإلكترونية */}
-            <section id="our-services" dir={isEnglish ? 'ltr' : 'rtl'} className="bg-slate-50 py-12 sm:py-16 lg:py-20">
+            <section id="our-services" dir={isEnglish ? 'ltr' : 'rtl'} className="scroll-mt-28 bg-slate-50 py-12 sm:py-16 lg:py-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-10 text-center animate-on-scroll sm:mb-16">
                         <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">{t('خدماتنا الإلكترونية', 'Our E-Services')}</h2>
