@@ -131,7 +131,7 @@ function MainContent() {
     return (
         <>
             {/* الخدمات الإلكترونية */}
-            <section id="our-services" dir={isEnglish ? 'ltr' : 'rtl'} className="bg-slate-50 py-12 sm:py-16 lg:py-20">
+            <section id="our-services" dir={isEnglish ? 'ltr' : 'rtl'} className="scroll-mt-28 bg-slate-50 py-12 sm:py-16 lg:py-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-10 text-center animate-on-scroll sm:mb-16">
                         <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">{t('خدماتنا الإلكترونية', 'Our E-Services')}</h2>

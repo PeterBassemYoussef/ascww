@@ -514,7 +514,7 @@ function Header() {
                 const trigger = event.currentTarget as HTMLElement;
                 const key = event.key;
                 if (!menu) return;
-                if (key === 'ArrowDown' || key === 'Enter' || key === ' ') {
+                if (key === 'ArrowDown' || key === ' ' || (key === 'Enter' && trigger.tagName !== 'A')) {
                     event.preventDefault();
                     openDropdown(dropdown);
                     focusMenuItem(menu, 'first');
@@ -940,7 +940,7 @@ function Header() {
                                     className={getDesktopNavTriggerClassName(isJobsActive)}
                                     aria-label={t('قائمة الوظائف', 'Jobs menu')}
                                 >
-                                    {t('وظائف', 'Jobs')}
+                                    {t('الوظائف', 'Jobs')}
                                 </button>
                                 <div className="nav-dropdown-menu">
                                     <a className="nav-dropdown-item" href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a>
@@ -949,13 +949,13 @@ function Header() {
                             </div>
 
                             <div className="nav-dropdown group">
-                                <button
-                                    type="button"
+                                <Link
                                     className={getDesktopNavTriggerClassName(isServicesActive)}
-                                    aria-label={t('قائمة الخدمات', 'Services menu')}
+                                    to={`${ROUTES.home}#our-services`}
+                                    aria-label={t('الخدمات', 'Services')}
                                 >
-                                    {t('خدمات', 'Services')}
-                                </button>
+                                    {t('الخدمات', 'Services')}
+                                </Link>
                                 <div className="nav-dropdown-menu nav-dropdown-menu--submenu">
                                     <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
                                     <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>
@@ -1212,9 +1212,9 @@ function Header() {
                         </details>
                         <Link className="rounded-lg bg-slate-100 px-3 py-2" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                         <details className="mobile-nav-group"><summary>{t('التدريب', 'Training')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</a><a href={ROUTES.trainingHallsBooking}>{t('قاعات التدريب', 'Training Halls')}</a><a href={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</a></div></details>
-                        <details className="mobile-nav-group"><summary>{t('وظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>
+                        <details className="mobile-nav-group"><summary>{t('الوظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>
                         <details className="mobile-nav-group">
-                            <summary>{t('خدمات', 'Services')}</summary>
+                            <summary>{t('الخدمات', 'Services')}</summary>
                             <div className="mobile-nav-submenu">
                                 <a href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
                                 <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>

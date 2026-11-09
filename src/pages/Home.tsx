@@ -1,7 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { AdminInfoResponse, NewsItem } from '../types';
 import { ADMIN_INFO_ENDPOINT, NEWS_ENDPOINT } from '../utils/helpers';
+import { ROUTES } from '../constants/routes';
 import Header from '../components/Header';
 import HeroSlider, { setHeroSlideImageLoaded } from '../components/HeroSlider';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
@@ -10,12 +11,26 @@ const BossWord = lazy(() => import('../components/BossWord'));
 const LatestNews = lazy(() => import('../components/LatestNews'));
 const MainContent = lazy(() => import('../components/MainContent'));
 const Footer = lazy(() => import('../components/Footer'));
+const SERVICES_PROMPT_DISMISSED_KEY = 'ascww-services-prompt-dismissed';
+
+function hasDismissedServicesPrompt() {
+  try {
+    return window.localStorage.getItem(SERVICES_PROMPT_DISMISSED_KEY) === 'true';
+  } catch (error) {
+    console.error('Unable to read services prompt preference.', error);
+    return false;
+  }
+}
 
 function HomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { language } = useSiteLanguage();
   const isEnglish = language === 'en';
   const t = (arabic: string, english: string) => (isEnglish ? english : arabic);
+  const [showServicesPrompt, setShowServicesPrompt] = useState(
+    () => location.pathname === ROUTES.home && location.hash !== '#our-services' && !hasDismissedServicesPrompt(),
+  );
   const [adminInfo, setAdminInfo] = useState<AdminInfoResponse | null>(null);
   const [adminInfoLoading, setAdminInfoLoading] = useState(true);
   const [adminInfoError, setAdminInfoError] = useState<string | null>(null);
@@ -24,6 +39,31 @@ function HomePage() {
   const [newsError, setNewsError] = useState<string | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const dismissServicesPrompt = () => {
+    try {
+      window.localStorage.setItem(SERVICES_PROMPT_DISMISSED_KEY, 'true');
+    } catch (error) {
+      console.error('Unable to save services prompt preference.', error);
+    }
+    setShowServicesPrompt(false);
+  };
+
+  useEffect(() => {
+    if (!showServicesPrompt) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowServicesPrompt(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [showServicesPrompt]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -477,6 +517,47 @@ function HomePage() {
 
   return (
     <>
+    {showServicesPrompt && (
+      <div
+        className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-950/65 p-3 backdrop-blur-sm sm:p-5"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="services-prompt-title"
+      >
+        <div
+          className="relative aspect-[3/2] w-[min(96vw,1152px,138vh)] overflow-hidden rounded-[3%] shadow-2xl"
+        >
+          <img
+            src={`/images/services/pop-up${isEnglish ? 'E' : ''}.webp`}
+            alt={t('مرحبًا بك في موقعنا الإلكتروني. خدماتك الإلكترونية أصبحت أسهل! اكتشف جميع الخدمات الإلكترونية.', 'Welcome to our website. Your electronic services are easier! Discover all electronic services.')}
+            className="absolute inset-0 h-full w-full object-contain"
+          />
+          <button
+            type="button"
+            aria-label={t('إغلاق', 'Close')}
+            onClick={dismissServicesPrompt}
+            className="absolute right-[2.4%] top-[2.4%] inline-flex h-[5.5%] min-h-8 max-h-12 aspect-square items-center justify-center rounded-full bg-white/90 text-[#0a3555] shadow-md transition hover:scale-105 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b05a]"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-1/2 w-1/2">
+              <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" />
+            </svg>
+          </button>
+          <h2 id="services-prompt-title" className="sr-only">
+            {t('مرحبًا بك في موقعنا الإلكتروني. خدماتك الإلكترونية أصبحت أسهل!', 'Welcome to our website. Your electronic services are easier!')}
+          </h2>
+          <button
+            type="button"
+            onClick={() => {
+              setShowServicesPrompt(false);
+              navigate(`${ROUTES.home}#our-services`);
+            }}
+            aria-label={t('اكتشف جميع الخدمات الإلكترونية', 'Discover all electronic services')}
+            className="absolute bottom-[8%] left-[28%] h-[10%] w-[44%] rounded-full bg-transparent transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#d7b05a]"
+          >
+          </button>
+        </div>
+      </div>
+    )}
     <Header />
     <main>
       <HeroSlider />
