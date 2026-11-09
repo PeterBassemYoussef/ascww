@@ -59,9 +59,6 @@ const runtimePackageJson = {
     start: 'node server.js',
     'start:prod': 'node server.js',
   },
-  dependencies: {
-    sharp: sourcePackageJson.dependencies?.sharp,
-  },
 };
 
 fs.writeFileSync(

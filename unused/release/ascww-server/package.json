@@ -10,8 +10,5 @@
   "scripts": {
     "start": "node server.js",
     "start:prod": "node server.js"
-  },
-  "dependencies": {
-    "sharp": "^0.34.4"
   }
 }

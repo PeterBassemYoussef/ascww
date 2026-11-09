@@ -781,17 +781,15 @@ function Header() {
                                 className="h-10 w-auto sm:h-8 lg:h-10"
                                 loading="eager"
                                 decoding="async"
-                                fetchPriority="high"
                             />
                             <img
-                                src="/images/ascww-logo.png"
+                                src="/images/ascww-logo.webp"
                                 alt={t('شعار الشركة', 'Company logo')}
-                                width={250}
-                                height={205}
+                                width={160}
+                                height={132}
                                 className="h-10 w-auto sm:h-8 lg:h-10"
                                 loading="eager"
                                 decoding="async"
-                                fetchPriority="high"
                             />
                         </Link>
 
@@ -958,17 +956,28 @@ function Header() {
                                 >
                                     {t('خدمات', 'Services')}
                                 </button>
-                                <div className="nav-dropdown-menu">
-                                    <a className="nav-dropdown-item" href="http://bills.ascww.com.eg/Inqeury.aspx" target="_blank" rel="noopener noreferrer">{t('استعلم عن فاتورتك', 'Check your bill')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.callCenter}>{t('خدمه العملاء', 'Customer service')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a>
-                                    <Link className="nav-dropdown-item" to={ROUTES.search}>{t('ابحث فى اخبار الشركة وخدماتها', 'Search company news and services')}</Link>
+                                <div className="nav-dropdown-menu nav-dropdown-menu--submenu">
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفواتير إلكترونياً', 'Pay bills online')}</a>
+                                    <a className="nav-dropdown-item" href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءة عداد المياه', 'Register a water meter reading')}</a>
                                     <a className="nav-dropdown-item" href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
-                                    <Link className="nav-dropdown-item" to={ROUTES.servicesEvidance}>{t('دليل المستخدمين', 'User guide')}</Link>
-                                    <Link className="nav-dropdown-item" to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
                                     <a className="nav-dropdown-item" href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a>
-                                    <a className="nav-dropdown-item" href={ROUTES.provideComplaine}>{t('تقديم شكوي', 'Submit a complaint')}</a>
+                                    <a className="nav-dropdown-item" href={ROUTES.provideComplaine}>{t('تقديم شكوى', 'Submit a complaint')}</a>
+                                    <a className="nav-dropdown-item" href={ROUTES.callCenter}>{t('خدمة العملاء', 'Customer service')}</a>
+                                    <a className="nav-dropdown-item" href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a>
+                                    <div className="nav-submenu nav-submenu--opens-up">
+                                        <button type="button" className="nav-submenu-trigger">
+                                            {t('خدمات أخرى', 'Other services')}
+                                            <span className="nav-submenu-caret" aria-hidden="true">◀</span>
+                                        </button>
+                                        <div className="nav-submenu-menu">
+                                            <Link className="nav-dropdown-item" to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
+                                            <a className="nav-dropdown-item" href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
+                                            <Link className="nav-dropdown-item" to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
+                                            <Link className="nav-dropdown-item" to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1204,7 +1213,29 @@ function Header() {
                         <Link className="rounded-lg bg-slate-100 px-3 py-2" to={ROUTES.tendersArchive}>{t('المناقصات', 'Tenders')}</Link>
                         <details className="mobile-nav-group"><summary>{t('التدريب', 'Training')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.generalAdminTraining}>{t('الإدارة العامة للتدريب', 'General Administration of Training')}</a><a href={ROUTES.trainingHallsBooking}>{t('قاعات التدريب', 'Training Halls')}</a><a href={ROUTES.schoolRegistration}>{t('المدرسة الفنية', 'Technical school')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('وظائف', 'Jobs')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.jobsAndCompetition}>{t('مسابقات و وظائف', 'Competitions and jobs')}</a><a href={ROUTES.resultOfWorker}>{t('نتائج المسابقات', 'Competition results')}</a></div></details>
-                        <details className="mobile-nav-group"><summary>{t('خدمات', 'Services')}</summary><div className="mobile-nav-submenu"><a href="http://bills.ascww.com.eg/Inqeury.aspx" target="_blank" rel="noopener noreferrer">{t('استعلم عن فاتورتك', 'Check your bill')}</a><a href={ROUTES.callCenter}>{t('خدمه العملاء', 'Customer service')}</a><a href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a><Link to={ROUTES.search}>{t('ابحث فى اخبار الشركة وخدماتها', 'Search company news and services')}</Link><a href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a><a href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a><Link to={ROUTES.servicesEvidance}>{t('دليل المستخدمين', 'User guide')}</Link><Link to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link><a href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a><a href={ROUTES.provideComplaine}>{t('تقديم شكوي', 'Submit a complaint')}</a></div></details>
+                        <details className="mobile-nav-group">
+                            <summary>{t('خدمات', 'Services')}</summary>
+                            <div className="mobile-nav-submenu">
+                                <a href="https://dsp.hcww.com.eg/" target="_blank" rel="noopener noreferrer">{t('المنصة الرقمية لخدمات مياه الشرب والصرف الصحي', 'Digital Platform for Drinking Water and Wastewater Services')}</a>
+                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('الاستعلام عن قيمة الفاتورة', 'Check your bill amount')}</a>
+                                <a href="https://dsp.hcww.com.eg/bills" target="_blank" rel="noopener noreferrer">{t('سداد الفواتير إلكترونياً', 'Pay bills online')}</a>
+                                <a href="https://dsp.hcww.com.eg/reading" target="_blank" rel="noopener noreferrer">{t('تسجيل قراءة عداد المياه', 'Register a water meter reading')}</a>
+                                <a href={ROUTES.myReadingApp}>{t('تطبيق قراءتي', 'My Reading app')}</a>
+                                <a href={ROUTES.provideRequest}>{t('الأسئلة الشائعة', 'Frequently asked questions')}</a>
+                                <a href={ROUTES.provideComplaine}>{t('تقديم شكوى', 'Submit a complaint')}</a>
+                                <a href={ROUTES.callCenter}>{t('خدمة العملاء', 'Customer service')}</a>
+                                <a href={ROUTES.hotlineApp}>{t('الخط الساخن', 'Hotline')}</a>
+                                <details className="mobile-nav-group">
+                                    <summary>{t('خدمات أخرى', 'Other services')}</summary>
+                                    <div className="mobile-nav-submenu">
+                                        <Link to={ROUTES.search}>{t('البحث في أخبار الشركة', 'Search company news')}</Link>
+                                        <a href={ROUTES.customerCharter}>{t('ميثاق المتعاملين', 'Customer charter')}</a>
+                                        <Link to={ROUTES.servicesEvidance}>{t('دليل المستخدم', 'User guide')}</Link>
+                                        <Link to={ROUTES.contractOnService}>{t('رحلة المتعامل للتعاقد على طلب خدمة', 'Customer journey for service contract requests')}</Link>
+                                    </div>
+                                </details>
+                            </div>
+                        </details>
                         <details className="mobile-nav-group"><summary>{t('دعم النزاهة', 'Integrity support')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.integritySupportOverview}>{t('إدارة دعم النزاهة', 'Integrity support department')}</a><a href={ROUTES.integritySupportHighlights}>{t('أبرز أعمال دعم النزاهة', 'Highlights of integrity support')}</a><a href={ROUTES.professionalConduct}>{t('السلوك الوظيفي', 'Professional conduct')}</a></div></details>
                         <details className="mobile-nav-group"><summary>{t('معرض الصور', 'Gallery')}</summary><div className="mobile-nav-submenu"><a href={ROUTES.bossTrips}>{t('جولات رئيس مجلس الإدارة', 'Chairman tours')}</a><a href={ROUTES.labOfCompany}>{t('معامل الشركه', 'Company laboratories')}</a><a href={ROUTES.wasteOfCompany}>{t('محطات الصرف', 'Wastewater stations')}</a><a href={ROUTES.trainingOfCompany}>{t('مركز التدريب', 'Training center')}</a><a href={ROUTES.schoolGallery}>{t('المدرسه الفنيه', 'Technical school')}</a><a href={ROUTES.sportOfCompany}>{t('النشاط الرياضي', 'Sports activity')}</a></div></details>
                         <a className="rounded-lg bg-[#0a3555] px-3 py-2 text-center text-white" href="tel:088-2331604">{t('الخط الساخن : 2331604-088', 'Phone: 088-2331604')}</a>

@@ -1,6 +1,7 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'url';
 import ssrHandler from './api/ssr.js';
 
@@ -9,8 +10,12 @@ const __dirname = path.dirname(__filename);
 const distDir = path.join(__dirname, 'dist');
 const publicDir = path.join(__dirname, 'public');
 const indexPath = path.join(distDir, 'index.html');
+const imageCacheDir = path.join(__dirname, '.img-cache');
 const PORT = Number(process.env.PORT || 3000);
 const BACKEND_BASE = (process.env.BACKEND_BASE_URL || 'https://backend.ascww.org').replace(/\/+$/, '');
+const IMAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+const IMAGE_QUALITY = 65;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -35,8 +40,6 @@ const MIME_TYPES = {
 const GALLERY_API_PREFIX = '/api/gallery/';
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']);
 
-const IMAGE_PROXY_PATH_PATTERN = /^\/api\/(?:news|projects)\/image\//;
-const NON_WEBP_IMAGE_TYPES = ['image/svg+xml', 'image/gif', 'image/webp'];
 const SCHOOL_SUBMISSION_STATE_PATH = '/api/school-submission-data';
 const SCHOOL_SUBMISSION_GUARDED_PATHS = new Set(['/api/upload', '/api/addStudent']);
 const SKIPPED_UPSTREAM_HEADERS = new Set([
@@ -50,15 +53,6 @@ const SKIPPED_UPSTREAM_HEADERS = new Set([
   'trailer',
   'upgrade',
 ]);
-
-let sharpLoadPromise;
-const getSharp = async () => {
-  if (sharpLoadPromise) return sharpLoadPromise;
-  sharpLoadPromise = import('sharp')
-    .then((module) => module.default)
-    .catch(() => null);
-  return sharpLoadPromise;
-};
 
 const send = (res, statusCode, body, contentType = 'text/plain; charset=utf-8') => {
   res.statusCode = statusCode;
@@ -74,7 +68,16 @@ const serveFile = (res, filePath) => {
     }
     const ext = path.extname(filePath).toLowerCase();
     const mime = MIME_TYPES[ext] || 'application/octet-stream';
-    send(res, 200, data, mime);
+    const assetsDir = path.join(distDir, 'assets');
+    const cacheControl = filePath === indexPath
+      ? 'no-cache'
+      : filePath.startsWith(`${assetsDir}${path.sep}`)
+        ? 'public, max-age=31536000, immutable'
+        : 'public, max-age=2592000';
+    res.statusCode = 200;
+    res.setHeader('Content-Type', mime);
+    res.setHeader('Cache-Control', cacheControl);
+    res.end(data);
   });
 };
 
@@ -100,11 +103,10 @@ const createSsrResponseAdapter = (res) => {
   return adapter;
 };
 
-const copyUpstreamHeaders = (upstreamHeaders, res, { transformed = false } = {}) => {
+const copyUpstreamHeaders = (upstreamHeaders, res) => {
   upstreamHeaders.forEach((value, key) => {
     const normalizedKey = key.toLowerCase();
     if (SKIPPED_UPSTREAM_HEADERS.has(normalizedKey)) return;
-    if (transformed && (normalizedKey === 'content-length' || normalizedKey === 'content-type' || normalizedKey === 'etag' || normalizedKey === 'content-md5')) return;
     res.setHeader(key, value);
   });
 };
@@ -119,11 +121,191 @@ const buildBackendApiUrl = (requestUrl) => {
   return `${BACKEND_BASE}${normalizedPath}${requestUrl.search}`;
 };
 
-const shouldTryWebpConversion = (req, pathname, method) => {
-  if (method !== 'GET') return false;
-  if (!IMAGE_PROXY_PATH_PATTERN.test(pathname)) return false;
-  const acceptHeader = String(req.headers.accept || '').toLowerCase();
-  return acceptHeader.includes('image/webp');
+const isImageNotModified = (req, etag) => {
+  const header = req.headers['if-none-match'];
+  if (!header) return false;
+  return header.split(',').some((value) => {
+    const candidate = value.trim();
+    return candidate === '*' || candidate === etag || candidate === `W/${etag}`;
+  });
+};
+
+const sendCachedImage = (req, res, image, etag) => {
+  res.setHeader('Content-Type', 'image/webp');
+  res.setHeader('Cache-Control', 'public, max-age=604800, s-maxage=604800');
+  res.setHeader('ETag', etag);
+  if (isImageNotModified(req, etag)) {
+    res.statusCode = 304;
+    res.end();
+    return;
+  }
+  res.statusCode = 200;
+  res.setHeader('Content-Length', image.length);
+  res.end(req.method === 'HEAD' ? undefined : image);
+};
+
+const sendOriginalImageHeaders = (res, contentType, contentLength) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', contentType);
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  if (contentLength) res.setHeader('Content-Length', contentLength);
+};
+
+const sendOriginalImage = async (req, res, upstream, contentType) => {
+  sendOriginalImageHeaders(res, contentType, upstream.headers.get('content-length'));
+  if (req.method === 'HEAD') {
+    await upstream.body?.cancel();
+    res.end();
+    return;
+  }
+  await streamUpstreamBody(upstream, res);
+};
+
+const getCachedImage = async (cachePath) => {
+  try {
+    const stat = await fs.promises.stat(cachePath);
+    if (Date.now() - stat.mtimeMs >= IMAGE_CACHE_TTL_MS) {
+      await fs.promises.unlink(cachePath);
+      return null;
+    }
+    return await fs.promises.readFile(cachePath);
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      console.warn('Unable to read image cache:', error);
+    }
+    return null;
+  }
+};
+
+const sendImageOptimizationFallback = (req, res, image, contentType) => {
+  sendOriginalImageHeaders(res, contentType, image.length);
+  res.end(req.method === 'HEAD' ? undefined : image);
+};
+
+const handleImageRequest = async (req, res, requestUrl) => {
+  const sources = requestUrl.searchParams.getAll('src');
+  const widths = requestUrl.searchParams.getAll('w');
+  const imageSource = sources.length === 1 ? sources[0] : '';
+  const widthValue = widths.length === 1 ? widths[0] : '';
+  const width = widthValue === '480' ? 480 : widthValue === '640' ? 640 : widthValue === '800' ? 800 : Number.NaN;
+  if (
+    !/^\/api\/(?:news\/image|image)\/[A-Za-z0-9._-]+$/.test(imageSource)
+    || imageSource.includes('..')
+    || ![480, 640, 800].includes(width)
+  ) {
+    send(res, 400, 'Invalid image source or width.');
+    return;
+  }
+
+  const cacheKey = createHash('sha1')
+    .update(`${imageSource}|${width}|${IMAGE_QUALITY}`)
+    .digest('hex');
+  const cachePath = path.join(imageCacheDir, `${cacheKey}.webp`);
+  const cachedImage = await getCachedImage(cachePath);
+  if (cachedImage) {
+    const etag = `"${createHash('sha1').update(cachedImage).digest('hex')}"`;
+    sendCachedImage(req, res, cachedImage, etag);
+    return;
+  }
+
+  const upstreamUrl = new URL(requestUrl);
+  upstreamUrl.pathname = imageSource;
+  upstreamUrl.search = '';
+
+  try {
+    const upstream = await fetch(buildBackendApiUrl(upstreamUrl), {
+      headers: { accept: 'image/*' },
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+    });
+    const contentType = upstream.headers.get('content-type') || '';
+    if (!upstream.ok) {
+      await upstream.body?.cancel();
+      send(res, upstream.status === 404 ? 404 : 502, 'Image request failed.');
+      return;
+    }
+    if (!/^image\//i.test(contentType)) {
+      await upstream.body?.cancel();
+      send(res, 404, 'Image not found.');
+      return;
+    }
+
+    const imageMimeType = contentType.split(';', 1)[0].trim().toLowerCase();
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageMimeType)) {
+      await sendOriginalImage(req, res, upstream, contentType);
+      return;
+    }
+
+    const upstreamLength = upstream.headers.get('content-length');
+    if (upstreamLength && Number(upstreamLength) > MAX_IMAGE_BYTES) {
+      await sendOriginalImage(req, res, upstream, contentType);
+      return;
+    }
+
+    const chunks = [];
+    let totalBytes = 0;
+    let passedThrough = false;
+    for await (const chunk of upstream.body || []) {
+      const buffer = Buffer.from(chunk);
+      if (passedThrough) {
+        res.write(buffer);
+        continue;
+      }
+      if (totalBytes + buffer.length > MAX_IMAGE_BYTES) {
+        sendOriginalImageHeaders(res, contentType, upstreamLength);
+        if (req.method === 'HEAD') {
+          await upstream.body?.cancel();
+          res.end();
+          return;
+        }
+        for (const bufferedChunk of chunks) res.write(bufferedChunk);
+        res.write(buffer);
+        passedThrough = true;
+        continue;
+      }
+      chunks.push(buffer);
+      totalBytes += buffer.length;
+    }
+    if (passedThrough) {
+      res.end();
+      return;
+    }
+
+    const originalImage = Buffer.concat(chunks, totalBytes);
+    let optimizedImage = null;
+    try {
+      const { default: sharp } = await import('sharp');
+      sharp.concurrency(1);
+      sharp.cache(false);
+      optimizedImage = await sharp(originalImage, { limitInputPixels: 40_000_000 })
+        .rotate()
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: IMAGE_QUALITY })
+        .toBuffer();
+    } catch (error) {
+      console.warn('Image optimization unavailable or failed; returning the original image:', error);
+    }
+
+    if (!optimizedImage) {
+      sendImageOptimizationFallback(req, res, originalImage, contentType);
+      return;
+    }
+
+    try {
+      await fs.promises.writeFile(cachePath, optimizedImage);
+    } catch (error) {
+      console.warn('Unable to write image cache:', error);
+    }
+    const etag = `"${createHash('sha1').update(optimizedImage).digest('hex')}"`;
+    sendCachedImage(req, res, optimizedImage, etag);
+  } catch (error) {
+    console.error('Image request failed:', error);
+    if (!res.headersSent) {
+      send(res, 502, 'Image request failed.');
+    } else {
+      res.end();
+    }
+  }
 };
 
 const parseBackendBoolean = (value) => {
@@ -242,7 +424,6 @@ const proxyApiRequest = async (req, res, requestUrl) => {
   const method = req.method || 'GET';
   const headers = { ...req.headers };
   delete headers.host;
-  const tryWebp = shouldTryWebpConversion(req, requestUrl.pathname, method);
 
   try {
     if (method !== 'GET' && SCHOOL_SUBMISSION_GUARDED_PATHS.has(requestUrl.pathname)) {
@@ -266,44 +447,8 @@ const proxyApiRequest = async (req, res, requestUrl) => {
     });
 
     res.statusCode = upstream.status;
-    const upstreamContentType = String(upstream.headers.get('content-type') || '').toLowerCase();
-    const canTranscode =
-      tryWebp
-      && upstream.ok
-      && upstreamContentType.startsWith('image/')
-      && !NON_WEBP_IMAGE_TYPES.some((type) => upstreamContentType.includes(type));
-
-    if (!canTranscode) {
-      copyUpstreamHeaders(upstream.headers, res);
-      await streamUpstreamBody(upstream, res);
-      return;
-    }
-
-    const sharp = await getSharp();
-    if (!sharp) {
-      copyUpstreamHeaders(upstream.headers, res);
-      await streamUpstreamBody(upstream, res);
-      return;
-    }
-
-    const sourceBuffer = Buffer.from(await upstream.arrayBuffer());
-
-    try {
-      const webpBuffer = await sharp(sourceBuffer).webp({ quality: 75, effort: 4 }).toBuffer();
-
-      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
-      res.setHeader('Content-Type', 'image/webp');
-      res.setHeader('Content-Length', String(webpBuffer.length));
-      res.setHeader('Vary', 'Accept');
-      res.setHeader('X-Image-Format', 'webp');
-      res.end(webpBuffer);
-    } catch {
-      copyUpstreamHeaders(upstream.headers, res, { transformed: true });
-      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/octet-stream');
-      res.setHeader('Content-Length', String(sourceBuffer.length));
-      res.setHeader('X-Image-Format', 'original');
-      res.end(sourceBuffer);
-    }
+    copyUpstreamHeaders(upstream.headers, res);
+    await streamUpstreamBody(upstream, res);
   } catch (error) {
     send(res, 502, `API proxy failed: ${String(error)}`);
   }
@@ -313,6 +458,11 @@ const server = http.createServer(async (req, res) => {
   const host = req.headers.host || `localhost:${PORT}`;
   const requestUrl = new URL(req.url || '/', `http://${host}`);
   const pathname = requestUrl.pathname;
+
+  if (pathname === '/api/img' && (req.method === 'GET' || req.method === 'HEAD')) {
+    await handleImageRequest(req, res, requestUrl);
+    return;
+  }
 
   if (pathname.startsWith(GALLERY_API_PREFIX)) {
     const galleryName = decodeURIComponent(pathname.slice(GALLERY_API_PREFIX.length));
@@ -437,14 +587,14 @@ const server = http.createServer(async (req, res) => {
 
   const normalizedPath = pathname === '/' ? '/index.html' : pathname;
   const publicFile = path.normalize(path.join(publicDir, normalizedPath));
-  const isInsidePublic = publicFile.startsWith(publicDir);
+  const isInsidePublic = publicFile === publicDir || publicFile.startsWith(`${publicDir}${path.sep}`);
   if (isInsidePublic && fs.existsSync(publicFile) && fs.statSync(publicFile).isFile()) {
     serveFile(res, publicFile);
     return;
   }
 
   const requestedFile = path.normalize(path.join(distDir, normalizedPath));
-  const isInsideDist = requestedFile.startsWith(distDir);
+  const isInsideDist = requestedFile === distDir || requestedFile.startsWith(`${distDir}${path.sep}`);
   const hasExtension = path.extname(requestedFile) !== '';
 
   if (isInsideDist && hasExtension && fs.existsSync(requestedFile) && fs.statSync(requestedFile).isFile()) {
@@ -459,6 +609,12 @@ const server = http.createServer(async (req, res) => {
 
   send(res, 500, 'Build files not found. Run `npm run build` first.');
 });
+
+try {
+  fs.mkdirSync(imageCacheDir, { recursive: true });
+} catch (error) {
+  console.warn('Unable to create image cache directory:', error);
+}
 
 server.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}`);

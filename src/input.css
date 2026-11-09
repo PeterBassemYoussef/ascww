@@ -277,6 +277,7 @@
   .hero-slider {
     position: absolute;
     inset: 0;
+    width: 100%;
     overflow: hidden;
     perspective: 1400px;
     transform-style: preserve-3d;
@@ -286,19 +287,35 @@
   .hero-slide {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     opacity: 0;
     filter: grayscale(24%) brightness(0.74) saturate(0.88) contrast(0.98) blur(12px);
-    transform: scale(1.18) translate3d(0, 0, 0) rotateZ(0.001deg);
+    transform: none !important;
     transform-origin: center center;
     backface-visibility: hidden;
     clip-path: inset(0 0 0 0 round 0);
     transition:
-      transform 8400ms cubic-bezier(0.16, 1, 0.3, 1),
       filter 8400ms cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform, filter, clip-path;
+  }
+
+  .hero-slide picture,
+  .hero-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-slide picture {
+    transform: scale(1.18);
+    transform-origin: center center;
+    transition: transform 8400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hero-slide img {
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
   }
 
   .hero-slide::before {
@@ -330,10 +347,14 @@
 
   .hero-slide.is-active {
     opacity: 1;
-    transform: scale(1.02) translate3d(0, 0, 0);
+    transform: none !important;
     filter: grayscale(0) brightness(1.02) saturate(1.12) contrast(1.02) blur(0);
     clip-path: inset(0 0 0 0 round 0);
     z-index: 1;
+  }
+
+  .hero-slide.is-active picture {
+    transform: scale(1.02);
   }
 
   .hero-slide.is-active::before {
@@ -364,9 +385,70 @@
 
   .hero-slide.is-entering,
   .hero-slide.is-leaving {
+    transform: none !important;
     animation-duration: 1200ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: both;
+  }
+
+  .hero-slide.is-entering picture {
+    animation: heroImageEnter 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-slide.is-leaving picture {
+    animation: heroImageExit 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-slide.is-entering.dir-right picture {
+    --hero-image-start: scale(1.18) translate3d(18%, 1.2%, 0) rotate(1.3deg);
+  }
+
+  .hero-slide.is-leaving.dir-right picture {
+    --hero-image-end: scale(0.995) translate3d(-14%, -1%, 0) rotate(-1.1deg);
+  }
+
+  .hero-slide.is-entering.dir-left picture {
+    --hero-image-start: scale(1.18) translate3d(-18%, -1.2%, 0) rotate(-1.3deg);
+  }
+
+  .hero-slide.is-leaving.dir-left picture {
+    --hero-image-end: scale(0.995) translate3d(14%, 1%, 0) rotate(1.1deg);
+  }
+
+  .hero-slide.is-entering.dir-up picture {
+    --hero-image-start: scale(1.17) translate3d(0.8%, -18%, 0) rotate(-0.8deg);
+  }
+
+  .hero-slide.is-leaving.dir-up picture {
+    --hero-image-end: scale(0.995) translate3d(-0.8%, 12%, 0) rotate(0.8deg);
+  }
+
+  .hero-slide.is-entering.dir-down picture {
+    --hero-image-start: scale(1.17) translate3d(-0.8%, 18%, 0) rotate(0.8deg);
+  }
+
+  .hero-slide.is-leaving.dir-down picture {
+    --hero-image-end: scale(0.995) translate3d(0.8%, -12%, 0) rotate(-0.8deg);
+  }
+
+  @keyframes heroImageEnter {
+    from {
+      transform: var(--hero-image-start, scale(1.18));
+    }
+
+    to {
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes heroImageExit {
+    from {
+      transform: scale(1.02);
+    }
+
+    to {
+      transform: var(--hero-image-end, scale(0.995));
+    }
   }
 
   .hero-slide.is-entering.dir-right {
@@ -1127,6 +1209,30 @@
 @media (max-width: 1023px) {
   .hero-title {
     @apply text-xl;
+  }
+}
+
+@media (max-width: 767px) {
+  #home {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 828 / 1500;
+    max-height: 85svh;
+    touch-action: pan-y;
+  }
+
+  #home > .hero-content-wrapper {
+    min-height: 100%;
+    align-items: end;
+    padding-top: 1rem;
+    padding-bottom: 5rem;
+  }
+
+  #hero-content {
+    border-radius: 0.75rem;
+    background: rgb(4 28 45 / 68%);
+    padding: 1rem 2.75rem;
   }
 }
 

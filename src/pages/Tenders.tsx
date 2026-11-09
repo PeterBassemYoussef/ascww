@@ -147,7 +147,7 @@ function Tenders() {
         const imagePath = firstTender ? getTenderImagePath(firstTender) : '';
         const imageUrl = imagePath
             ? `${TENDER_FILE_ENDPOINT}/${encodeURIComponent(imagePath)}`
-            : `${window.location.origin}/images/ascww-logo.png`;
+            : `${window.location.origin}/images/ascww-logo.webp`;
 
         document.title = `${title} | ${t('شركة مياه أسيوط', 'Assiut Water Company')}`;
         setMetaTag('meta[property="og:title"]', 'property', 'og:title', title);

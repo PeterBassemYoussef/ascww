@@ -5,6 +5,7 @@ Thumbs.db
 dist/
 *.tsbuildinfo
 .cache/
+.img-cache/
 public/gallery-manifest.json
 release/ASCWW-New-Website-Adoption-Notes.md
 .playwright-mcp
