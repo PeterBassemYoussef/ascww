@@ -13,7 +13,7 @@ export const ROUTES = {
   forKidsAndWomen: '/awareness/community-outreach',
   laboratoriesSector: '/laboratories-sector',
   laboratoriesSectorCentralLab: '/laboratories-sector/central-lab',
-  laboratoriesSectorCentralLabDocument: '/laboratories-sector/central-lab/:documentId',
+  laboratoriesSectorCentralLabDocument: '/laboratories-sector/central-lab/:documentSlug',
   laboratoriesSectorAchievements: '/laboratories-sector/achievements',
   laboratoriesSectorServices: '/laboratories-sector/services',
   laboratoriesSectorStructure: '/laboratories-sector/structure',

@@ -1,0 +1,86 @@
+الرئيسية
+الرئيسية | https://ascww.org/
+
+عن الشركة
+نبذة عن الشركة | https://ascww.org/about
+فروع الشركة | https://ascww.org/branches
+مشروعات الشركة | https://ascww.org/projects
+أرشيف الأخبار | https://ascww.org/news
+الرؤية والرسالة | https://ascww.org/about/vision-mission
+إدارة تكنولوجيا المعلومات | https://ascww.org/it-management
+الهيكل التنظيمي | https://ascww.org/about/structure
+إنجازات الشركة | https://ascww.org/about/achievements
+اللائحة الموحدة للعقود والمشتريات | https://ascww.org/about/regulations
+دعم النزاهة - إدارة دعم النزاهة | https://ascww.org/about/integrity
+دعم النزاهة - أبرز الأعمال | https://ascww.org/about/integrity-activities
+دعم النزاهة - السلوك الوظيفي | https://ascww.org/about/code-of-conduct
+
+التوعية والاتصال
+التوعية والاتصال | https://ascww.org/awareness/contact
+إرشادات الأمن السيبراني | https://ascww.org/awareness/cyber-security
+ركن الأطفال ولكِ سيدتي | https://ascww.org/awareness/community-outreach
+
+قطاع المعامل
+عن قطاع المعامل | https://ascww.org/laboratories-sector
+هيكل قطاع المعامل | https://ascww.org/laboratories-sector/structure
+إنجازات قطاع المعامل | https://ascww.org/laboratories-sector/achievements
+خدمات قطاع المعامل | https://ascww.org/laboratories-sector/services
+المعمل المركزي | https://ascww.org/laboratories-sector/central-lab
+المعمل المركزي - نبذة معمل مياه الشرب | https://ascww.org/laboratories-sector/central-lab/overview
+المعمل المركزي - معمل سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/sampling-and-coding
+المعمل المركزي - المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/organic-lab
+المعمل المركزي - أجهزة المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/organic-equipment
+المعمل المركزي - معمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/inorganic-lab
+المعمل المركزي - المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/bacteriology-lab
+المعمل المركزي - المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/biology-lab
+المعمل المركزي - إدارة الجودة | https://ascww.org/laboratories-sector/central-lab/quality-management
+المعمل المركزي - أجهزة سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/sampling-equipment
+المعمل المركزي - أجهزة المعمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/inorganic-equipment
+المعمل المركزي - أجهزة المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/bacteriology-equipment
+المعمل المركزي - أجهزة المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/biology-equipment
+الصرف الصحي | https://ascww.org/sanitation
+معالجة الصرف الصحي | https://ascww.org/sanitation/treatment
+التخلص الآمن من الصرف الصحي | https://ascww.org/sanitation/safe-disposal
+الحفاظ على شبكة الصرف الصحي | https://ascww.org/sanitation/network-preservation
+الصرف الصناعي | https://ascww.org/sanitation/industrial-waste
+دور إدارة الصرف الصناعي | https://ascww.org/sanitation/industrial-waste-management
+
+المناقصات
+المناقصات | https://ascww.org/tenders
+تفاصيل المناقصة (استبدل {id} بمعرّف المناقصة) | https://ascww.org/tenders/{id}
+
+التدريب
+الإدارة العامة للتدريب | https://ascww.org/training/administrative
+قاعات التدريب | https://ascww.org/training/training-hall
+المدرسة الفنية - التقديم | https://ascww.org/school-registration
+
+الوظائف
+مسابقات ووظائف | https://ascww.org/careers/vacancies
+نتائج المسابقات | https://ascww.org/careers/results
+
+الخدمات
+المنصة الرقمية لخدمات مياه الشرب والصرف الصحي | https://dsp.hcww.com.eg/
+الاستعلام عن قيمة الفاتورة | https://dsp.hcww.com.eg/bills
+سداد الفواتير إلكترونياً | https://dsp.hcww.com.eg/bills
+تسجيل قراءة عداد المياه | https://dsp.hcww.com.eg/reading
+تطبيق قراءتي | https://ascww.org/services/meter-reading
+الأسئلة الشائعة والاستفسارات | https://ascww.org/services/inquiries
+تقديم شكوى | https://ascww.org/services/complaints
+خدمة العملاء | https://ascww.org/services/customer-care
+الخط الساخن | https://ascww.org/services/hotline-app
+ميثاق المتعاملين | https://ascww.org/services/customer-charter
+البحث في أخبار الشركة | https://ascww.org/services/search
+دليل المستخدم | https://ascww.org/services/guide
+رحلة المتعامل للتعاقد على طلب خدمة | https://ascww.org/services/contract-procedures
+
+معرض الصور
+جولات رئيس مجلس الإدارة | https://ascww.org/trips-the-boss
+معامل الشركة | https://ascww.org/lab-of-company
+محطات الصرف | https://ascww.org/waste-of-company
+مركز التدريب | https://ascww.org/training-of-company
+المدرسة الفنية | https://ascww.org/school-of-company
+النشاط الرياضي | https://ascww.org/sport-of-company
+
+صفحات التفاصيل
+تفاصيل الخبر (استبدل {id} بمعرّف الخبر) | https://ascww.org/news/{id}
+تفاصيل المشروع (استبدل {id} بمعرّف المشروع) | https://ascww.org/projects/{id}

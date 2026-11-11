@@ -116,8 +116,8 @@ const resolveTitle = (pathname: string, isEnglish: boolean) => {
   }
 
   if (pathname.startsWith(`${ROUTES.laboratoriesSectorCentralLab}/`)) {
-    const documentId = Number(pathname.slice(`${ROUTES.laboratoriesSectorCentralLab}/`.length));
-    const document = CENTRAL_LAB_DOCUMENTS.find((item) => item.id === documentId);
+    const documentSlug = pathname.slice(`${ROUTES.laboratoriesSectorCentralLab}/`.length);
+    const document = CENTRAL_LAB_DOCUMENTS.find((item) => item.slug === documentSlug);
     if (document) return isEnglish ? document.en : document.ar;
   }
 

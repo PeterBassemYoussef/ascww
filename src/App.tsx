@@ -4,6 +4,7 @@ import HomePage from './pages/Home';
 import ScrollToTop from './components/ScrollToTop';
 import PageTitle from './components/PageTitle';
 import { LEGACY_ROUTE_REDIRECTS, ROUTES } from './constants/routes';
+import { CENTRAL_LAB_DOCUMENTS, getCentralLabDocumentPath } from './constants/centralLabDocuments';
 import { useSiteLanguage } from './context/SiteLanguageContext';
 
 const News = lazy(() => import('./pages/News'));
@@ -85,6 +86,13 @@ function App() {
           <Route path={ROUTES.forKidsAndWomen} element={<ForKidsAndWomenPage />} />
           <Route path={ROUTES.laboratoriesSector} element={<LaboratoriesSectorPage />} />
           <Route path={ROUTES.laboratoriesSectorCentralLab} element={<LaboratoriesSectorCentralLabPage />} />
+          {CENTRAL_LAB_DOCUMENTS.map((document) => (
+            <Route
+              key={document.id}
+              path={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+              element={<Navigate to={getCentralLabDocumentPath(document)} replace />}
+            />
+          ))}
           <Route path={ROUTES.laboratoriesSectorCentralLabDocument} element={<LaboratoriesSectorCentralLabPage />} />
           <Route path={ROUTES.laboratoriesSectorAchievements} element={<LaboratoriesSectorAchievementsPage />} />
           <Route path={ROUTES.laboratoriesSectorServices} element={<LaboratoriesSectorServicesPage />} />
