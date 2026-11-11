@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
-import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
+import { CENTRAL_LAB_DOCUMENTS, getCentralLabDocumentPath } from '../constants/centralLabDocuments';
 import { buildSearchApiUrl, normalizeSearchPayload, type SearchResultItem } from '../utils/helpers';
 import { useSiteLanguage, type SiteLanguage } from '../context/SiteLanguageContext';
 
@@ -869,7 +869,7 @@ function Header() {
                                                 <Link
                                                     key={document.id}
                                                     className="nav-dropdown-item"
-                                                    to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                    to={getCentralLabDocumentPath(document)}
                                                 >
                                                     {isEnglish ? document.en : document.ar}
                                                 </Link>
@@ -884,7 +884,7 @@ function Header() {
                                                         <Link
                                                             key={document.id}
                                                             className="nav-dropdown-item"
-                                                            to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                            to={getCentralLabDocumentPath(document)}
                                                         >
                                                             {isEnglish ? document.en : document.ar}
                                                         </Link>
@@ -1173,7 +1173,7 @@ function Header() {
                                             .map((document) => (
                                                 <Link
                                                     key={document.id}
-                                                    to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                    to={getCentralLabDocumentPath(document)}
                                                 >
                                                     {isEnglish ? document.en : document.ar}
                                                 </Link>
@@ -1184,7 +1184,7 @@ function Header() {
                                                 {getCentralLabEquipmentDocuments().map((document) => (
                                                     <Link
                                                         key={document.id}
-                                                        to={`${ROUTES.laboratoriesSectorCentralLab}/${document.id}`}
+                                                        to={getCentralLabDocumentPath(document)}
                                                     >
                                                         {isEnglish ? document.en : document.ar}
                                                     </Link>

@@ -26,18 +26,18 @@
 إنجازات قطاع المعامل | https://ascww.org/laboratories-sector/achievements
 خدمات قطاع المعامل | https://ascww.org/laboratories-sector/services
 المعمل المركزي | https://ascww.org/laboratories-sector/central-lab
-المعمل المركزي - نبذة معمل مياه الشرب | https://ascww.org/laboratories-sector/central-lab/1
-المعمل المركزي - معمل سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/2
-المعمل المركزي - المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/3
-المعمل المركزي - أجهزة المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/4
-المعمل المركزي - معمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/5
-المعمل المركزي - المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/6
-المعمل المركزي - المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/7
-المعمل المركزي - إدارة الجودة | https://ascww.org/laboratories-sector/central-lab/8
-المعمل المركزي - أجهزة سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/9
-المعمل المركزي - أجهزة المعمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/10
-المعمل المركزي - أجهزة المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/11
-المعمل المركزي - أجهزة المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/12
+المعمل المركزي - نبذة معمل مياه الشرب | https://ascww.org/laboratories-sector/central-lab/overview
+المعمل المركزي - معمل سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/sampling-and-coding
+المعمل المركزي - المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/organic-lab
+المعمل المركزي - أجهزة المعمل العضوي | https://ascww.org/laboratories-sector/central-lab/organic-equipment
+المعمل المركزي - معمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/inorganic-lab
+المعمل المركزي - المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/bacteriology-lab
+المعمل المركزي - المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/biology-lab
+المعمل المركزي - إدارة الجودة | https://ascww.org/laboratories-sector/central-lab/quality-management
+المعمل المركزي - أجهزة سحب وتكويد العينات | https://ascww.org/laboratories-sector/central-lab/sampling-equipment
+المعمل المركزي - أجهزة المعمل غير العضوي | https://ascww.org/laboratories-sector/central-lab/inorganic-equipment
+المعمل المركزي - أجهزة المعمل البكتريولوجي | https://ascww.org/laboratories-sector/central-lab/bacteriology-equipment
+المعمل المركزي - أجهزة المعمل البيولوجي | https://ascww.org/laboratories-sector/central-lab/biology-equipment
 الصرف الصحي | https://ascww.org/sanitation
 معالجة الصرف الصحي | https://ascww.org/sanitation/treatment
 التخلص الآمن من الصرف الصحي | https://ascww.org/sanitation/safe-disposal

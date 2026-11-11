@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { CENTRAL_LAB_DOCUMENTS } from '../constants/centralLabDocuments';
+import { CENTRAL_LAB_DOCUMENTS, getCentralLabDocumentPath } from '../constants/centralLabDocuments';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 import './LaboratoriesSectorCentralLab.css';
 
@@ -676,7 +676,7 @@ function appendLaboratoryEquipmentPageLink(content: Element, sourceDocumentId: n
   const paragraph = content.ownerDocument.createElement('p');
   paragraph.className = 'document-paragraph central-lab-equipment-page-link';
   const link = content.ownerDocument.createElement('a');
-  link.href = `/laboratories-sector/central-lab/${equipmentDocumentId}`;
+  link.href = getCentralLabDocumentPath(equipmentDocument);
   link.textContent = isEnglish
     ? `View ${equipmentDocument.en}`
     : `عرض ${equipmentDocument.ar}`;
@@ -1252,7 +1252,7 @@ function arrangeQualityManagementArticleAndImages(content: Element) {
 
 function LaboratoriesSectorCentralLabPage() {
   const { language } = useSiteLanguage();
-  const { documentId } = useParams<{ documentId: string }>();
+  const { documentSlug } = useParams<{ documentSlug: string }>();
   const [searchParams] = useSearchParams();
   const requestedLanguage = searchParams.get('lang');
   const isEnglish = requestedLanguage === 'en' || (requestedLanguage !== 'ar' && language === 'en');
@@ -1261,8 +1261,9 @@ function LaboratoriesSectorCentralLabPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
-  const requestedDocumentId = Number(documentId ?? searchParams.get('document') ?? 1);
-  const selectedDocument = CENTRAL_LAB_DOCUMENTS.find((document) => document.id === requestedDocumentId)
+  const documentIdentifier = documentSlug ?? searchParams.get('document') ?? '1';
+  const selectedDocument = CENTRAL_LAB_DOCUMENTS.find((document) => document.slug === documentIdentifier)
+    ?? CENTRAL_LAB_DOCUMENTS.find((document) => document.id === Number(documentIdentifier))
     ?? CENTRAL_LAB_DOCUMENTS[0];
   const selectedTitle = isEnglish ? selectedDocument.en : selectedDocument.ar;
 

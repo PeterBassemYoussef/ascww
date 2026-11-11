@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { CENTRAL_LAB_DOCUMENTS, getCentralLabDocumentPath } from '../constants/centralLabDocuments';
 import { useSiteLanguage } from '../context/SiteLanguageContext';
 
 const ASSET_PATH = '/images/lap-pdf/content';
@@ -136,7 +137,7 @@ function OrganicEquipmentDocument({ isEnglish }: { isEnglish: boolean }) {
     <iframe
       ref={frameRef}
       title={isEnglish ? 'Organic Laboratory Equipment' : 'أجهزة المعمل العضوي'}
-      src={`/laboratories-sector/central-lab/4?embedded=true&lang=${isEnglish ? 'en' : 'ar'}`}
+      src={`${getCentralLabDocumentPath(CENTRAL_LAB_DOCUMENTS[3])}?embedded=true&lang=${isEnglish ? 'en' : 'ar'}`}
       className="block min-h-[40rem] w-full border-0"
       onLoad={handleFrameLoad}
     />
